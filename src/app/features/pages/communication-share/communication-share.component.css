@@ -1,0 +1,93 @@
+/* Communication Share Page Component Styles */
+
+.font-ibm-plex-arabic {
+    font-family: 'IBM Plex Sans Arabic', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+/* Service card hover effects */
+.service-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Button hover effects */
+button:hover {
+    transition: all 0.2s ease;
+}
+
+/* Grid responsive adjustments */
+@media (max-width: 768px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .px-20 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Icon placeholder styling */
+.service-card .icon-placeholder {
+    background: linear-gradient(135deg, #F7FDF9 0%, #E9F7EF 100%);
+}
+
+/* Feedback section styling */
+.border-t-2 {
+    transition: border-color 0.2s ease;
+}
+
+/* Focus states for accessibility */
+button:focus {
+    outline: 2px solid #1B8354;
+    outline-offset: 2px;
+}
+
+/* Service card focus states */
+.service-card:focus {
+    outline: 2px solid #1B8354;
+    outline-offset: 2px;
+}
+
+/* RTL text alignment */
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="ltr"] .text-right {
+    text-align: left;
+}
+
+/* Smooth transitions */
+* {
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Hero section background */
+.hero-section {
+    background: linear-gradient(135deg, #F7FDF9 0%, #FFFFFF 100%);
+}
+
+/* Service grid gap adjustments */
+.service-grid {
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .service-grid {
+        gap: 1rem;
+    }
+}

@@ -1,0 +1,124 @@
+<div class="flex flex-col gap-2 items-start w-full">
+  <label class="text-base font-medium text-[#161616]">
+    {{ label | translate }}
+  </label>
+
+  <div class="relative w-full">
+    <img
+      src="assets/images/calender-icon.png"
+      alt="Calendar"
+      class="absolute start-3 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
+    />
+
+    <mat-form-field appearance="outline" class="w-full custom-mat-form-field">
+      <input
+        matInput
+        [(ngModel)]="selectedHijriDate"
+        (input)="onDateInput($event)"
+        (click)="toggleCalendar()"
+        [disabled]="disabled"
+        [placeholder]="'datePickers.hijri.placeholder' | translate"
+        class="ps-7 py-2 w-full cursor-pointer"
+        pattern="[0-9]{1,2}[\/\-][0-9]{1,2}[\/\-][0-9]{4}"
+        title="Enter date in format: DD/MM/YYYY"
+        readonly
+      />
+      <button
+        matSuffix
+        mat-icon-button
+        type="button"
+        (click)="toggleCalendar()"
+        [disabled]="disabled"
+        class="custom-calendar-toggle"
+      >
+        <mat-icon>calendar_month</mat-icon>
+      </button>
+      <mat-hint>{{ "datePickers.hijri.formatHint" | translate }}</mat-hint>
+    </mat-form-field>
+
+    <!-- Custom Hijri Calendar Dialog -->
+    @if (showCalendar) {
+    <div class="hijri-calendar-overlay" (click)="showCalendar = false">
+      <div class="hijri-calendar" (click)="$event.stopPropagation()">
+        <!-- Calendar Header -->
+        <div class="calendar-header">
+          <button mat-icon-button (click)="previousMonth()" class="nav-button">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <div class="header-text">
+            <span class="month-name">{{
+              months[selectedMonth - 1].labelKey | translate
+            }}</span>
+            <span class="year">{{ selectedYear }}</span>
+          </div>
+          <button mat-icon-button (click)="nextMonth()" class="nav-button">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid">
+          <!-- Week days header -->
+          <div class="week-header">
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.sat" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.sun" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.mon" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.tue" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.wed" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.thu" | translate }}
+            </div>
+            <div class="day-header">
+              {{ "datePickers.hijri.weekDays.fri" | translate }}
+            </div>
+          </div>
+
+          <!-- Calendar weeks -->
+          <div class="calendar-weeks">
+            @for (week of calendarWeeks; track week) {
+            <div class="calendar-week">
+              @for (day of week; track day) {
+              <button
+                mat-button
+                class="calendar-day"
+                [class.selected]="day === selectedDay"
+                [class.today]="
+                  day === getCurrentDay() &&
+                  selectedMonth === currentMonth &&
+                  selectedYear === currentYear
+                "
+                [disabled]="day === 0"
+                (click)="day > 0 && selectDay(day)"
+              >
+                {{ day > 0 ? day : "" }}
+              </button>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Display formatted date info -->
+  <div class="text-xs text-gray-500 mt-1">
+    @if (selectedYear && selectedMonth && selectedDay) {
+    <span>
+      {{ selectedDay }} {{ months[selectedMonth - 1].labelKey | translate }}
+      {{ selectedYear }}
+    </span>
+    }
+  </div>
+</div>

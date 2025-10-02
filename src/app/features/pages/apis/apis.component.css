@@ -1,0 +1,141 @@
+/* APIs Page Component Styles */
+
+.font-ibm-plex-arabic {
+    font-family: 'IBM Plex Sans Arabic', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .flex.flex-col.md\:flex-row {
+        flex-direction: column;
+    }
+
+    .md\:w-\[340px\] {
+        width: 100%;
+    }
+
+    .px-2.md\:px-8 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* Tab hover effects */
+button:hover {
+    transition: all 0.2s ease;
+}
+
+/* Video play button hover effect */
+.bg-\[\#F7FDF9\]:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* Prayer time cards scroll behavior */
+.overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #1B8354 #f1f1f1;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #1B8354;
+    border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #166B42;
+}
+
+/* Slider dots hover effect */
+.cursor-pointer:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Button disabled styles */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    transform: none;
+}
+
+/* Steps list styling */
+ol.list-decimal li {
+    padding-left: 0.5rem;
+}
+
+ol.list-decimal li::marker {
+    color: #1B8354;
+    font-weight: 600;
+}
+
+/* Badge styling */
+.bg-\[\#E9F7EF\] {
+    transition: background-color 0.2s ease;
+}
+
+/* Feedback card responsive */
+@media (max-width: 640px) {
+    .flex.flex-col.md\:flex-row.items-center.justify-between {
+        text-align: center;
+    }
+}
+
+/* Sticky sidebar */
+.md\:sticky {
+    position: sticky;
+    top: 2rem;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Border transitions */
+.border-t-2 {
+    transition: border-color 0.2s ease;
+}
+
+/* Link hover effects */
+a:hover {
+    text-decoration: underline;
+    transition: text-decoration 0.2s ease;
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus {
+    outline: 2px solid #1B8354;
+    outline-offset: 2px;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Error states */
+.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* Success states */
+.success {
+    border-color: #1B8354;
+    background-color: #f0fdf4;
+}

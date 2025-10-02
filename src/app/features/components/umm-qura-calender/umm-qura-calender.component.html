@@ -1,0 +1,653 @@
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- Calendar Headers -->
+  <div class="flex flex-col md:flex-row items-start gap-4 md:gap-8 w-full mb-6">
+    <!-- Gregorian Header -->
+    <div
+      class="flex h-10 px-6 md:px-24 justify-center items-center gap-2 flex-1 w-full rounded-lg bg-[#F0F0F0]"
+    >
+      <div
+        class="text-[#161616] text-center md:text-left font-['IBM_Plex_Sans_Arabic'] text-sm md:text-base font-normal leading-6"
+      >
+        {{ getGregorianMonthName(currentGregorianMonth) }}
+        {{ currentGregorianYear }}م
+      </div>
+    </div>
+
+    <!-- Hijri Header -->
+    <div
+      class="flex h-10 px-6 md:px-24 justify-center items-center gap-2 flex-1 w-full rounded-lg bg-[#F0F0F0]"
+    >
+      <div
+        class="text-[#161616] text-center md:text-left font-['IBM_Plex_Sans_Arabic'] text-sm md:text-base font-normal leading-6"
+      >
+        {{ getHijriMonthName(currentHijriMonth) }} {{ currentHijriYear }}هـ
+      </div>
+    </div>
+  </div>
+
+  <!-- Dual Calendar Container -->
+  <div class="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8 w-full">
+    <!-- Gregorian Calendar -->
+    <div
+      class="flex flex-col w-full lg:flex-1 rounded-lg bg-white shadow-[0_24px_48px_-12px_rgba(16,24,40,0.18)]"
+    >
+      <div class="flex items-start flex-1">
+        <div class="flex p-4 flex-col items-start gap-4 w-full">
+          <div class="flex justify-start items-start gap-8 w-full">
+            <div
+              class="flex w-full lg:w-[392px] flex-col items-start gap-4 flex-1"
+            >
+              <div
+                class="flex flex-col items-start self-stretch w-full justify-between"
+              >
+                <!-- Month Navigation -->
+                <div class="flex items-center justify-between w-full">
+                  <!-- Month and Year Selection -->
+                  <div class="flex min-h-10 px-4 gap-4 items-center">
+                    <!-- Year Dropdown -->
+                    <div
+                      class="flex w-[78px] h-8 flex-col items-start gap-1 relative year-dropdown"
+                    >
+                      <div
+                        (click)="toggleGregorianYearDropdown()"
+                        class="flex h-8 px-3 justify-center items-center gap-1 flex-shrink-0 rounded cursor-pointer hover:bg-gray-100"
+                      >
+                        <svg
+                          class="flex w-8 h-8 p-[5.5px_3.5px] justify-center items-center"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.40248 5.70352C4.48374 5.81111 4.72634 6.13227 4.87083 6.31741C5.16021 6.68822 5.55561 7.18094 5.98215 7.67221C6.41085 8.16595 6.86119 8.64681 7.26126 9.00031C7.46187 9.17756 7.63809 9.31225 7.78351 9.39992C7.92028 9.48237 8.00107 9.49951 8.00107 9.49951C8.00107 9.49951 8.07949 9.48236 8.21625 9.39992C8.36167 9.31225 8.53789 9.17757 8.7385 9.00031C9.13858 8.64682 9.58892 8.16595 10.0176 7.6722C10.4441 7.18093 10.8396 6.6882 11.1289 6.31739C11.2734 6.13224 11.5157 5.81154 11.5969 5.70395C11.7607 5.4816 12.074 5.43365 12.2964 5.5974C12.5187 5.76116 12.5662 6.07415 12.4025 6.2965L12.4013 6.29806C12.3162 6.41077 12.0648 6.74363 11.9173 6.93261C11.6214 7.3118 11.2144 7.81907 10.7727 8.32781C10.3332 8.83406 9.84938 9.35319 9.40064 9.74969C9.17684 9.94744 8.94998 10.1253 8.73253 10.2563C8.52882 10.3791 8.27089 10.5 7.99988 10.5C7.72887 10.5 7.47095 10.3791 7.26723 10.2563C7.04979 10.1252 6.82293 9.94744 6.59913 9.74969C6.15038 9.35319 5.6666 8.83406 5.22705 8.32782C4.78535 7.81909 4.3784 7.31182 4.08248 6.93264C3.93494 6.74359 3.68363 6.41086 3.5986 6.29828L3.59752 6.29686C3.43376 6.07451 3.48103 5.76119 3.70337 5.59743C3.92571 5.43368 4.23872 5.48119 4.40248 5.70352Z"
+                            fill="#161616"
+                          />
+                        </svg>
+                        <div class="flex justify-center items-center">
+                          <div
+                            class="text-[#161616] font-['IBM_Plex_Sans_Arabic'] text-sm font-medium leading-5"
+                          >
+                            {{ currentGregorianYear }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Year Dropdown List -->
+                      <div
+                        *ngIf="showGregorianYearDropdown"
+                        class="absolute top-8 left-0 z-10 w-[120px] max-h-[200px] overflow-y-auto bg-white border border-[#D2D6DB] rounded shadow-[0_20px_24px_-4px_rgba(16,24,40,0.08),0_8px_8px_-4px_rgba(16,24,40,0.03)]"
+                      >
+                        <div class="py-1">
+                          <div
+                            *ngFor="let year of gregorianYears"
+                            (click)="selectGregorianYear(year)"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                            [class.bg-[#1B8354]]="year === currentGregorianYear"
+                            [class.text-white]="year === currentGregorianYear"
+                            [class.text-[#161616]]="
+                              year !== currentGregorianYear
+                            "
+                          >
+                            <span
+                              class="text-sm font-normal font-['IBM_Plex_Sans_Arabic']"
+                            >
+                              {{ year }}
+                            </span>
+                            <svg
+                              *ngIf="year === currentGregorianYear"
+                              class="w-4 h-4 flex-shrink-0"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13.8333 4.5L6.5 11.8333L2.16667 7.5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Month Dropdown -->
+                    <div
+                      class="flex w-[120px] h-8 flex-col items-start gap-1 relative month-dropdown"
+                    >
+                      <div
+                        (click)="toggleGregorianMonthDropdown()"
+                        class="flex h-8 px-3 justify-center items-center gap-1 flex-shrink-0 rounded cursor-pointer hover:bg-gray-100"
+                      >
+                        <div class="flex justify-center items-center">
+                          <div
+                            class="text-[#161616] font-['IBM_Plex_Sans_Arabic'] text-base font-medium leading-6"
+                          >
+                            {{ getGregorianMonthName(currentGregorianMonth) }}
+                          </div>
+                        </div>
+                        <svg
+                          class="flex w-8 h-8 p-[5.5px_3.5px] justify-center items-center"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.40248 5.70352C4.48374 5.81111 4.72634 6.13227 4.87083 6.31741C5.16021 6.68822 5.55561 7.18094 5.98215 7.67221C6.41085 8.16595 6.86119 8.64681 7.26126 9.00031C7.46187 9.17756 7.63809 9.31225 7.78351 9.39992C7.92028 9.48237 8.00107 9.49951 8.00107 9.49951C8.00107 9.49951 8.07949 9.48236 8.21625 9.39992C8.36167 9.31225 8.53789 9.17757 8.7385 9.00031C9.13858 8.64682 9.58892 8.16595 10.0176 7.6722C10.4441 7.18093 10.8396 6.6882 11.1289 6.31739C11.2734 6.13224 11.5157 5.81154 11.5969 5.70395C11.7607 5.4816 12.074 5.43365 12.2964 5.5974C12.5187 5.76116 12.5662 6.07415 12.4025 6.2965L12.4013 6.29806C12.3162 6.41077 12.0648 6.74363 11.9173 6.93261C11.6214 7.3118 11.2144 7.81907 10.7727 8.32781C10.3332 8.83406 9.84938 9.35319 9.40064 9.74969C9.17684 9.94744 8.94998 10.1253 8.73253 10.2563C8.52882 10.3791 8.27089 10.5 7.99988 10.5C7.72887 10.5 7.47095 10.3791 7.26723 10.2563C7.04979 10.1252 6.82293 9.94744 6.59913 9.74969C6.15038 9.35319 5.6666 8.83406 5.22705 8.32782C4.78535 7.81909 4.3784 7.31182 4.08248 6.93264C3.93494 6.74359 3.68363 6.41086 3.5986 6.29828L3.59752 6.29686C3.43376 6.07451 3.48103 5.76119 3.70337 5.59743C3.92571 5.43368 4.23872 5.48119 4.40248 5.70352Z"
+                            fill="#161616"
+                          />
+                        </svg>
+                      </div>
+
+                      <!-- Month Dropdown List -->
+                      <div
+                        *ngIf="showGregorianMonthDropdown"
+                        class="absolute top-8 left-0 z-10 w-[140px] max-h-[200px] overflow-y-auto bg-white border border-[#D2D6DB] rounded shadow-[0_20px_24px_-4px_rgba(16,24,40,0.03)]"
+                      >
+                        <div class="py-1">
+                          <div
+                            *ngFor="let month of gregorianMonths"
+                            (click)="selectGregorianMonth(month)"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                            [class.bg-[#1B8354]]="
+                              parseInt(month.month_number) ===
+                              currentGregorianMonth
+                            "
+                            [class.text-white]="
+                              parseInt(month.month_number) ===
+                              currentGregorianMonth
+                            "
+                            [class.text-[#161616]]="
+                              parseInt(month.month_number) !==
+                              currentGregorianMonth
+                            "
+                          >
+                            <span
+                              class="text-sm font-normal font-['IBM_Plex_Sans_Arabic']"
+                            >
+                              {{ month.month_name }}
+                            </span>
+                            <svg
+                              *ngIf="
+                                parseInt(month.month_number) ===
+                                currentGregorianMonth
+                              "
+                              class="w-4 h-4 flex-shrink-0"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13.8333 4.5L6.5 11.8333L2.16667 7.5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Navigation Buttons -->
+                  <div class="flex justify-center items-center">
+                    <!-- Previous Button -->
+                    <div
+                      (click)="navigateGregorianMonth(-1)"
+                      class="flex w-10 h-10 min-w-10 max-w-10 min-h-10 max-h-10 px-4 justify-center items-center gap-1 rounded cursor-pointer hover:bg-gray-100 rtl:rotate-180"
+                    >
+                      <svg
+                        class="flex w-6 h-6 p-[6.249px_3.25px_6.25px_3.25px] justify-center items-center flex-shrink-0"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3.25049 11.9998C3.25049 12.3733 3.41614 12.7199 3.57301 12.9801C3.74228 13.2609 3.96993 13.5508 4.21967 13.8335C4.72067 14.4006 5.37436 15.0096 6.00872 15.5604C6.64682 16.1145 7.28271 16.6248 7.75774 16.9955C7.99565 17.1812 8.19412 17.3327 8.33353 17.438C8.40325 17.4906 8.45825 17.5318 8.49607 17.56L8.53964 17.5924L8.5512 17.601L8.55521 17.6039C8.88871 17.8496 9.35865 17.7787 9.60431 17.4452C9.84996 17.1117 9.77877 16.6422 9.4453 16.3965L9.43258 16.3871L9.39253 16.3574C9.35711 16.331 9.30468 16.2917 9.23769 16.2411C9.10366 16.1399 8.91151 15.9933 8.68068 15.8131C8.21821 15.4521 7.60412 14.9592 6.99222 14.4279C6.3766 13.8933 5.7803 13.3345 5.3438 12.8404C5.31619 12.8091 5.28947 12.7784 5.26365 12.7483L20.0005 12.7483C20.4147 12.7483 20.7505 12.4125 20.7505 11.9983C20.7505 11.584 20.4147 11.2483 20.0005 11.2483L5.26619 11.2483C5.29122 11.2191 5.3171 11.1893 5.3438 11.1591C5.7803 10.665 6.3766 10.1062 6.99222 9.57162C7.60412 9.04026 8.21821 8.54737 8.68068 8.1864C8.91151 8.00622 9.10365 7.85963 9.23769 7.75838C9.30468 7.70776 9.35711 7.66852 9.39252 7.64212L9.43257 7.61235L9.4453 7.60294C9.77877 7.35727 9.84996 6.88779 9.6043 6.5543C9.35864 6.2208 8.88871 6.14991 8.55521 6.39557L8.5512 6.39853L8.53964 6.40709L8.49607 6.43947C8.45825 6.46766 8.40325 6.50884 8.33353 6.56151C8.19412 6.66682 7.99564 6.81825 7.75773 7.00395C7.28271 7.37472 6.64681 7.88494 6.00872 8.43904C5.37435 8.98991 4.72066 9.59889 4.21967 10.166C3.96993 10.4486 3.74228 10.7386 3.57301 11.0194C3.41709 11.278 3.25248 11.622 3.25051 11.993"
+                          fill="#161616"
+                        />
+                      </svg>
+                    </div>
+
+                    <!-- Next Button -->
+                    <div
+                      (click)="navigateGregorianMonth(1)"
+                      class="rtl:rotate-180 flex w-10 h-10 min-w-10 max-w-10 min-h-10 max-h-10 px-4 justify-center items-center gap-1 rounded cursor-pointer hover:bg-gray-100"
+                    >
+                      <svg
+                        class="flex w-6 h-6 p-[6.249px_3.25px_6.25px_3.25px] justify-center items-center flex-shrink-0"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.7495 11.9995C20.7495 11.6259 20.5839 11.2794 20.427 11.0191C20.2577 10.7383 20.0301 10.4484 19.7803 10.1657C19.2794 9.59864 18.6257 8.98966 17.9913 8.4388C17.3532 7.88469 16.7173 7.37448 16.2423 7.00371C16.0044 6.81801 15.8059 6.66657 15.6665 6.56126C15.5968 6.50859 15.5418 6.46742 15.5039 6.43923L15.4604 6.40684L15.4488 6.39829L15.4448 6.39533C15.1113 6.14967 14.6414 6.22056 14.3957 6.55406C14.1501 6.88754 14.2213 7.35702 14.5547 7.60269L14.5674 7.61211L14.6075 7.64188C14.6429 7.66828 14.6953 7.70752 14.7623 7.75813C14.8964 7.85938 15.0885 8.00598 15.3193 8.18615C15.7818 8.54712 16.3959 9.04002 17.0078 9.57137C17.6234 10.106 18.2197 10.6648 18.6562 11.1589C18.6838 11.1901 18.7105 11.2208 18.7364 11.251L3.99951 11.251C3.5853 11.251 3.24951 11.5868 3.24951 12.001C3.24951 12.4152 3.5853 12.751 3.99951 12.751L18.7338 12.751C18.7088 12.7802 18.6829 12.8099 18.6562 12.8401C18.2197 13.3342 17.6234 13.893 17.0078 14.4276C16.3959 14.959 15.7818 15.4519 15.3193 15.8128C15.0885 15.993 14.8964 16.1396 14.7623 16.2409C14.6953 16.2915 14.6429 16.3307 14.6075 16.3571L14.5674 16.3869L14.5547 16.3963C14.2213 16.642 14.1501 17.1115 14.3957 17.4449C14.6414 17.7784 15.1113 17.8493 15.4448 17.6037L15.4488 17.6007L15.4604 17.5922L15.5039 17.5598C15.5418 17.5316 15.5968 17.4904 15.6665 17.4377C15.8059 17.3324 16.0044 17.181 16.2423 16.9953C16.7173 16.6245 17.3532 16.1143 17.9913 15.5602C18.6257 15.0093 19.2794 14.4003 19.7803 13.8333C20.0301 13.5506 20.2577 13.2607 20.427 12.9799C20.5829 12.7212 20.7475 12.3772 20.7495 12.0062"
+                          fill="#161616"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Calendar Content Container -->
+                <div class="flex flex-col w-full">
+                  <!-- Day Headers -->
+                  <div class="flex justify-center items-center self-stretch">
+                    <div
+                      *ngFor="let day of dayHeaders"
+                      class="flex h-12 px-1 justify-center items-center flex-1"
+                    >
+                      <div
+                        class="flex h-10 flex-col justify-center items-center flex-1 rounded-full"
+                      >
+                        <div
+                          class="self-stretch text-[#64748B] text-center font-['IBM_Plex_Sans_Arabic'] text-base font-normal leading-6"
+                        >
+                          {{ day }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Calendar Grid -->
+                  <div
+                    class="grid grid-cols-7 gap-1 w-full flex-1 content-start"
+                    [class.rtl]="isRtl"
+                  >
+                    <!-- Loading indicator -->
+                    <div
+                      *ngIf="isLoadingGregorianCalendar"
+                      class="col-span-7 flex justify-center items-center py-8"
+                    >
+                      <div
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-[#1B8354]"
+                      ></div>
+                      <span class="ml-2 text-[#161616] text-sm"
+                        >Loading calendar...</span
+                      >
+                    </div>
+
+                    <!-- Calendar days -->
+                    <div
+                      *ngFor="let day of gregorianCalendarDays"
+                      (click)="selectDate(day, 'gregorian')"
+                      class="aspect-square flex justify-center items-center cursor-pointer"
+                      [class]="getCalendarCellClass(day)"
+                    >
+                      <div
+                        class="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex-col justify-center items-center gap-0 flex-shrink-0 rounded-full"
+                        [class]="getDateStateClass(day)"
+                      >
+                        <div
+                          class="text-center font-['IBM_Plex_Sans_Arabic'] text-sm sm:text-base font-normal leading-6"
+                          [class]="getDateTextClass(day)"
+                        >
+                          {{ day.day }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div
+        class="flex p-4 justify-center items-center gap-2 self-stretch border-t border-[#CBD5E1]"
+      >
+        <div class="flex justify-center items-center gap-2 flex-1">
+          <div
+            class="flex h-10 min-h-10 max-h-10 px-3 sm:px-4 justify-center items-center gap-1 flex-1 rounded bg-[#0D121C] cursor-pointer hover:bg-gray-800"
+            (click)="navigateToGregorianCalendar()"
+          >
+            <svg
+              class="flex w-6 h-6 p-[6.469px_4px_6.471px_2.939px] justify-center items-center"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.81076 12.749L9.53041 16.4688L8.46974 17.5294L2.93945 11.999L8.46978 6.46875L9.53044 7.52941L5.81078 11.249L20.0001 11.2491L20.0001 12.7491L5.81076 12.749Z"
+                fill="white"
+              />
+            </svg>
+            <div class="flex justify-center items-center">
+              <div
+                class="text-white font-['IBM_Plex_Sans_Arabic'] text-sm sm:text-base font-medium leading-6"
+              >
+                التقويم السنوي - ميلادي
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Hijri Calendar -->
+    <div
+      class="flex flex-col w-full lg:flex-1 rounded-lg bg-white shadow-[0_24px_48px_-12px_rgba(16,24,40,0.18)]"
+    >
+      <div class="flex items-start flex-1">
+        <div class="flex p-4 flex-col items-start gap-4 w-full">
+          <div class="flex justify-start items-start gap-8 w-full">
+            <div
+              class="flex w-full lg:w-[392px] flex-col items-start gap-4 flex-1"
+            >
+              <div
+                class="flex flex-col items-start self-stretch w-full justify-between"
+              >
+                <!-- Month Navigation -->
+                <div class="flex items-center justify-between w-full">
+                  <!-- Month and Year Selection -->
+                  <div class="flex min-h-10 px-4 gap-4 items-center w-full">
+                    <!-- Year Dropdown -->
+                    <div
+                      class="flex w-[78px] h-8 flex-col items-start gap-1 relative year-dropdown"
+                    >
+                      <div
+                        (click)="toggleHijriYearDropdown()"
+                        class="flex h-8 px-3 justify-center items-center gap-1 flex-shrink-0 rounded cursor-pointer hover:bg-gray-100"
+                      >
+                        <svg
+                          class="flex w-8 h-8 p-[5.5px_3.5px] justify-center items-center"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.40248 5.70352C4.48374 5.81111 4.72634 6.13227 4.87083 6.31741C5.16021 6.68822 5.55561 7.18094 5.98215 7.67221C6.41085 8.16595 6.86119 8.64681 7.26126 9.00031C7.46187 9.17756 7.63809 9.31225 7.78351 9.39992C7.92028 9.48237 8.00107 9.49951 8.00107 9.49951C8.00107 9.49951 8.07949 9.48236 8.21625 9.39992C8.36167 9.31225 8.53789 9.17757 8.7385 9.00031C9.13858 8.64682 9.58892 8.16595 10.0176 7.6722C10.4441 7.18093 10.8396 6.6882 11.1289 6.31739C11.2734 6.13224 11.5157 5.81154 11.5969 5.70395C11.7607 5.4816 12.074 5.43365 12.2964 5.5974C12.5187 5.76116 12.5662 6.07415 12.4025 6.2965L12.4013 6.29806C12.3162 6.41077 12.0648 6.74363 11.9173 6.93261C11.6214 7.3118 11.2144 7.81907 10.7727 8.32781C10.3332 8.83406 9.84938 9.35319 9.40064 9.74969C9.17684 9.94744 8.94998 10.1253 8.73253 10.2563C8.52882 10.3791 8.27089 10.5 7.99988 10.5C7.72887 10.5 7.47095 10.3791 7.26723 10.2563C7.04979 10.1252 6.82293 9.94744 6.59913 9.74969C6.15038 9.35319 5.6666 8.83406 5.22705 8.32782C4.78535 7.81909 4.3784 7.31182 4.08248 6.93264C3.93494 6.74359 3.68363 6.41086 3.5986 6.29828L3.59752 6.29686C3.43376 6.07451 3.48103 5.76119 3.70337 5.59743C3.92571 5.43368 4.23872 5.48119 4.40248 5.70352Z"
+                            fill="#161616"
+                          />
+                        </svg>
+                        <div class="flex justify-center items-center">
+                          <div
+                            class="text-[#161616] font-['IBM_Plex_Sans_Arabic'] text-sm font-medium leading-5"
+                          >
+                            {{ currentHijriYear }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Year Dropdown List -->
+                      <div
+                        *ngIf="showHijriYearDropdown"
+                        class="absolute top-8 left-0 z-10 w-[120px] max-h-[200px] overflow-y-auto bg-white border border-[#D2D6DB] rounded shadow-[0_20px_24px_-4px_rgba(16,24,40,0.08),0_8px_8px_-4px_rgba(16,24,40,0.03)]"
+                      >
+                        <div class="py-1">
+                          <div
+                            *ngFor="let year of hijriYears"
+                            (click)="selectHijriYear(year)"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                            [class.bg-[#1B8354]]="year === currentHijriYear"
+                            [class.text-white]="year === currentHijriYear"
+                            [class.text-[#161616]]="year !== currentHijriYear"
+                          >
+                            <span
+                              class="text-sm font-normal font-['IBM_Plex_Sans_Arabic']"
+                            >
+                              {{ year }}
+                            </span>
+                            <svg
+                              *ngIf="year === currentHijriYear"
+                              class="w-4 h-4 flex-shrink-0"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13.8333 4.5L6.5 11.8333L2.16667 7.5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Month Dropdown -->
+                    <div
+                      class="flex w-[120px] h-8 flex-col items-start gap-1 relative month-dropdown"
+                    >
+                      <div
+                        (click)="toggleHijriMonthDropdown()"
+                        class="flex h-8 px-3 justify-center items-center gap-1 flex-shrink-0 rounded cursor-pointer hover:bg-gray-100"
+                      >
+                        <div class="flex justify-center items-center">
+                          <div
+                            class="text-[#161616] font-['IBM_Plex_Sans_Arabic'] text-base font-medium leading-6"
+                          >
+                            {{ getHijriMonthName(currentHijriMonth) }}
+                          </div>
+                        </div>
+                        <svg
+                          class="flex w-8 h-8 p-[5.5px_3.5px] justify-center items-center"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.40248 5.70352C4.48374 5.81111 4.72634 6.13227 4.87083 6.31741C5.16021 6.68822 5.55561 7.18094 5.98215 7.67221C6.41085 8.16595 6.86119 8.64681 7.26126 9.00031C7.46187 9.17756 7.63809 9.31225 7.78351 9.39992C7.92028 9.48237 8.00107 9.49951 8.00107 9.49951C8.00107 9.49951 8.07949 9.48236 8.21625 9.39992C8.36167 9.31225 8.53789 9.17757 8.7385 9.00031C9.13858 8.64682 9.58892 8.16595 10.0176 7.6722C10.4441 7.18093 10.8396 6.6882 11.1289 6.31739C11.2734 6.13224 11.5157 5.81154 11.5969 5.70395C11.7607 5.4816 12.074 5.43365 12.2964 5.5974C12.5187 5.76116 12.5662 6.07415 12.4025 6.2965L12.4013 6.29806C12.3162 6.41077 12.0648 6.74363 11.9173 6.93261C11.6214 7.3118 11.2144 7.81907 10.7727 8.32781C10.3332 8.83406 9.84938 9.35319 9.40064 9.74969C9.17684 9.94744 8.94998 10.1253 8.73253 10.2563C8.52882 10.3791 8.27089 10.5 7.99988 10.5C7.72887 10.5 7.47095 10.3791 7.26723 10.2563C7.04979 10.1252 6.82293 9.94744 6.59913 9.74969C6.15038 9.35319 5.6666 8.83406 5.22705 8.32782C4.78535 7.81909 4.3784 7.31182 4.08248 6.93264C3.93494 6.74359 3.68363 6.41086 3.5986 6.29828L3.59752 6.29686C3.43376 6.07451 3.48103 5.76119 3.70337 5.59743C3.92571 5.43368 4.23872 5.48119 4.40248 5.70352Z"
+                            fill="#161616"
+                          />
+                        </svg>
+                      </div>
+
+                      <!-- Month Dropdown List -->
+                      <div
+                        *ngIf="showHijriMonthDropdown"
+                        class="absolute top-8 left-0 z-10 w-[140px] max-h-[200px] overflow-y-auto bg-white border border-[#D2D6DB] rounded shadow-[0_20px_24px_-4px_rgba(16,24,40,0.08),0_8px_8px_-4px_rgba(16,24,40,0.03)]"
+                      >
+                        <div class="py-1">
+                          <div
+                            *ngFor="let month of hijriMonths"
+                            (click)="selectHijriMonth(month)"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                            [class.bg-[#1B8354]]="
+                              parseInt(month.month_number) === currentHijriMonth
+                            "
+                            [class.text-white]="
+                              parseInt(month.month_number) === currentHijriMonth
+                            "
+                            [class.text-[#161616]]="
+                              parseInt(month.month_number) !== currentHijriMonth
+                            "
+                          >
+                            <span
+                              class="text-sm font-normal font-['IBM_Plex_Sans_Arabic']"
+                            >
+                              {{ month.month_name }}
+                            </span>
+                            <svg
+                              *ngIf="
+                                parseInt(month.month_number) ===
+                                currentHijriMonth
+                              "
+                              class="w-4 h-4 flex-shrink-0"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13.8333 4.5L6.5 11.8333L2.16667 7.5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Navigation Buttons -->
+                  <div class="flex items-center w-full justify-end">
+                    <!-- Previous Button -->
+                    <div
+                      (click)="navigateHijriMonth(-1)"
+                      class="flex w-10 h-10 min-w-10 max-w-10 min-h-10 max-h-10 px-4 justify-center items-center gap-1 rounded cursor-pointer hover:bg-gray-100 rtl:rotate-180"
+                    >
+                      <svg
+                        class="flex w-6 h-6 p-[6.249px_3.25px_6.25px_3.25px] justify-center items-center flex-shrink-0"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3.25049 11.9998C3.25049 12.3733 3.41614 12.7199 3.57301 12.9801C3.74228 13.2609 3.96993 13.5508 4.21967 13.8335C4.72067 14.4006 5.37436 15.0096 6.00872 15.5604C6.64682 16.1145 7.28271 16.6248 7.75774 16.9955C7.99565 17.1812 8.19412 17.3327 8.33353 17.438C8.40325 17.4906 8.45825 17.5318 8.49607 17.56L8.53964 17.5924L8.5512 17.601L8.55521 17.6039C8.88871 17.8496 9.35865 17.7787 9.60431 17.4452C9.84996 17.1117 9.77877 16.6422 9.4453 16.3965L9.43258 16.3871L9.39253 16.3574C9.35711 16.331 9.30468 16.2917 9.23769 16.2411C9.10366 16.1399 8.91151 15.9933 8.68068 15.8131C8.21821 15.4521 7.60412 14.9592 6.99222 14.4279C6.3766 13.8933 5.7803 13.3345 5.3438 12.8404C5.31619 12.8091 5.28947 12.7784 5.26365 12.7483L20.0005 12.7483C20.4147 12.7483 20.7505 12.4125 20.7505 11.9983C20.7505 11.584 20.4147 11.2483 20.0005 11.2483L5.26619 11.2483C5.29122 11.2191 5.3171 11.1893 5.3438 11.1591C5.7803 10.665 6.3766 10.1062 6.99222 9.57162C7.60412 9.04026 8.21821 8.54737 8.68068 8.1864C8.91151 8.00622 9.10365 7.85963 9.23769 7.75838C9.30468 7.70776 9.35711 7.66852 9.39252 7.64212L9.43257 7.61235L9.4453 7.60294C9.77877 7.35727 9.84996 6.88779 9.6043 6.5543C9.35864 6.2208 8.88871 6.14991 8.55521 6.39557L8.5512 6.39853L8.53964 6.40709L8.49607 6.43947C8.45825 6.46766 8.40325 6.50884 8.33353 6.56151C8.19412 6.66682 7.99564 6.81825 7.75773 7.00395C7.28271 7.37472 6.64681 7.88494 6.00872 8.43904C5.37435 8.98991 4.72066 9.59889 4.21967 10.166C3.96993 10.4486 3.74228 10.7386 3.57301 11.0194C3.41709 11.278 3.25248 11.622 3.25051 11.993"
+                          fill="#161616"
+                        />
+                      </svg>
+                    </div>
+
+                    <!-- Next Button -->
+                    <div
+                      (click)="navigateHijriMonth(1)"
+                      class="rtl:rotate-180 flex w-10 h-10 min-w-10 max-w-10 min-h-10 max-h-10 px-4 items-center gap-1 rounded cursor-pointer hover:bg-gray-100"
+                    >
+                      <svg
+                        class="flex w-6 h-6 p-[6.249px_3.25px_6.25px_3.25px] justify-center items-center flex-shrink-0"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.7495 11.9995C20.7495 11.6259 20.5839 11.2794 20.427 11.0191C20.2577 10.7383 20.0301 10.4484 19.7803 10.1657C19.2794 9.59864 18.6257 8.98966 17.9913 8.4388C17.3532 7.88469 16.7173 7.37448 16.2423 7.00371C16.0044 6.81801 15.8059 6.66657 15.6665 6.56126C15.5968 6.50859 15.5418 6.46742 15.5039 6.43923L15.4604 6.40684L15.4488 6.39829L15.4448 6.39533C15.1113 6.14967 14.6414 6.22056 14.3957 6.55406C14.1501 6.88754 14.2213 7.35702 14.5547 7.60269L14.5674 7.61211L14.6075 7.64188C14.6429 7.66828 14.6953 7.70752 14.7623 7.75813C14.8964 7.85938 15.0885 8.00598 15.3193 8.18615C15.7818 8.54712 16.3959 9.04002 17.0078 9.57137C17.6234 10.106 18.2197 10.6648 18.6562 11.1589C18.6838 11.1901 18.7105 11.2208 18.7364 11.251L3.99951 11.251C3.5853 11.251 3.24951 11.5868 3.24951 12.001C3.24951 12.4152 3.5853 12.751 3.99951 12.751L18.7338 12.751C18.7088 12.7802 18.6829 12.8099 18.6562 12.8401C18.2197 13.3342 17.6234 13.893 17.0078 14.4276C16.3959 14.959 15.7818 15.4519 15.3193 15.8128C15.0885 15.993 14.8964 16.1396 14.7623 16.2409C14.6953 16.2915 14.6429 16.3307 14.6075 16.3571L14.5674 16.3869L14.5547 16.3963C14.2213 16.642 14.1501 17.1115 14.3957 17.4449C14.6414 17.7784 15.1113 17.8493 15.4448 17.6037L15.4488 17.6007L15.4604 17.5922L15.5039 17.5598C15.5418 17.5316 15.5968 17.4904 15.6665 17.4377C15.8059 17.3324 16.0044 17.181 16.2423 16.9953C16.7173 16.6245 17.3532 16.1143 17.9913 15.5602C18.6257 15.0093 19.2794 14.4003 19.7803 13.8333C20.0301 13.5506 20.2577 13.2607 20.427 12.9799C20.5829 12.7212 20.7475 12.3772 20.7495 12.0062"
+                          fill="#161616"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Calendar Content Container -->
+                <div class="flex flex-col w-full">
+                  <!-- Day Headers -->
+                  <div class="flex justify-center items-center self-stretch">
+                    <div
+                      *ngFor="let day of dayHeaders"
+                      class="flex h-12 px-1 justify-center items-center flex-1"
+                    >
+                      <div
+                        class="flex h-10 flex-col justify-center items-center flex-1 rounded-full"
+                      >
+                        <div
+                          class="self-stretch text-[#64748B] text-center font-['IBM_Plex_Sans_Arabic'] text-base font-normal leading-6"
+                        >
+                          {{ day }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Calendar Grid -->
+                  <div
+                    class="grid grid-cols-7 gap-1 w-full flex-1 content-start"
+                    [class.rtl]="isRtl"
+                  >
+                    <!-- Loading indicator -->
+                    <div
+                      *ngIf="isLoadingHijriCalendar"
+                      class="col-span-7 flex justify-center items-center py-8"
+                    >
+                      <div
+                        class="animate-spin rounded-full h-6 w-6 border-b-2 border-[#1B8354]"
+                      ></div>
+                      <span class="ml-2 text-[#161616] text-sm"
+                        >Loading calendar...</span
+                      >
+                    </div>
+
+                    <!-- Calendar days -->
+                    <div
+                      *ngFor="let day of hijriCalendarDays"
+                      (click)="selectDate(day, 'hijri')"
+                      class="aspect-square flex justify-center items-center cursor-pointer"
+                      [class]="getCalendarCellClass(day)"
+                    >
+                      <div
+                        class="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex-col justify-center items-center gap-0 flex-shrink-0 rounded-full"
+                        [class]="getDateStateClass(day)"
+                      >
+                        <div
+                          class="text-center font-['IBM_Plex_Sans_Arabic'] text-sm sm:text-base font-normal leading-6"
+                          [class]="getDateTextClass(day)"
+                        >
+                          {{ day.day }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div
+        class="flex p-4 items-center gap-2 self-stretch border-t border-[#CBD5E1]"
+      >
+        <div class="flex items-center gap-2 flex-1">
+          <div
+            class="flex h-10 min-h-10 max-h-10 px-3 sm:px-4 justify-center items-center gap-1 flex-1 rounded bg-[#0D121C] cursor-pointer hover:bg-gray-800"
+            (click)="navigateToHijriCalendar()"
+          >
+            <svg
+              class="flex w-6 h-6 p-[6.469px_4px_6.471px_2.939px] justify-center items-center"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.81076 12.749L9.53041 16.4688L8.46974 17.5294L2.93945 11.999L8.46978 6.46875L9.53044 7.52941L5.81078 11.249L20.0001 11.2491L20.0001 12.7491L5.81076 12.749Z"
+                fill="white"
+              />
+            </svg>
+            <div class="flex justify-center items-center">
+              <div
+                class="text-white font-['IBM_Plex_Sans_Arabic'] text-sm sm:text-base font-medium leading-6"
+              >
+                التقويم السنوي - أم القرى
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

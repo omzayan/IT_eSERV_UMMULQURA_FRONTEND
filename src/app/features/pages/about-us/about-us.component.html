@@ -1,0 +1,75 @@
+<!-- Hero Section -->
+<div class="flex w-full px-20 py-10 gap-8 bg-primary-25">
+  <div class="flex flex-col gap-4 flex-1">
+    <!-- Breadcrumb -->
+    <app-breadcrumb [items]="[
+        { label: 'ABOUT_US.BREADCRUMB.HOME', href: '/' },
+        {
+          label: 'ABOUT_US.BREADCRUMB.ABOUT',
+          href: '/about-us',
+          isActive: true
+        }
+      ]" separator="/"></app-breadcrumb>
+
+    <!-- Title -->
+    <h1 class="text-4xl font-arabic font-bold leading-11 tracking-[-0.045rem]">
+      {{ "aboutUs.title" | translate }}
+    </h1>
+
+    <!-- Description -->
+    <p class="font-arabic font-normal">
+      {{ "aboutUs.description" | translate }}
+    </p>
+  </div>
+</div>
+
+<!-- Service Hub -->
+<div class="flex px-20 py-10 flex-col gap-8 w-full">
+  <div class="flex flex-col gap-6 w-full">
+    <!-- Service Cards Grid -->
+    <div class="flex flex-col gap-6 w-full">
+      <!-- Loop through card rows -->
+      <div class="flex items-start gap-6 w-full" *ngFor="let cardRow of cardRows">
+        <!-- Cards in each row -->
+        <ng-container *ngFor="let card of cardRow">
+          <!-- Full width card for last row if it has only 2 cards -->
+          <div [class]="cardRow.length === 2 ? 'w-[410.67px]' : 'flex-1'">
+            <app-service-card [titleKey]="card.titleKey" [title]="''" [icon]="card.icon">
+            </app-service-card>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Last Modified Section -->
+<!-- Feedback Section -->
+<div class="flex flex-col bg-white">
+  <!-- Last Modified Section -->
+  <div class="flex items-center px-5 md:px-10 lg:px-20 py-4 w-full">
+      <div class="text-sm text-[#161616]">
+          {{ 'contactUs.feedback.lastModified' | translate }}
+      </div>
+  </div>
+
+  <!-- Feedback Section -->
+  <div class="flex justify-between items-center px-5 md:px-10 lg:px-20 py-6 w-full border-t-2 border-[#1B8354]">
+      <div class="hidden sm:block text-sm text-[#161616]">
+          {{ 'contactUs.feedback.stats' | translate }}
+      </div>
+
+      <div class="flex items-center gap-4">
+          <div class="text-base text-[#161616]">
+              {{ 'contactUs.feedback.question' | translate }}
+          </div>
+          <div class="flex gap-3">
+              <button class="bg-[#1B8354] text-white px-4 py-2 rounded">
+                  {{ 'contactUs.feedback.no' | translate }}
+              </button>
+              <button class="bg-[#1B8354] text-white px-4 py-2 rounded">
+                  {{ 'contactUs.feedback.yes' | translate }}
+              </button>
+          </div>
+      </div>
+  </div>

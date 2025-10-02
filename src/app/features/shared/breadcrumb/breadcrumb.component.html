@@ -1,0 +1,24 @@
+<nav class="flex gap-2 text-sm items-center" [ngClass]="className">
+  <ng-container *ngFor="let item of items; let i = index">
+    <!-- Breadcrumb item -->
+    <ng-container *ngIf="item.isActive; else linkTemplate">
+      <span class="text-black-200 font-medium">{{
+        item.label | translate
+      }}</span>
+    </ng-container>
+
+    <ng-template #linkTemplate>
+      <a
+        [routerLink]="item.href || '#'"
+        class="text-black hover:none font-medium"
+      >
+        {{ item.label | translate }}
+      </a>
+    </ng-template>
+
+    <!-- Separator between items -->
+    <ng-container *ngIf="i < items.length - 1">
+      <span class="mx-1">{{ separator }}</span>
+    </ng-container>
+  </ng-container>
+</nav>

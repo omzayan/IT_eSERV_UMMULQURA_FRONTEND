@@ -1,0 +1,343 @@
+<div class="flex p-10 px-20 gap-8 w-full max-w-[1200px] mx-auto">
+
+    <!-- Form Section -->
+    <div class="flex flex-col gap-8 flex-1">
+        <!-- Breadcrumb -->
+        <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+        <!-- Title and Description -->
+        <div>
+            <h1 class="text-[30px] font-bold leading-[38px] text-gray-900">
+                {{ 'contactUs.title' | translate }}
+            </h1>
+            <p class="max-w-[720px] text-base text-gray-900 mt-2">
+                {{ 'contactUs.description' | translate }}
+            </p>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="flex flex-col gap-6 w-full max-w-3xl mx-auto">
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 w-full">
+                <!-- Name Fields -->
+                <div class="flex gap-6 w-full">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="flex items-center gap-1 font-semibold text-sm">
+                            <span class="text-red-600">*</span>
+                            {{ 'contactUs.form.firstName.label' | translate }}
+                        </label>
+                        <input type="text" formControlName="firstName"
+                            [placeholder]="'contactUs.form.firstName.placeholder' | translate"
+                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
+                            [class.border-red-500]="hasError('firstName', 'required')" />
+                        <div *ngIf="hasError('firstName', 'required')" class="text-red-500 text-sm">
+                            {{ 'contactUs.form.firstName.label' | translate }} is required
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="flex items-center gap-1 font-semibold text-sm">
+                            <span class="text-red-600">*</span>
+                            {{ 'contactUs.form.lastName.label' | translate }}
+                        </label>
+                        <input type="text" formControlName="lastName"
+                            [placeholder]="'contactUs.form.lastName.placeholder' | translate"
+                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
+                            [class.border-red-500]="hasError('lastName', 'required')" />
+                        <div *ngIf="hasError('lastName', 'required')" class="text-red-500 text-sm">
+                            {{ 'contactUs.form.lastName.label' | translate }} is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email & Phone -->
+                <div class="flex gap-6 w-full">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            <span class="text-red-600">*</span>
+                            {{ 'contactUs.form.email.label' | translate }}
+                        </label>
+                        <input type="email" formControlName="email"
+                            [placeholder]="'contactUs.form.email.placeholder' | translate"
+                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
+                            [class.border-red-500]="hasError('email', 'required') || hasError('email', 'email')" />
+                        <div *ngIf="hasError('email', 'required')" class="text-red-500 text-sm">
+                            {{ 'contactUs.form.email.label' | translate }} is required
+                        </div>
+                        <div *ngIf="hasError('email', 'email')" class="text-red-500 text-sm">
+                            Please enter a valid email address
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            <span class="text-red-600">*</span>
+                            {{ 'contactUs.form.phone.label' | translate }}
+                        </label>
+                        <div class="flex h-10 bg-gray-100 rounded items-center">
+                            <input type="tel" formControlName="phone"
+                                [placeholder]="'contactUs.form.phone.placeholder' | translate"
+                                class="flex-1 h-full px-4 text-base text-gray-600 placeholder-gray-500 bg-transparent outline-none"
+                                [class.border-red-500]="hasError('phone', 'required')" />
+                            <div class="flex items-center gap-1 px-4 border-l border-gray-300">
+                                <app-chevron-down-icon className="w-5 h-5"></app-chevron-down-icon>
+                                <span class="text-gray-900 text-base">+966</span>
+                            </div>
+                        </div>
+                        <div *ngIf="hasError('phone', 'required')" class="text-red-500 text-sm">
+                            {{ 'contactUs.form.phone.label' | translate }} is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject & Category -->
+                <div class="flex gap-6 w-full">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            {{ 'contactUs.form.subject.label' | translate }}
+                        </label>
+                        <input type="text" formControlName="subject"
+                            [placeholder]="'contactUs.form.subject.placeholder' | translate"
+                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none" />
+                    </div>
+
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            {{ 'contactUs.form.category.label' | translate }}
+                        </label>
+                        <input type="text" formControlName="category"
+                            [placeholder]="'contactUs.form.category.placeholder' | translate"
+                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none" />
+                    </div>
+                </div>
+
+                <!-- Message & File Upload in same row -->
+                <div class="flex gap-6 w-full">
+                    <!-- Message -->
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            {{ 'contactUs.form.message.label' | translate }}
+                        </label>
+                        <textarea formControlName="message"
+                            [placeholder]="'contactUs.form.message.placeholder' | translate"
+                            class="w-full h-24 px-4 py-3 rounded bg-gray-100 border border-gray-300 resize-none text-base text-gray-600 placeholder-gray-500 outline-none"></textarea>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-semibold text-sm">
+                            {{ 'contactUs.form.fileUpload.label' | translate }}
+                        </label>
+                        <p class="text-xs text-slate-500">
+                            {{ 'contactUs.form.fileUpload.helperText' | translate }}
+                        </p>
+                        <div class="relative">
+                            <input type="file" (change)="onFileChange($event)"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                accept=".jpg,.png,.pdf" />
+                            <div
+                                class="flex h-10 px-3 justify-center items-center gap-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-50 select-none">
+                                {{ 'contactUs.form.fileUpload.browse' | translate }}
+                            </div>
+                        </div>
+                        <div *ngIf="selectedFile" class="text-sm text-gray-600">
+                            Selected: {{ selectedFile.name }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" class="h-10 px-4 rounded bg-green-700 hover:bg-green-800 transition-colors">
+                        <span class="text-white font-medium text-base">
+                            {{ 'contactUs.form.submit' | translate }}
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Contact Card -->
+    <div class="flex w-[416px] p-10 flex-col gap-6 border border-gray-300 rounded-2xl bg-white">
+        <div class="flex flex-col gap-4 w-full">
+            <div class="w-full text-lg font-bold text-gray-800">
+                {{ 'contactUs.contactCard.title' | translate }}
+            </div>
+
+            <!-- Phone -->
+            <div class="flex items-center gap-2 w-full">
+                <app-call-icon className="w-6 h-6"></app-call-icon>
+                <div class="flex flex-col flex-1">
+                    <div class="font-bold text-base text-gray-800">{{ 'contactUs.contactCard.phone.label' | translate }}
+                    </div>
+                    <div class="flex items-center gap-2 text-green-700">
+                        <div>{{ 'contactUs.contactCard.phone.value' | translate }}</div>
+                        <button (click)="copyPhoneValue()">
+                            <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMS -->
+            <div class="flex items-center gap-2 w-full">
+                <app-message-icon className="w-6 h-6"></app-message-icon>
+                <div class="flex flex-col flex-1">
+                    <div class="font-bold text-base text-gray-800">{{ 'contactUs.contactCard.sms.label' | translate }}
+                    </div>
+                    <div class="flex items-center gap-2 text-green-700">
+                        <div>{{ 'contactUs.contactCard.sms.value' | translate }}</div>
+                        <button (click)="copySmsValue()">
+                            <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="flex items-center gap-2 w-full">
+                <app-mail-icon className="w-6 h-6"></app-mail-icon>
+                <div class="flex flex-col flex-1">
+                    <div class="font-bold text-base text-gray-800">{{ 'contactUs.contactCard.email.label' | translate }}
+                    </div>
+                    <div class="flex items-center gap-2 text-green-700">
+                        <div>{{ 'contactUs.contactCard.email.value' | translate }}</div>
+                        <button (click)="copyEmailValue()">
+                            <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fax -->
+            <div class="flex items-center gap-2 w-full">
+                <app-mail-icon className="w-6 h-6"></app-mail-icon>
+                <div class="flex flex-col flex-1">
+                    <div class="font-bold text-base text-gray-800">{{ 'contactUs.contactCard.fax.label' | translate }}
+                    </div>
+                    <div class="flex items-center gap-2 text-green-700">
+                        <div>{{ 'contactUs.contactCard.fax.value' | translate }}</div>
+                        <button (click)="copyFaxValue()">
+                            <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="flex items-center gap-2 w-full">
+                <app-location-icon className="w-6 h-6"></app-location-icon>
+                <div class="flex flex-col flex-1">
+                    <div class="font-bold text-base text-gray-800">{{ 'contactUs.contactCard.location.label' | translate
+                        }}</div>
+                    <div class="flex items-center gap-2 text-green-700">
+                        <div>{{ 'contactUs.contactCard.location.value' | translate }}</div>
+                        <app-link-icon className="w-5 h-5"></app-link-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="flex flex-col gap-2 w-full">
+                <div class="font-bold text-lg text-gray-800">{{ 'contactUs.contactCard.followUs' | translate }}</div>
+                <div class="flex gap-2">
+                    <app-twitter-icon className="w-6 h-6"></app-twitter-icon>
+                    <app-linkedin-icon className="w-6 h-6"></app-linkedin-icon>
+                    <app-instagram-icon className="w-6 h-6"></app-instagram-icon>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-full h-px bg-gray-300"></div>
+
+        <!-- Emergency Contacts -->
+        <div class="flex flex-col gap-4 w-full">
+            <div class="font-bold text-lg text-gray-800">{{ 'contactUs.contactCard.emergencyContacts' | translate }}
+            </div>
+
+            <!-- Civil Defense -->
+            <div class="flex items-center w-full">
+                <!-- Icon + Number -->
+                <div class="font-semibold text-base text-gray-900 mr-3">
+                    {{ 'contactUs.contactCard.civilDefense' | translate }}
+                </div>
+
+                <div class="flex items-center gap-1 text-green-700">
+                    <div class="font-semibold text-base"> 988</div>
+                    <button (click)="copyToClipboard('988')">
+                        <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                    </button>
+
+                </div>
+
+                <!-- Label -->
+
+            </div>
+
+            <!-- Police -->
+            <div class="flex items-center w-full">
+                <div class="font-semibold text-base text-gray-900 mr-3">
+                    {{ 'contactUs.contactCard.police' | translate }}
+                </div>
+                <div class="flex items-center gap-1 text-green-700">
+                    <div class="font-semibold text-base">999</div>
+                    <button (click)="copyToClipboard('999')">
+                        <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Ambulance -->
+            <div class="flex items-center w-full">
+                <div class="font-semibold text-base text-gray-900 mr-3">
+                    {{ 'contactUs.contactCard.ambulance' | translate }}
+                </div>
+                <div class="flex items-center gap-1 text-green-700">
+                    <div class="font-semibold text-base">999</div>
+                    <button (click)="copyToClipboard('999')">
+                        <app-copy-icon className="w-5 h-5"></app-copy-icon>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- View More -->
+            <div class="text-green-700 cursor-pointer">{{ 'contactUs.contactCard.viewMore' | translate }}</div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Feedback Section -->
+<div class="flex flex-col bg-white">
+    <!-- Last Modified Section -->
+    <div class="flex items-center px-5 md:px-10 lg:px-20 py-4 w-full">
+        <div class="text-sm text-[#161616]">
+            {{ 'contactUs.feedback.lastModified' | translate }}
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="flex justify-between items-center px-5 md:px-10 lg:px-20 py-6 w-full border-t-2 border-[#1B8354]">
+        <div class="hidden sm:block text-sm text-[#161616]">
+            {{ 'contactUs.feedback.stats' | translate }}
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="text-base text-[#161616]">
+                {{ 'contactUs.feedback.question' | translate }}
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-[#1B8354] text-white px-4 py-2 rounded">
+                    {{ 'contactUs.feedback.no' | translate }}
+                </button>
+                <button class="bg-[#1B8354] text-white px-4 py-2 rounded">
+                    {{ 'contactUs.feedback.yes' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
