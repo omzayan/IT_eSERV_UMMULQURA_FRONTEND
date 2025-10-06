@@ -55,6 +55,21 @@ export const routes: Routes = [
             './features/pages/gregorian-calendar/gregorian-calendar.component'
           ).then((c) => c.GregorianCalendarComponent),
       },
+         {
+         path: 'date-converter',
+        loadComponent: () =>
+          import(
+            './features/components/date-converter/date-converter.component'
+          ).then((c) => c.DateConverterComponent),
+      },
+       {
+         path: 'app-pray-time',
+        loadComponent: () =>
+          import(
+            './features/pages/pray-time/pray-time.component'
+          ).then((c) => c.PrayTimeComponent),
+      },
+      
       {
         path: 'about-us-details',
         loadComponent: () =>

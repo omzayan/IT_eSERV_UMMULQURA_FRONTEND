@@ -240,42 +240,42 @@ interface PrayerTimeRow {
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ row.hijri_date?.formatted || '--' }}
+                    {{ row.hijri_date.formatted || '--' }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ row.gregorian_date?.formatted || '--' }}
+                    {{ row.gregorian_date.formatted || '--' }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.fajr) }}
+                    {{ formatTime12(row.prayer_times.fajr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.sunrise) }}
+                    {{ formatTime12(row.prayer_times.sunrise) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.dhuhr) }}
+                    {{ formatTime12(row.prayer_times.dhuhr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.asr) }}
+                    {{ formatTime12(row.prayer_times.asr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.maghrib) }}
+                    {{ formatTime12(row.prayer_times.maghrib) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(row.prayer_times?.isha) }}
+                    {{ formatTime12(row.prayer_times.isha) }}
                   </td>
                 </tr>
               </tbody>

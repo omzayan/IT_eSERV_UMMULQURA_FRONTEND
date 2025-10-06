@@ -15,7 +15,7 @@ import {
   LanguageService,
   GeolocationService,
 } from '../../../core/services';
-import { PrayerTimeWithDateResult } from '../../../core/types/api.types';
+import { PrayerTime, PrayerTimeWithDateResult } from '../../../core/types/api.types';
 import {
   CitySelectorComponent,
   LocationData,
@@ -166,45 +166,44 @@ interface PrayerTimeRow {
                   <td class="text-[#384250] p-4 whitespace-nowrap">
                     {{ prayerTime.day_name || '--' }}
                   </td>
+                               <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+   {{ prayerTime.hijri_date.day }} {{ prayerTime.hijri_date.month_name }} {{ prayerTime.hijri_date.year }}
+</td>
+                
+                   <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+   {{ prayerTime.gregorian_date.day }} {{ prayerTime.gregorian_date.month_name }} {{ prayerTime.gregorian_date.year }}
+</td>
+
+                 
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ prayerTime.hijri_date?.formatted || '--' }}
+                    {{ formatTime12(prayerTime.prayer_times.fajr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ prayerTime.gregorian_date.formatted || '--' }}
+                    {{ formatTime12(prayerTime.prayer_times.sunrise) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(prayerTime.prayer_times?.fajr) }}
+                    {{ formatTime12(prayerTime.prayer_times.dhuhr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(prayerTime.prayer_times?.sunrise) }}
+                    {{ formatTime12(prayerTime.prayer_times.asr) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(prayerTime.prayer_times?.dhuhr) }}
+                    {{ formatTime12(prayerTime.prayer_times.maghrib) }}
                   </td>
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
-                    {{ formatTime12(prayerTime.prayer_times?.asr) }}
-                  </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
-                    {{ formatTime12(prayerTime.prayer_times?.maghrib) }}
-                  </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
-                    {{ formatTime12(prayerTime.prayer_times?.isha) }}
+                    {{ formatTime12(prayerTime.prayer_times.isha) }}
                   </td>
                 </tr>
               </tbody>
@@ -228,7 +227,7 @@ export class DailyPrayerTimesComponent
   selectedCoords: LocationData | null = null;
   selectedHijriDate: DatePickerValue | null = null;
   selectedGregorianDate: DatePickerValue | null = null;
-  prayerTime: PrayerTimeWithDateResult | null = null;
+  prayerTime: PrayerTimeWithDateResult  | null = null;
   loading = false;
   error: string | null = null;
   private viewInitialized = false;
@@ -426,100 +425,79 @@ export class DailyPrayerTimesComponent
   /**
    * Handle search with Hijri date (Scenarios 1 & 2)
    */
-  private handleHijriDateSearch(): void {
-    const hijriDate = new Date(
-      this.selectedHijriDate!.year,
-      this.selectedHijriDate!.month - 1, // Month is 0-based in Date constructor
-      this.selectedHijriDate!.dayNumber
-    );
+private handleHijriDateSearch(): void {
+  if (this.selectedHijriDate) {
+    const { year, month, dayNumber } = this.selectedHijriDate;
 
     if (this.selectedCityId) {
-      // Scenario 1: Hijri date + City ID
+      // سيناريو 1: هجري + مدينة
       this.prayerService
-        .getPrayerTimesForHijriDate(
-          hijriDate,
-          undefined,
-          undefined,
-          Number(this.selectedCityId)
-        )
+        .getPrayerTimesForHijriDate(year, month, dayNumber)
         .subscribe({
           next: (result) => {
             this.prayerTime = result;
             this.loading = false;
           },
-          error: (e) => {
-            this.handleSearchError();
-          },
+          error: () => this.handleSearchError(),
         });
     } else if (this.selectedCoords) {
-      // Scenario 2: Hijri date + Coordinates (auto-detect)
+      // سيناريو 2: هجري + إحداثيات
       this.prayerService
         .getPrayerTimesForHijriDate(
-          hijriDate,
+          year,
+          month,
+          dayNumber,
           this.selectedCoords.lng,
-          this.selectedCoords.lat,
-          undefined
+          this.selectedCoords.lat
         )
         .subscribe({
           next: (result) => {
             this.prayerTime = result;
             this.loading = false;
           },
-          error: (e) => {
-            this.handleSearchError();
-          },
+          error: () => this.handleSearchError(),
         });
     }
   }
+}
+
 
   /**
    * Handle search with Gregorian date (Scenarios 3 & 4)
    */
-  private handleGregorianDateSearch(): void {
-    const gregorianDate = new Date(
-      this.selectedGregorianDate!.year,
-      this.selectedGregorianDate!.month - 1, // Month is 0-based in Date constructor
-      this.selectedGregorianDate!.dayNumber
-    );
+private handleGregorianDateSearch(): void {
+  if (this.selectedGregorianDate) {
+    const { year, month, dayNumber } = this.selectedGregorianDate;
+    const gregorianDate = new Date(year, month - 1, dayNumber);
 
     if (this.selectedCityId) {
-      // Scenario 3: Gregorian date + City ID
       this.prayerService
-        .getPrayerTimesForGregorianDate(
-          gregorianDate,
-          undefined,
-          undefined,
-          Number(this.selectedCityId)
-        )
+        .getPrayerTimesForGregorianDate(gregorianDate)
         .subscribe({
           next: (result) => {
             this.prayerTime = result;
             this.loading = false;
           },
-          error: (e) => {
-            this.handleSearchError();
-          },
+          error: () => this.handleSearchError(),
         });
     } else if (this.selectedCoords) {
-      // Scenario 4: Gregorian date + Coordinates (auto-detect)
       this.prayerService
         .getPrayerTimesForGregorianDate(
           gregorianDate,
           this.selectedCoords.lng,
-          this.selectedCoords.lat,
-          undefined
+          this.selectedCoords.lat
         )
         .subscribe({
           next: (result) => {
             this.prayerTime = result;
             this.loading = false;
           },
-          error: (e) => {
-            this.handleSearchError();
-          },
+          error: () => this.handleSearchError(),
         });
     }
   }
+}
+
 
   /**
    * Handle search with current date (default behavior)
@@ -528,7 +506,7 @@ export class DailyPrayerTimesComponent
     if (this.selectedCityId) {
       // Current date + City ID
       this.prayerService
-        .getTodayPrayerTimes(undefined, undefined, Number(this.selectedCityId))
+        .getTodayPrayerTimes(undefined, undefined)
         .subscribe({
           next: (result) => {
             this.prayerTime = result;

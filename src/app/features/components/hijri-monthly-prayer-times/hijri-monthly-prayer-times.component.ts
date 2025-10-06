@@ -10,8 +10,10 @@ import {
 import { PrayerService } from '../../../core/services/prayer.service';
 import { LanguageService } from '../../../core/services/language.service';
 import {
+  BaseResponse,
   CommonResponse,
   MonthlyPrayerTimesResult,
+  MonthPrayerTimes,
 } from '../../../core/types/api.types';
 
 interface LocationState {
@@ -91,7 +93,7 @@ interface PrayerTimeRow {
 
       <!-- Prayer Times Table -->
       <div
-        *ngIf="prayerTimes?.data?.daily_prayer_times?.length! > 0"
+        *ngIf="prayerTimes?.daily_prayer_times"
         class="flex flex-col w-full rounded-2xl border border-[#D2D6DB] overflow-hidden"
       >
         <!-- Table Container with Horizontal Scroll -->
@@ -151,7 +153,7 @@ interface PrayerTimeRow {
               <tbody>
                 <tr
                   *ngFor="
-                    let row of prayerTimes?.data?.daily_prayer_times || [];
+                    let row of prayerTimes?.daily_prayer_times;
                     let i = index
                   "
                   class="font-ibm-plex-arabic"
@@ -212,7 +214,7 @@ interface PrayerTimeRow {
 export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
   selectedMonthYear: HijriMonthYearValue | null = null;
   selectedLocation: LocationState = {};
-  prayerTimes: CommonResponse<MonthlyPrayerTimesResult> | null = null;
+  prayerTimes: MonthlyPrayerTimesResult | null = null;
   loading = false;
   error: string | null = null;
   isAr = false;
@@ -265,42 +267,59 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     if (this.error) this.error = null;
   }
 
-  async fetchHijriMonthlyData(): Promise<void> {
-    if (
-      this.selectedMonthYear === null ||
-      (!this.selectedLocation.cityId &&
-        !(this.selectedLocation.lat && this.selectedLocation.lng))
-    ) {
-      this.error = this.translate.instant('errors.missingRequiredFields');
-      return;
-    }
-
-    try {
-      this.loading = true;
-      this.error = null;
-
-      const { year, month } = this.selectedMonthYear;
-      const latitude = this.selectedLocation.lat;
-      const longitude = this.selectedLocation.lng;
-      const cityId = this.selectedLocation.cityId;
-
-      // Use the getMonthlyPrayerTimesByHijri API
-      const response = await this.prayerService
-        .getMonthlyPrayerTimesByHijri(year, month, longitude, latitude, cityId)
-        .toPromise();
-
-      if (response && response.success && response.data) {
-        this.prayerTimes = response;
-      } else {
-        this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
-      }
-    } catch (err) {
-      console.error('Error fetching Hijri monthly prayer times:', err);
-      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
-    } finally {
-      this.loading = false;
-    }
+ async fetchHijriMonthlyData(): Promise<void> {
+  if (
+    this.selectedMonthYear === null ||
+    (!this.selectedLocation.cityId &&
+      !(this.selectedLocation.lat && this.selectedLocation.lng))
+  ) {
+    this.error = this.translate.instant('errors.missingRequiredFields');
+    return;
   }
+
+  try {
+    this.loading = true;
+    this.error = null;
+
+    const { year, month } = this.selectedMonthYear;
+    const latitude = this.selectedLocation.lat;
+    const longitude = this.selectedLocation.lng;
+
+    const response = await this.prayerService
+      .getMonthlyPrayerTimesByHijri(year, month, longitude, latitude)
+      .toPromise();
+
+  if (response && response.success && response.result) {
+  this.prayerTimes = {
+    days_in_month: response.result.prayerTimes.length,
+    location: { /* حط بيانات الموقع هنا */ },
+    daily_prayer_times: response.result.prayerTimes.map(pt => ({
+      hijri_date: pt.hijri_date,
+      gregorian_date: pt.gregorian_date,
+      day_name: '', // لو API بيرجعها ضيفها
+      prayer_times: {
+        fajr: pt.fajr,
+        sunrise: pt.sunrise,
+        dhuhr: pt.dhuhr,
+        asr: pt.asr,
+        maghrib: pt.maghrib,
+        isha: pt.isha,
+        sunset: pt.sunset
+      }
+    }))
+  };
+}
+else {
+      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+    }
+  } catch (err) {
+    console.error('Error fetching Hijri monthly prayer times:', err);
+    this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+  } finally {
+    this.loading = false;
+  }
+}
+
 
   formatTime12(time: string | undefined): string {
     if (!time || time === '--') return '--';

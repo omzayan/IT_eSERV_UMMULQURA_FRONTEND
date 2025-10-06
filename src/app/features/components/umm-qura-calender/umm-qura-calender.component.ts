@@ -12,6 +12,7 @@ import {
   MonthlyPrayerTimesResult,
   DailyPrayerTime,
   WeekDayResult,
+  MonthPrayerTimes,
 } from '../../../core/types/api.types';
 
 interface CalendarDay {
@@ -171,100 +172,197 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
     }
   }
 
-  private generateCalendars(): void {
-    this.loadHijriCalendar();
-    this.loadGregorianCalendar();
-  }
+private generateCalendars(): void {
+  this.loadHijriCalendar();
+  this.loadGregorianCalendar();
+}
+private getDayName(dateString: string): string {
+  const date = new Date(dateString);
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[date.getDay()];
+}
 
-  private loadHijriCalendar(): void {
-    this.isLoadingHijriCalendar = true;
 
-    this.apiService
-      .getMonthlyPrayerTimesByHijri(
-        this.currentHijriYear,
-        this.currentHijriMonth,
-        undefined,
-        undefined,
-        1
-      )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            this.hijriMonthlyData = response.data;
-            this.generateHijriCalendarFromData();
-          } else {
-            console.error(
-              'Failed to load Hijri calendar data:',
-              response.message
-            );
-            this.generateHijriCalendarFromData(); // Fallback
-          }
-          this.isLoadingHijriCalendar = false;
-        },
-        error: (error) => {
-          console.error('Error loading Hijri calendar:', error);
+private loadHijriCalendar(): void {
+  this.isLoadingHijriCalendar = true;
+
+  this.apiService
+    .getMonthlyPrayerTimesByHijri(
+      this.currentHijriYear,
+      this.currentHijriMonth,
+      undefined,
+      undefined
+    )
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
+        if (response.success && response.result) {
+          // 🔹 مابينج من MonthPrayerTimes → MonthlyPrayerTimesResult
+          this.hijriMonthlyData = {
+            days_in_month: response.result.prayerTimes.length,
+            location: {
+              latitude: 0, // TODO: هات من الـ API لو بيرجّع location
+              longitude: 0,
+            },
+            daily_prayer_times: response.result.prayerTimes.map((pt) => ({
+              hijri_date: pt.hijri_date,
+              gregorian_date: pt.gregorian_date,
+              day_name: pt.gregorian_date.day_name, 
+              prayer_times: {
+                fajr: pt.fajr,
+                sunrise: pt.sunrise,
+                dhuhr: pt.dhuhr,
+                asr: pt.asr,
+                maghrib: pt.maghrib,
+                isha: pt.isha,
+                sunset: pt.sunset,
+              },
+            })),
+          };
+
+          this.generateHijriCalendarFromData();
+        } else {
+          console.error(
+            'Failed to load Hijri calendar data:',
+            response.error?.message || 'Unknown error'
+          );
+          this.hijriMonthlyData = null;
           this.generateHijriCalendarFromData(); // Fallback
-          this.isLoadingHijriCalendar = false;
-        },
-      });
-  }
+        }
+      },
+      error: (error) => {
+        console.error('Error loading Hijri calendar:', error);
+        this.hijriMonthlyData = null;
+        this.generateHijriCalendarFromData(); // Fallback
+      },
+      complete: () => {
+        this.isLoadingHijriCalendar = false;
+      },
+    });
+}
 
-  private generateHijriCalendarFromData(): void {
-    this.hijriCalendarDays = [];
 
-    if (this.hijriMonthlyData && this.hijriMonthlyData.daily_prayer_times) {
-      const dailyPrayerTimes = this.hijriMonthlyData.daily_prayer_times;
-      const daysInMonth = this.hijriMonthlyData.days_in_month;
+private loadGregorianCalendar(): void {
+  this.isLoadingGregorianCalendar = true;
 
-      // Calculate calendar layout
-      const firstDayOfWeek = this.getFirstDayOfWeek(dailyPrayerTimes[0]);
-      const totalCells = 42; // 6 rows × 7 days
+  this.apiService
+    .getMonthlyPrayerTimesByGregorian(
+      this.currentGregorianYear,
+      this.currentGregorianMonth,
+      undefined,
+      undefined
+    )
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
 
-      // Previous month days (grayed out)
-      for (let i = 0; i < firstDayOfWeek; i++) {
-        const day = daysInMonth - firstDayOfWeek + i + 1;
-        this.hijriCalendarDays.push({
-          day,
-          isCurrentMonth: false,
-          isToday: false,
-          isSelected: false,
-          isPrevMonth: true,
-        });
-      }
+        if (response.success && response.result) {
+          // ✅ Mapping من MonthlyPrayerTimesResult → MonthPrayerTimes
+          this.gregorianMonthlyData = {
+           days_in_month: response.result.prayerTimes.length,
+            location: {
+              latitude: 0, // TODO: هات من الـ API لو بيرجّع location
+              longitude: 0,
+            },
+           daily_prayer_times: response.result.prayerTimes.map((pt) => ({
+              hijri_date: pt.hijri_date,
+              gregorian_date: pt.gregorian_date,
+              day_name: pt.gregorian_date.day_name, 
+              prayer_times: {
+                fajr: pt.fajr,
+                sunrise: pt.sunrise,
+                dhuhr: pt.dhuhr,
+                asr: pt.asr,
+                maghrib: pt.maghrib,
+                isha: pt.isha,
+                sunset: pt.sunset,
+              },
+            })),
+          };
+        }
+else {
+          console.error(
+            'Failed to load Gregorian calendar data:',
+            response.error?.message || 'Unknown error'
+          );
+          this.gregorianMonthlyData = null;
+          this.generateGregorianCalendarFromData(); // Fallback
+        }
+      },
+      error: (error) => {
+        console.error('Error loading Gregorian calendar:', error);
+        this.gregorianMonthlyData = null;
+        this.generateGregorianCalendarFromData(); // Fallback
+      },
+      complete: () => {
+        this.isLoadingGregorianCalendar = false;
+      },
+    });
+}
 
-      // Current month days
-      for (let day = 1; day <= daysInMonth; day++) {
-        const prayerData = dailyPrayerTimes.find(
-          (pt) => pt.hijri_date.day === day
-        );
-        const isToday = this.isToday(prayerData);
 
-        this.hijriCalendarDays.push({
-          day,
-          isCurrentMonth: true,
-          isToday,
-          isSelected: false,
-          prayerData,
-        });
-      }
 
-      // Next month days (grayed out)
-      const remainingCells = totalCells - this.hijriCalendarDays.length;
-      for (let day = 1; day <= remainingCells; day++) {
-        this.hijriCalendarDays.push({
-          day,
-          isCurrentMonth: false,
-          isToday: false,
-          isSelected: false,
-          isNextMonth: true,
-        });
-      }
-    } else {
-      // Fallback to static calendar
+
+private generateHijriCalendarFromData(): void {
+  this.hijriCalendarDays = [];
+
+  if (this.hijriMonthlyData && this.hijriMonthlyData.daily_prayer_times) {
+    const dailyPrayerTimes = this.hijriMonthlyData.daily_prayer_times;
+    const daysInMonth = this.hijriMonthlyData.days_in_month;
+
+    if (!dailyPrayerTimes.length) {
       this.generateStaticHijriCalendar();
+      return;
     }
+
+    // أول يوم في الشهر (من التاريخ الهجري لأول يوم)
+    const firstDayOfWeek = this.getFirstDayOfWeek(dailyPrayerTimes[0]);
+    const totalCells = 42; // 6 rows × 7 days
+
+    // Previous month days (grayed out)
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const day = daysInMonth - firstDayOfWeek + i + 1;
+      this.hijriCalendarDays.push({
+        day,
+        isCurrentMonth: false,
+        isToday: false,
+        isSelected: false,
+        isPrevMonth: true,
+      });
+    }
+
+    // Current month days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const prayerData = dailyPrayerTimes.find(
+        (pt) => pt.hijri_date.day === day
+      );
+      const isToday = this.isToday(prayerData);
+
+      this.hijriCalendarDays.push({
+        day,
+        isCurrentMonth: true,
+        isToday,
+        isSelected: false,
+        prayerData,
+      });
+    }
+
+    // Next month days (grayed out)
+    const remainingCells = totalCells - this.hijriCalendarDays.length;
+    for (let day = 1; day <= remainingCells; day++) {
+      this.hijriCalendarDays.push({
+        day,
+        isCurrentMonth: false,
+        isToday: false,
+        isSelected: false,
+        isNextMonth: true,
+      });
+    }
+  } else {
+    // Fallback to static calendar
+    this.generateStaticHijriCalendar();
   }
+}
 
   private generateStaticHijriCalendar(): void {
     // Fallback static calendar (existing logic)
@@ -313,39 +411,8 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadGregorianCalendar(): void {
-    this.isLoadingGregorianCalendar = true;
 
-    this.apiService
-      .getMonthlyPrayerTimesByGregorian(
-        this.currentGregorianYear,
-        this.currentGregorianMonth,
-        undefined,
-        undefined,
-        1
-      )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            this.gregorianMonthlyData = response.data;
-            this.generateGregorianCalendarFromData();
-          } else {
-            console.error(
-              'Failed to load Gregorian calendar data:',
-              response.message
-            );
-            this.generateGregorianCalendarFromData(); // Fallback
-          }
-          this.isLoadingGregorianCalendar = false;
-        },
-        error: (error) => {
-          console.error('Error loading Gregorian calendar:', error);
-          this.generateGregorianCalendarFromData(); // Fallback
-          this.isLoadingGregorianCalendar = false;
-        },
-      });
-  }
+
 
   private generateGregorianCalendarFromData(): void {
     this.gregorianCalendarDays = [];

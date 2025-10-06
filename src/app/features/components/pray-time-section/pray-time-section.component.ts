@@ -555,7 +555,7 @@ export class PrayTimeSectionComponent
             tomorrow,
             position.longitude,
             position.latitude,
-            undefined
+            
           )
         : this.prayerService.getPrayerTimesForGregorianDate(tomorrow);
 
@@ -711,52 +711,49 @@ export class PrayTimeSectionComponent
   /**
    * Handle search with Hijri date (Scenarios 1 & 2)
    */
-  private handleHijriDateSearch(): void {
-    const hijriDate = new Date(
-      this.selectedHijriDate!.year,
-      this.selectedHijriDate!.month - 1, // Month is 0-based in Date constructor
-      this.selectedHijriDate!.dayNumber
-    );
-
-    if (this.selectedCityId) {
-      // Scenario 1: Hijri date + City ID
-      this.prayerService
-        .getPrayerTimesForHijriDate(
-          hijriDate,
-          undefined,
-          undefined,
-          Number(this.selectedCityId)
-        )
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    } else if (this.selectedCoords) {
-      // Scenario 2: Hijri date + Coordinates (auto-detect)
-      this.prayerService
-        .getPrayerTimesForHijriDate(
-          hijriDate,
-          this.selectedCoords.lng,
-          this.selectedCoords.lat,
-          undefined
-        )
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    }
+private handleHijriDateSearch(): void {
+  if (!this.selectedHijriDate) {
+    return;
   }
 
+  this.loading = true;
+
+  const { year, month, dayNumber } = this.selectedHijriDate;
+
+  if (this.selectedCityId) {
+    // Scenario 1: Hijri date + City ID
+    this.prayerService
+      .getPrayerTimesForHijriDate(year, month, dayNumber, undefined, undefined)
+      .subscribe({
+        next: (result) => {
+          this.prayerTime = result;
+          this.loading = false;
+        },
+        error: () => {
+          this.handleSearchError();
+        },
+      });
+  } else if (this.selectedCoords) {
+    // Scenario 2: Hijri date + Coordinates
+    this.prayerService
+      .getPrayerTimesForHijriDate(
+        year,
+        month,
+        dayNumber,
+        this.selectedCoords.lng,
+        this.selectedCoords.lat
+      )
+      .subscribe({
+        next: (result) => {
+          this.prayerTime = result;
+          this.loading = false;
+        },
+        error: () => {
+          this.handleSearchError();
+        },
+      });
+  }
+}
   /**
    * Handle search with Gregorian date (Scenarios 3 & 4)
    */
@@ -774,7 +771,7 @@ export class PrayTimeSectionComponent
           gregorianDate,
           undefined,
           undefined,
-          Number(this.selectedCityId)
+         
         )
         .subscribe({
           next: (result) => {
@@ -792,7 +789,7 @@ export class PrayTimeSectionComponent
           gregorianDate,
           this.selectedCoords.lng,
           this.selectedCoords.lat,
-          undefined
+          
         )
         .subscribe({
           next: (result) => {
@@ -813,7 +810,7 @@ export class PrayTimeSectionComponent
     if (this.selectedCityId) {
       // Current date + City ID
       this.prayerService
-        .getTodayPrayerTimes(undefined, undefined, Number(this.selectedCityId))
+        .getTodayPrayerTimes(undefined, undefined)
         .subscribe({
           next: (result) => {
             this.prayerTime = result;

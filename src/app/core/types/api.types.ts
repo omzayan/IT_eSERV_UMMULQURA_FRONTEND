@@ -18,6 +18,7 @@ export interface DateInfo {
   month: number;
   year: number;
   month_name: string;
+  day_name: string
   formatted: string;
   iso: string;
 }
@@ -39,8 +40,8 @@ export interface PrayerTimes {
 
 // Location information
 export interface LocationInfo {
-  longitude?: string | null;
-  latitude?: string | null;
+  longitude?: number | null;
+  latitude?: number | null;
   city_name?: string | null;
   city_id?: number | null;
 }
@@ -252,3 +253,67 @@ export interface StaticPageDto {
 export interface StaticPageResult {
   static_page: StaticPageDto;
 }
+///////////////////////////////////////////////////
+export interface BaseResponse<T> {
+  result: T;
+  success: boolean;
+  error: Error | null
+  unAuthorizedRequest: boolean;
+  __abp: boolean;
+}
+export interface Result {
+  day: number;
+  month: number;
+  year: number;
+  month_name: string;
+  iso: string;
+  day_name: string;
+}
+export interface Error {
+  code: string
+  message: string
+  details: string
+  validationErrors: ValidationError[]
+}
+
+export interface ValidationError {
+  message: string
+  members: string[]
+}
+export interface GregorianDateInput {
+  day: number;
+  month: number;
+  year: number;
+}
+
+export interface HijriDateInput {
+  day: number;
+  month: number;
+  year: number;
+}
+export interface FarmerDate {
+  
+  [key: string]: any;
+}
+export interface PrayerTime {
+  fajr: string;
+  sunrise: string;
+  dhuhr: string;
+  asr: string;
+  maghrib: string;
+  isha: string;
+  sunset: string;
+  hijri_date: DateInfo;
+  gregorian_date: DateInfo;
+  farmer_date?: FarmerDate;
+}
+
+export interface MonthPrayerTimes {
+  month: number;
+  prayerTimes: PrayerTime[];
+}
+export interface DurationPrayerTimes {
+  prayerTimes: PrayerTime[];
+}
+
+

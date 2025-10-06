@@ -1,14 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import {
   UnifiedDatePickerComponent,
   DatePickerValue,
   DatePickerType,
 } from '../../shared/unified-date-picker/unified-date-picker.component';
 import { ApiService } from '../../../core/services/api.service';
-import { DateConversionResult } from '../../../core/types/api.types';
+import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput, Result } from '../../../core/types/api.types';
 
 @Component({
   selector: 'app-date-converter',
@@ -121,15 +121,12 @@ import { DateConversionResult } from '../../../core/types/api.types';
                 {{ getSourceLabel() | translate }}
               </h4>
               <div class="space-y-1">
-                <div
-                  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
-                >
-                  {{
-                    conversionType === 'hijri-to-gregorian'
-                      ? conversionResult.hijri_formatted
-                      : conversionResult.gregorian_formatted
-                  }}
-                </div>
+             <div
+  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
+>
+  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
+</div>
+
                 <div class="text-sm text-gray-600 font-ibm-plex-arabic">
                   {{
                     conversionType === 'hijri-to-gregorian'
@@ -149,15 +146,11 @@ import { DateConversionResult } from '../../../core/types/api.types';
                 {{ getTargetLabel() | translate }}
               </h4>
               <div class="space-y-1">
-                <div
-                  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
-                >
-                  {{
-                    conversionType === 'hijri-to-gregorian'
-                      ? conversionResult.gregorian_formatted
-                      : conversionResult.hijri_formatted
-                  }}
-                </div>
+                      <div
+  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
+>
+  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
+</div>
                 <div class="text-sm text-gray-600 font-ibm-plex-arabic">
                   {{
                     conversionType === 'hijri-to-gregorian'
@@ -209,7 +202,7 @@ export class DateConverterComponent implements OnDestroy {
   conversionType: 'hijri-to-gregorian' | 'gregorian-to-hijri' =
     'hijri-to-gregorian';
   sourceDate: DatePickerValue | null = null;
-  conversionResult: DateConversionResult | null = null;
+conversionResult: Result | null = null;
   isConverting: boolean = false;
   conversionError: string | null = null;
 
@@ -251,70 +244,80 @@ export class DateConverterComponent implements OnDestroy {
     this.conversionError = null;
   }
 
-  convertDate() {
-    if (!this.sourceDate) return;
 
-    this.isConverting = true;
-    this.conversionError = null;
 
-    // Create a Date object from the selected date
-    const dateToConvert = new Date(
-      this.sourceDate.year,
-      this.sourceDate.month, // JavaScript months are 0-indexed
-      this.sourceDate.dayNumber
-    );
 
-    // Choose the appropriate API call based on conversion type
-    const conversionObservable =
-      this.conversionType === 'hijri-to-gregorian'
-        ? this.apiService.convertHijriToGregorian(dateToConvert)
-        : this.apiService.convertGregorianToHijri(dateToConvert);
+convertDate() {
+  if (!this.sourceDate) return;
 
-    conversionObservable.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
-        this.isConverting = false;
-        if (response.success && response.data) {
-          this.conversionResult = response.data;
-        } else {
-          this.conversionError = response.message || 'Conversion failed';
-        }
-      },
-      error: (error) => {
-        this.isConverting = false;
-        this.conversionError = error.message || 'Network error occurred';
-        console.error('Date conversion error:', error);
-      },
-    });
+  this.isConverting = true;
+  this.conversionError = null;
+
+  let conversionObservable: Observable<BaseResponse<Result>>;
+
+  if (this.conversionType === 'hijri-to-gregorian') {
+    const hijriInput: HijriDateInput = {
+      day: this.sourceDate.dayNumber,
+      month: this.sourceDate.month,
+      year: this.sourceDate.year,
+    };
+    conversionObservable = this.apiService.convertHijriToGregorian(hijriInput);
+  } else {
+    const gregorianInput: GregorianDateInput = {
+      day: this.sourceDate.dayNumber,
+      month: this.sourceDate.month,
+      year: this.sourceDate.year,
+    };
+    conversionObservable = this.apiService.convertGregorianToHijri(gregorianInput);
   }
 
-  getFormattedResult(): string {
-    if (!this.conversionResult) return '';
+  conversionObservable.pipe(takeUntil(this.destroy$)).subscribe({
+    next: (response) => {
+      this.isConverting = false;
+      if (response.success && response.result) {
+        this.conversionResult = response.result; // ✅ هنا Result
+      } else {
+        this.conversionError = 'Conversion failed';
+      }
+    },
+    error: (error) => {
+      this.isConverting = false;
+      this.conversionError = error.message || 'Network error occurred';
+      console.error('Date conversion error:', error);
+    },
+  });
+}
 
-    return this.conversionType === 'hijri-to-gregorian'
-      ? this.conversionResult.gregorian_formatted
-      : this.conversionResult.hijri_formatted;
-  }
 
-  getDetailedResult(): string {
-    if (!this.conversionResult) return '';
 
-    const targetDate =
-      this.conversionType === 'hijri-to-gregorian'
-        ? this.conversionResult.gregorian_date
-        : this.conversionResult.hijri_date;
 
-    return `${targetDate.day} ${targetDate.month_name} ${targetDate.year}`;
-  }
 
-  getHijriDetails(): string {
-    if (!this.conversionResult) return '';
-    const hijriDate = this.conversionResult.hijri_date;
-    return `${hijriDate.day} ${hijriDate.month_name} ${hijriDate.year}`;
-  }
+getFormattedResult(): string {
+  if (!this.conversionResult) return '';
 
-  getGregorianDetails(): string {
-    if (!this.conversionResult) return '';
-    const gregorianDate = this.conversionResult.gregorian_date;
-    return `${gregorianDate.day} ${gregorianDate.month_name} ${gregorianDate.year}`;
-  }
+  // عندنا بس iso كـ formatted date
+  return this.conversionResult.iso;
+}
+
+getDetailedResult(): string {
+  if (!this.conversionResult) return '';
+
+  // نفس الشكل التفصيلي: 5 Safar 1500
+  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+}
+
+getHijriDetails(): string {
+  if (!this.conversionResult) return '';
+
+  // الريسبونس الحالي بيرجع يا Hijri يا Gregorian حسب التحويل
+  // فممكن نسميه HijriDetails بس يرجع نفس الـ result
+  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+}
+
+getGregorianDetails(): string {
+  if (!this.conversionResult) return '';
+
+  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+}
+
 }

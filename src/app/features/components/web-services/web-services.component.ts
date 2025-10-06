@@ -74,13 +74,13 @@ export class WebServicesComponent {
       image: 'assets/images/service1.png',
       title: 'webServices.dateConversion.title',
       subtitle: 'webServices.dateConversion.subtitle',
-      url: '#',
+      url: '/date-converter',
     },
     {
       image: 'assets/images/service2.png',
       title: 'webServices.prayerTimes.title',
       subtitle: 'webServices.prayerTimes.subtitle',
-      url: '#',
+      url: '/app-pray-time',
     },
   ];
 
