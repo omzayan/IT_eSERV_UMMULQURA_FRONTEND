@@ -30,9 +30,10 @@
         </ng-container>
       </option>
 
-      <option *ngFor="let city of cities" [value]="city.value">
-        {{ city.name }}
-      </option>
+   <option *ngFor="let city of cities" [value]="city.id">
+  {{ city.name }}
+</option>
+
     </select>
 
     <!-- Auto-detect Location Button -->

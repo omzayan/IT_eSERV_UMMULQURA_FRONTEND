@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
+import { CityData, CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
 import {
   HijriMonthYearPickerComponent,
   HijriMonthYearValue,
@@ -11,6 +11,7 @@ import { PrayerService } from '../../../core/services/prayer.service';
 import { LanguageService } from '../../../core/services/language.service';
 import {
   BaseResponse,
+  City,
   CommonResponse,
   MonthlyPrayerTimesResult,
   MonthPrayerTimes,
@@ -241,25 +242,27 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  handleLocationSelect(location: { lat: number; lng: number }): void {
-    this.selectedLocation = {
-      lat: location.lat,
-      lng: location.lng,
-      cityId: undefined,
-    };
-    // Clear error when user makes a selection
-    if (this.error) this.error = null;
-  }
+handleLocationSelect(location: { lat?: number; lng?: number }): void {
+  this.selectedLocation = {
+    lat: location.lat ?? undefined,
+    lng: location.lng ?? undefined,
+    cityId: undefined,
+  };
 
-  handleCitySelect(cityId: string): void {
-    this.selectedLocation = {
-      cityId: parseInt(cityId),
-      lat: undefined,
-      lng: undefined,
-    };
-    // Clear error when user makes a selection
-    if (this.error) this.error = null;
-  }
+  if (this.error) this.error = null;
+}
+
+
+handleCitySelect(city: City): void {
+  this.selectedLocation = {
+    lat: city.latitude,
+    lng: city.longitude,
+    cityId: city.id,
+    
+  };
+}
+
+
 
   handleMonthYearSelect(value: HijriMonthYearValue | null): void {
     this.selectedMonthYear = value;

@@ -1,3 +1,4 @@
+
 // Common response structure matching backend
 export interface CommonResponse<T> {
   success: boolean;
@@ -315,5 +316,21 @@ export interface MonthPrayerTimes {
 export interface DurationPrayerTimes {
   prayerTimes: PrayerTime[];
 }
+export interface QiblaResult {
+  qiblahDegrees: number;
+  LocationInfo: {
+    longitude: string;
+    latitude: string;
+  };
+}
+export interface City {
+  id: number;        // رقم المدينة
+  name: string;      // اسم المدينة
+  latitude?: number; // خط العرض
+  longitude?: number;// خط الطول
+}
+
+
+
 
 

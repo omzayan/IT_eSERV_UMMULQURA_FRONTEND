@@ -214,22 +214,29 @@ getMonthlyPrayerTimesByHijri(
   /**
    * Get prayer times for all cities
    */
-  getAllCitiesPrayerTimes(): Observable<PrayerTimesByCitiesResult | null> {
-    return this.apiService
-      .getCitiesPrayerTimes()
-      .pipe(map((response) => (response.success ? response.data : null)));
-  }
+  // getAllCitiesPrayerTimes(): Observable<PrayerTimesByCitiesResult | null> {
+  //   return this.apiService
+  //     .getCitiesPrayerTimes()
+  //     .pipe(map((response) => (response.success ? response.data : null)));
+  // }
 
   /**
    * Get Qibla direction
    */
-  getQiblaDirection(
-    longitude?: number,
-    latitude?: number,
-    cityNumber?: number
-  ): Observable<QiblaResult | null> {
-    return this.apiService
-      .getQibla(longitude, latitude, cityNumber)
-      .pipe(map((response) => (response.success ? response.data : null)));
-  }
+ getQiblaDirection(
+  longitude: number,
+  latitude: number
+): Observable<QiblaResult | null> {
+  return this.apiService
+    .getQibla(longitude, latitude)
+    .pipe(
+      map((response) => {
+        if (response.success && response.result) {
+          return response.result; 
+        }
+        return null;
+      })
+    );
+}
+
 }

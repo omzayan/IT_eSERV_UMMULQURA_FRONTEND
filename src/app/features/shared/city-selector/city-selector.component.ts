@@ -11,11 +11,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ReferenceDataService } from '../../../core/services';
-import { CityResult } from '../../../core/types/api.types';
+import { City, CityResult } from '../../../core/types/api.types';
 
 export interface LocationData {
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
   city?: string;
 }
 
@@ -36,7 +36,7 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   @Input() label?: string = 'citySelect.selectCity';
   @Input() disabled: boolean = false;
   @Output() locationSelect = new EventEmitter<LocationData>();
-  @Output() citySelect = new EventEmitter<string>();
+  @Output() citySelect = new EventEmitter<City>();
 
   private destroy$ = new Subject<void>();
 
@@ -44,8 +44,7 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   currentCoordinates: { lat: number; lng: number } | null = null;
   isGettingLocation: boolean = false;
 
-  // Cities state
-  cities: CityData[] = [];
+  cities: City[] = [];
   loadingCities: boolean = false;
   citiesError: string | null = null;
 
@@ -63,48 +62,48 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private fetchCities() {
-    this.loadingCities = true;
-    this.citiesError = null;
+private fetchCities() {
+  this.loadingCities = true;
+  this.citiesError = null;
 
-    this.referenceDataService
-      .getCities()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (apiCities) => {
-          // Map to expected format - assuming cities don't have coordinates in API
-          // For now, we'll use placeholder coordinates or you can extend the API
-          this.cities = apiCities.map((city: CityResult) => ({
-            value: city.id.toString(),
-            name: city.name,
-            coordinates: { lat: 0, lng: 0 }, // TODO: Add actual coordinates from API
-          }));
-          this.loadingCities = false;
-        },
-        error: (error) => {
-          console.error('Error fetching cities:', error);
-          this.citiesError = this.translate.instant(
-            'citySelect.citiesLoadError'
-          );
-          this.loadingCities = false;
-        },
-      });
-  }
+  this.referenceDataService
+    .getCities()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (apiCities: City[] | null) => {
+        if (apiCities) {
+          console.log(this.cities)
+          this.cities = apiCities; // هنا بتخزن الـ City على طول زي ما جاي من الـ API
+        } else {
+          this.cities = [];
+        }
+        this.loadingCities = false;
+      },
+      error: (error) => {
+        console.error('Error fetching cities:', error);
+        this.citiesError = this.translate.instant('citySelect.citiesLoadError');
+        this.loadingCities = false;
+      },
+    });
+}
 
-  onCityChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const cityValue = target.value;
-    this.selectedCity = cityValue;
 
-    // Clear current coordinates when a city is selected
-    this.currentCoordinates = null;
 
-    if (cityValue) {
-      // Only emit citySelect when a city is selected
-      // Do NOT emit locationSelect to avoid conflict with city-based prayer times
-      this.citySelect.emit(cityValue);
+onCityChange(event: Event) {
+  const target = event.target as HTMLSelectElement;
+  const cityId = Number(target.value); // الـ id من select value
+  this.selectedCity = cityId.toString();
+
+  this.currentCoordinates = null;
+
+  if (cityId) {
+    const selected = this.cities.find(c => c.id === cityId);
+    if (selected) {
+      this.citySelect.emit(selected); // هترجع City object
     }
   }
+}
+
 
   getCurrentLocation() {
     if (!navigator.geolocation) {
@@ -119,18 +118,13 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
         const { latitude, longitude } = position.coords;
         this.isGettingLocation = false;
 
-        // Store coordinates for display
-        this.currentCoordinates = {
-          lat: latitude,
-          lng: longitude,
-        };
+        this.currentCoordinates = { lat: latitude, lng: longitude };
 
         this.locationSelect.emit({
           lat: latitude,
           lng: longitude,
         });
 
-        // Clear city selection when using current location
         this.selectedCity = '';
       },
       (error) => {
@@ -151,13 +145,12 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
             errorMessage = this.translate.instant('citySelect.locationTimeout');
             break;
         }
-
         alert(errorMessage);
       },
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 300000, // 5 minutes
+        maximumAge: 300000,
       }
     );
   }
@@ -165,6 +158,5 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   reset() {
     this.selectedCity = '';
     this.currentCoordinates = null;
-    // Don't emit events on reset to avoid infinite loops
   }
 }

@@ -221,29 +221,30 @@ export class QiblaCompassComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getQiblaDirection(longitude: number, latitude: number): void {
-    this.apiService
-      .getQibla(longitude, latitude)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            // Parse the qibla direction from the API response
-            const qiblaValue = response.data.qibla;
-            this.qiblaDirection = parseFloat(qiblaValue) || 0;
-            console.log('Qibla direction:', this.qiblaDirection);
-          } else {
-            this.error = response.message || 'Unable to get Qibla direction';
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('API error:', error);
-          this.error = 'Unable to get Qibla direction from server';
-          this.isLoading = false;
-        },
-      });
-  }
+private getQiblaDirection(longitude: number, latitude: number): void {
+  this.apiService
+    .getQibla(longitude, latitude)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
+        if (response.success && response.result) {
+          // ✅ نقرأ القيمة من result.qiblahDegrees
+          this.qiblaDirection = response.result.qiblahDegrees;
+          console.log('Qibla direction:', this.qiblaDirection);
+        } else {
+          this.error =
+            response.error?.message || 'Unable to get Qibla direction';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('API error:', error);
+        this.error = 'Unable to get Qibla direction from server';
+        this.isLoading = false;
+      },
+    });
+}
+
 
   retryGetLocation(): void {
     this.getUserLocationAndQibla();

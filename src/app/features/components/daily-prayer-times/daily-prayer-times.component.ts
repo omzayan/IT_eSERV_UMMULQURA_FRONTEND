@@ -15,8 +15,9 @@ import {
   LanguageService,
   GeolocationService,
 } from '../../../core/services';
-import { PrayerTime, PrayerTimeWithDateResult } from '../../../core/types/api.types';
+import { City, PrayerTime, PrayerTimeWithDateResult } from '../../../core/types/api.types';
 import {
+  CityData,
   CitySelectorComponent,
   LocationData,
 } from '../../shared/city-selector/city-selector.component';
@@ -223,7 +224,7 @@ export class DailyPrayerTimesComponent
   gregorianDatePicker!: UnifiedDatePickerComponent;
 
   isAr = false;
-  selectedCityId: string | null = null;
+  selectedCityId: number | null = null;
   selectedCoords: LocationData | null = null;
   selectedHijriDate: DatePickerValue | null = null;
   selectedGregorianDate: DatePickerValue | null = null;
@@ -380,11 +381,16 @@ export class DailyPrayerTimesComponent
     }
   }
 
-  onCitySelect(cityId: string): void {
-    this.selectedCityId = cityId;
-    // Reset coordinates when city is selected
-    this.selectedCoords = null;
-  }
+
+onCitySelect(city: City): void {
+  this.selectedCoords = {
+    lat: city.latitude,
+    lng: city.longitude,
+  
+  };
+  this.selectedCityId  = city.id
+}
+
 
   onLocationSelect(location: LocationData): void {
     this.selectedCoords = location;

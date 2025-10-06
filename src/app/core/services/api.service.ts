@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, switchMap, throwError } from 'rxjs';
+import { map, Observable, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   CommonResponse,
@@ -22,6 +22,7 @@ import {
   HijriDateInput,
   MonthPrayerTimes,
   DurationPrayerTimes,
+  City,
 } from '../types/api.types';
 
 @Injectable({
@@ -284,36 +285,36 @@ getMonthlyPrayerTimesByHijri(
   /**
    * Get Qibla direction
    */
-  getQibla(
-    longitude?: number,
-    latitude?: number,
-    cityNumber?: number
-  ): Observable<CommonResponse<QiblaResult>> {
-    let params = new HttpParams();
+getQibla(
+  longitude: number,
+  latitude: number
+): Observable<BaseResponse<QiblaResult>> {
+  let params = new HttpParams()
+    .set('Longitude', longitude.toString())
+    .set('Latitude', latitude.toString());
 
-    if (longitude !== undefined)
-      params = params.set('longitude', longitude.toString());
-    if (latitude !== undefined)
-      params = params.set('latitude', latitude.toString());
-    if (cityNumber !== undefined)
-      params = params.set('cityNumber', cityNumber.toString());
+  return this.http.get<BaseResponse<QiblaResult>>(
+    `${this.baseUrl}api/services/app/Qiblah/GetGoeNorthQiblah`,
+    { params }
+  );
+}
 
-    return this.http.get<CommonResponse<QiblaResult>>(
-      `${this.baseUrl}/GetQibla`,
-      { params }
-    );
-  }
+
 
   /**
    * Get prayer times for all cities
    */
-  getCitiesPrayerTimes(): Observable<
-    CommonResponse<PrayerTimesByCitiesResult>
-  > {
-    return this.http.get<CommonResponse<PrayerTimesByCitiesResult>>(
-      `${this.baseUrl}/GetCitiesPrayerTimes`
-    );
+  getCitiesByCountry(country: string): Observable<City[] | null> {
+    const params = new HttpParams().set('country', country);
+
+    return this.http
+      .get<BaseResponse<City[]>>(
+        `${this.baseUrl}api/services/app/CityService/GetCitiesByCountry`,
+        { params }
+      )
+      .pipe(map((res) => (res.success ? res.result : null)));
   }
+
 
   // ==================== REFERENCE DATA SERVICES ====================
 

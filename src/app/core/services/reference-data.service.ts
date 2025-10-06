@@ -8,6 +8,7 @@ import {
   CityResult,
   AppSettingResult,
   StaticPageResult,
+  City,
 } from '../types/api.types';
 
 /**
@@ -61,16 +62,13 @@ export class ReferenceDataService {
   /**
    * Get all available cities
    */
-  getCities(): Observable<CityResult[]> {
-    return this.apiService
-      .getCities()
-      .pipe(
-        map((response) =>
-          response.success && response.data ? response.data : []
-        )
-      );
+ 
+  getCities(): Observable<City[] | null> {
+    const country = "SaudiArabia"; // أو "السعودية" على حسب الـ API
+    return this.apiService.getCitiesByCountry(country).pipe(
+      map((cities) => (cities && cities.length > 0 ? cities : null))
+    );
   }
-
   /**
    * Get application settings
    */

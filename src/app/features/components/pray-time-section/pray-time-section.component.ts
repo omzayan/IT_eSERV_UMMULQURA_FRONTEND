@@ -19,8 +19,10 @@ import {
 import {
   PrayerTimeWithDateResult,
   CityResult,
+  City,
 } from '../../../core/types/api.types';
 import {
+  CityData,
   CitySelectorComponent,
   LocationData,
 } from '../../shared/city-selector/city-selector.component';
@@ -351,7 +353,7 @@ export class PrayTimeSectionComponent
 
   Math = Math; // Make Math available in template
   isAr = false;
-  selectedCityId: string | null = null;
+  selectedCityId: number | null = null;
   selectedCoords: LocationData | null = null;
   selectedHijriDate: DatePickerValue | null = null;
   selectedGregorianDate: DatePickerValue | null = null;
@@ -662,11 +664,23 @@ export class PrayTimeSectionComponent
     this.updateCustomDateFlag();
   }
 
-  onCitySelect(cityId: string): void {
-    this.selectedCityId = cityId;
-    // Reset coordinates when city is selected
-    this.selectedCoords = null;
-  }
+onCitySelect(city: City): void {
+  // id الخاص بالمدينة
+  this.selectedCityId = city.id;
+
+  // الإحداثيات
+  this.selectedCoords = {
+    lat: city.latitude ?? 0,
+    lng: city.longitude ?? 0,
+  };
+
+  // الاسم كمان (اختياري)
+  //this.selectedCityName = city.name;
+}
+
+
+  
+
 
   onLocationSelect(location: LocationData): void {
     this.selectedCoords = location;
