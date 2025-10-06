@@ -24,9 +24,9 @@ export interface DateInfo {
   iso: string;
 }
 
-export interface HijriDateInfo extends DateInfo {}
+export interface HijriDateInfo extends DateInfo { }
 
-export interface GregorianDateInfo extends DateInfo {}
+export interface GregorianDateInfo extends DateInfo { }
 
 // Prayer times structure
 export interface PrayerTimes {
@@ -293,7 +293,7 @@ export interface HijriDateInput {
   year: number;
 }
 export interface FarmerDate {
-  
+
   [key: string]: any;
 }
 export interface PrayerTime {
@@ -328,9 +328,5 @@ export interface City {
   name: string;      // اسم المدينة
   latitude?: number; // خط العرض
   longitude?: number;// خط الطول
+  cityName?: string;
 }
-
-
-
-
-
