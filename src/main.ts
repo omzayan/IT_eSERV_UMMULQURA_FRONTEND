@@ -18,10 +18,11 @@ import { ToastrModule } from 'ngx-toastr';
 // Import our interceptors
 import { languageInterceptor } from './app/core/interceptors/language.interceptor';
 import { errorInterceptor } from './app/core/interceptors/error.interceptor';
+import { BackendTranslateLoader } from './backend/translateLoader';
 
 // Factory for translate HTTP loader
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(); // Make sure to pass http here
+  return new BackendTranslateLoader(http); // Make sure to pass http here
 }
 
 bootstrapApplication(AppComponent, {
