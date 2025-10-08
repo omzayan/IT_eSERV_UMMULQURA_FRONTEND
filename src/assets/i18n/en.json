@@ -141,6 +141,9 @@
   "hijriMonthSelect": {
     "selectMonth": "Select Month",
     "months": {
+      "10": "Shawwal",
+      "11": "Dhu al-Qi'dah",
+      "12": "Dhu al-Hijjah",
       "01": "Muharram",
       "02": "Safar",
       "03": "Rabi' al-awwal",
@@ -149,15 +152,15 @@
       "06": "Jumada al-thani",
       "07": "Rajab",
       "08": "Sha'ban",
-      "09": "Ramadan",
-      "10": "Shawwal",
-      "11": "Dhu al-Qi'dah",
-      "12": "Dhu al-Hijjah"
+      "09": "Ramadan"
     }
   },
   "miladiMonthSelect": {
     "selectMonth": "Select Month",
     "months": {
+      "10": "October",
+      "11": "November",
+      "12": "December",
       "01": "January",
       "02": "February",
       "03": "March",
@@ -166,10 +169,7 @@
       "06": "June",
       "07": "July",
       "08": "August",
-      "09": "September",
-      "10": "October",
-      "11": "November",
-      "12": "December"
+      "09": "September"
     }
   },
   "weekSelect": {
@@ -286,8 +286,7 @@
     },
     "errorMessage": "Error displaying results",
     "errorSubMessage": "Please select both date and city to view prayer times accurately.",
-    "selectCity": "Select City",
-    "selectDate": "Select Date"
+    "selectCity": "Select City"
   },
   "footer": {
     "followUs": "Follow us",
@@ -440,7 +439,6 @@
     },
     "datePickers": {
       "title": "Date Range Selection",
-
       "selectStartDate": "Select start date",
       "selectEndDate": "Select end date",
       "gregorian": {
@@ -620,33 +618,6 @@
     "rating": "Rating"
   },
   "communicationShare": {
-    "heroSection": {
-      "title": "Electronic Participation",
-      "description": "To be part of the decision-making process, we provide you the opportunity to give your best and share your opinions and ideas about the Umm Al-Qura Calendar, whether current or future, before approval and implementation."
-    },
-    "breadcrumb": {
-      "home": "Home",
-      "about": "About",
-      "communicationShare": "Electronic Participation"
-    },
-    "aboutUsDetails": {
-      "title": "About Us",
-      "description": "Umm Al-Qura Calendar is the official and accredited reference for calculating Hijri days and dates in the Kingdom of Saudi Arabia."
-    },
-    "topics": {
-      "title": "Participation Topics",
-      "description": "We believe in your essential role, recognize the impact of your suggestions, the importance of resolving your complaints, and what your innovations reveal!",
-      "title1": "Electronic Participation Policy",
-      "title2": "Electronic Consultations",
-      "title3": "Joint Development and Ideas",
-      "title4": "Open Data",
-      "title5": "Complaints and Suggestions",
-      "title6": "Beneficiary Voice Reports",
-      "title7": "Website and Services Statistics",
-      "title8": "Social Media"
-    }
-  },
-  "communicationShare": {
     "breadcrumb": {
       "home": "Home",
       "about": "About Us",
@@ -673,6 +644,14 @@
   "LOADING_CALENDAR": "Loading calendar",
   "ERROR_LOADING_CALENDAR": "Error loading calendar data",
   "RETRY": "Retry",
+  "SelectKey": "Select Key",
+  "EditingKey": "Editing Key",
+  "Save": "Save ",
+  "Key": "Key",
+  "Add": "Add",
+  "Cancel": "Cancel",
+  "AddNewTranslation": "Add New Translation"
+ ,
 
 
   

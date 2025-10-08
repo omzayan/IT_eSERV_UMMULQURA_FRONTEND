@@ -1,0 +1,681 @@
+{
+    "ABOUT_US": {
+        "BREADCRUMB": {
+            "HOME": "Beranda",
+            "ABOUT": "Tentang Kami"
+        }
+    },
+    "header": {
+        "login": "Masuk",
+        "search": "Cari",
+        "calendar": "Kalender",
+        "blog": "Blog",
+        "prayerTimes": "Waktu Sholat",
+        "about": "Tentang Kalender",
+        "home": "Beranda",
+        "aboutUs": "Tentang Kami",
+        "contactUs": "Hubungi Kami",
+        "apis": "API",
+        "communicationShare": "Komunikasi & Partisipasi",
+        "aboutUsDetails": "Detail Tentang Kami",
+        "language": {
+            "en": "English",
+            "ar": "العربية"
+        }
+    },
+    "stamp": {
+        "howToVerify": "Bagaimana verifikasinya?",
+        "govSite": "Situs pemerintah yang terdaftar di Otoritas Pemerintah Digital"
+    },
+    "hero": {
+        "title": "Kalender Umm al‑Qura",
+        "description": "Kalender resmi Arab Saudi — halaman komprehensif dengan alat dan informasi terkait waktu sesuai Kalender Umm al‑Qura.",
+        "download": "Unduh aplikasi kami sekarang dari toko resmi",
+        "slide2": {
+            "title": "Waktu Sholat & Arah Kiblat",
+            "description": "Dapatkan waktu sholat tepat untuk lokasi mana saja dan temukan arah kiblat yang benar dengan rangkaian alat dan fitur Islami.",
+            "download": "Temukan semua fitur melalui aplikasi kami"
+        }
+    },
+    "prayTimeSection": {
+        "title": "Waktu Sholat",
+        "description": "Pilih lokasi Anda untuk menampilkan waktu sholat secara akurat, dengan arah kiblat dan masjid terdekat.",
+        "search": "Cari",
+        "loading": "Sedang memuat...",
+        "selectCity": "Pilih kota",
+        "chooseCity": "Pilih kota",
+        "orCoordinates": "atau masukkan koordinat",
+        "latitude": "Lintang",
+        "longitude": "Bujur",
+        "selectCityOrLocation": "Silakan pilih kota atau masukkan koordinat",
+        "error": "Gagal mengambil waktu sholat",
+        "remaining": "Tersisa untuk sholat",
+        "gregorianDate": "Tanggal Masehi",
+        "hijriDate": "Tanggal Hijriyah"
+    },
+    "prayTimeHero": {
+        "title": "Waktu Sholat",
+        "description": "Ketahui waktu sholat harian secara tepat berdasarkan kota Anda, dengan pembaruan otomatis lokal"
+    },
+    "prayTime": {
+        "imageSection": {
+            "title": "Layanan Waktu Sholat",
+            "subtitle": "Waktu sholat yang akurat untuk semua kota di Arab Saudi"
+        }
+    },
+    "prayers": {
+        "isha": "Isya",
+        "maghrib": "Maghrib",
+        "asr": "Ashar",
+        "dhuhr": "Dzuhur",
+        "sunrise": "Terbit",
+        "fajr": "Subuh",
+        "cityTime": "Kota / Waktu",
+        "remainingTime": "Waktu tersisa untuk sholat"
+    },
+    "prayCard": {
+        "remainingTime": "Waktu tersisa",
+        "nearestMosque": "Masjid terdekat",
+        "qiblaDirection": "Arah Kiblat",
+        "currentPrayer": "Sholat sekarang",
+        "selectedDate": "Tanggal yang dipilih"
+    },
+    "table": {
+        "title": "Umm al‑Qura",
+        "subtitle": "Kalender resmi Arab Saudi",
+        "noData": "Tidak ada data tersedia",
+        "error": "Gagal mengambil waktu sholat"
+    },
+    "aboutUs": {
+        "breadcrumb": {
+            "home": "Beranda",
+            "about": "Tentang Kami"
+        },
+        "title": "Tentang Kalender Umm al‑Qura",
+        "description": "Kalender Umm al‑Qura adalah kalender resmi Kerajaan Arab Saudi, digunakan untuk mengatur kehidupan sehari‑hari dan menentukan hari‑hari penting agama dan nasional seperti awal bulan Hijriyah, waktu sholat, Ramadan, dan hari raya Idul Fitri & Idul Adha.",
+        "feedback": {
+            "lastModified": "Terakhir diubah: 04/12/2020 – 16:13 waktu Saudi",
+            "stats": "60% dari pengguna menjawab ya dari 2843 komentar",
+            "question": "Apakah halaman ini bermanfaat?",
+            "yes": "Ya",
+            "no": "Tidak"
+        }
+    },
+    "services": {
+        "strategy": "Strategi, Kebijakan & Regulasi",
+        "orgStructure": "Struktur Organisasi",
+        "aboutUs": "Siapa Kami",
+        "eParticipation": "Partisipasi Elektronik",
+        "tenders": "Tender & Pengadaan",
+        "budget": "Anggaran & Pengeluaran",
+        "careers": "Karir",
+        "sustainability": "Pembangunan Berkelanjutan",
+        "partners": "Mitra",
+        "contact": "Hubungi",
+        "news": "Berita & Acara"
+    },
+    "qiblaCompass": {
+        "title": "Kompas Kiblat",
+        "description": "Layanan pintar untuk menentukan arah kiblat secara akurat menggunakan teknologi geolokasi terbaru",
+        "loading": "Menentukan lokasi Anda dan menghitung arah kiblat...",
+        "retry": "Coba lagi",
+        "direction": "Arah Kiblat",
+        "coordinates": "Lokasi Anda saat ini"
+    },
+    "webServices": {
+        "title": "Layanan Web",
+        "description": "Portal Kalender Umm al‑Qura adalah platform resmi yang menyediakan kalender yang diakui di Arab Saudi, digunakan untuk menentukan waktu sholat, peristiwa Islami, dan tanggal resmi sesuai kalender Hijriyah yang diakui secara astronomis.",
+        "dateConversion": {
+            "title": "Konversi Tanggal",
+            "subtitle": "Ubah tanggal dari Masehi ke Hijriyah dan sebaliknya berdasarkan Kalender Umm al‑Qura"
+        },
+        "prayerTimes": {
+            "title": "Waktu Sholat",
+            "subtitle": "Dapatkan waktu sholat yang akurat untuk lokasi Anda"
+        },
+        "startService": "Mulai layanan"
+    },
+    "partners": {
+        "title": "Mitra Kami"
+    },
+    "hijriMonthSelect": {
+        "selectMonth": "Pilih bulan",
+        "months": {
+            "10": "Syawal",
+            "11": "Dzulqaidah",
+            "12": "Dzulhijjah",
+            "01": "Muharram",
+            "02": "Safar",
+            "03": "Rabiul Awal",
+            "04": "Rabiul Akhir",
+            "05": "Jumadal Ula",
+            "06": "Jumadal Akhir",
+            "07": "Rajab",
+            "08": "Sya’ban",
+            "09": "Ramadhan"
+        }
+    },
+    "miladiMonthSelect": {
+        "selectMonth": "Pilih bulan",
+        "months": {
+            "10": "Oktober",
+            "11": "November",
+            "12": "Desember",
+            "01": "Januari",
+            "02": "Februari",
+            "03": "Maret",
+            "04": "April",
+            "05": "Mei",
+            "06": "Juni",
+            "07": "Juli",
+            "08": "Agustus",
+            "09": "September"
+        }
+    },
+    "weekSelect": {
+        "selectWeek": "Pilih minggu",
+        "selectWeekPlaceholder": "Pilih minggu",
+        "weeks": {
+            "week1": "Minggu pertama",
+            "week2": "Minggu kedua",
+            "week3": "Minggu ketiga",
+            "week4": "Minggu keempat"
+        }
+    },
+    "daySelect": {
+        "selectDay": "Pilih hari",
+        "selectDayPlaceholder": "Pilih sebuah hari",
+        "days": {
+            "sunday": "Minggu",
+            "monday": "Senin",
+            "tuesday": "Selasa",
+            "wednesday": "Rabu",
+            "thursday": "Kamis",
+            "friday": "Jumat",
+            "saturday": "Sabtu"
+        }
+    },
+    "citySelect": {
+        "selectCity": "Pilih kota",
+        "selectCityPlaceholder": "Pilih kota",
+        "getCurrentLocation": "Dapatkan lokasi saat ini",
+        "autoDetectLocation": "Deteksi otomatis lokasi",
+        "geolocationNotSupported": "Browser tidak mendukung geolokasi",
+        "locationDenied": "Akses lokasi ditolak. Mohon izinkan akses di pengaturan browser",
+        "locationUnavailable": "Lokasi tidak tersedia sekarang",
+        "locationTimeout": "Waktu penentuan lokasi habis",
+        "locationError": "Terjadi kesalahan saat menentukan lokasi",
+        "detectedLocation": "Lokasi terdeteksi",
+        "latitude": "Lintang",
+        "longitude": "Bujur",
+        "citiesLoadError": "Gagal memuat kota",
+        "loadingCities": "Memuat kota..."
+    },
+    "prayTimeTable": {
+        "tabs": {
+            "daily": "Harian",
+            "weekly": "Mingguan",
+            "monthly": "Bulanan (Masehi)",
+            "monthlyHijri": "Bulanan (Hijriyah)"
+        },
+        "showPrayerTimes": "Tampilkan waktu sholat",
+        "selectDateRange": "Pilih jenis rentang waktu",
+        "headers": {
+            "dayTime": "Hari / Waktu",
+            "dayName": "Nama Hari",
+            "hijriDate": "Tanggal Hijriyah",
+            "gregorianDate": "Tanggal Masehi",
+            "hijri": "Hijriyah",
+            "gregorian": "Masehi"
+        }
+    },
+    "loading": "Sedang memuat...",
+    "errors": {
+        "missingRequiredFields": "Silakan pilih bulan dan kota/ lokasi",
+        "failedToLoadPrayerTimes": "Gagal memuat waktu sholat. Silakan coba lagi."
+    },
+    "error": {
+        "locationAccess": "Akses lokasi ditolak",
+        "fetchPrayerTimes": "Gagal mengambil waktu sholat"
+    },
+    "calendar": {
+        "title": "Kalender",
+        "description": "Halaman komprehensif dengan alat dan informasi waktu berdasarkan Kalender Umm al‑Qura",
+        "tabs": {
+            "hijri": "Kalender Hijriyah – Umm al‑Qura",
+            "gregorian": "Kalender Masehi",
+            "prayTime": "Waktu Sholat",
+            "umqurra": "Kalender Umm al‑Qura",
+            "dateConverter": "Konversi Tanggal"
+        },
+        "conversion": {
+            "title": "Konversi",
+            "hijriToGregorian": "Hijriyah ke Masehi",
+            "gregorianToHijri": "Masehi ke Hijriyah"
+        },
+        "selectDate": "Pilih tanggal",
+        "convertNow": "Konversi sekarang",
+        "years": {
+            "hijri": "Muharram",
+            "gregorian": "Januari"
+        },
+        "monthNames": {
+            "hijri": {
+                "1447": "Muharram 1447",
+                "safar": "Safar 1447"
+            },
+            "gregorian": {
+                "2024": "Januari 2024",
+                "2025": "Januari 2025"
+            }
+        },
+        "days": {
+            "sat": "Sabtu",
+            "sun": "Minggu",
+            "mon": "Senin",
+            "tue": "Selasa",
+            "wed": "Rabu",
+            "thu": "Kamis",
+            "fri": "Jumat"
+        },
+        "dualCalendar": {
+            "annualCalendarUmmAlQura": "Kalender Tahunan Umm al‑Qura",
+            "annualCalendarGregorian": "Kalender Tahunan Masehi",
+            "hijriRange": "Safar 1447H – Muharram 1447H",
+            "gregorianRange": "Juli 2025 – Juni 2025"
+        },
+        "errorMessage": "Terjadi kesalahan saat menampilkan hasil",
+        "errorSubMessage": "Silakan tentukan tanggal dan kota untuk melihat waktu sholat dengan tepat.",
+        "selectCity": "Pilih kota"
+    },
+    "footer": {
+        "followUs": "Ikuti Kami",
+        "accessibilityTools": "Alat Aksesibilitas",
+        "groupTitle": "Judul Grup",
+        "clients": "Klien",
+        "contactUs": "Kontak Kami",
+        "participate": "Berpartisipasi",
+        "complaint": "Ajukan Keluhan",
+        "reportCorruption": "Laporkan Korupsi",
+        "importantLinks": "Tautan Penting",
+        "link1": "Portal Layanan Nasional",
+        "link2": "Data Pemerintah Terbuka",
+        "link3": "Strategi Nasional Data & AI",
+        "link4": "Portal Data Terbuka",
+        "link5": "Portal Partisipasi Elektronik",
+        "summary": "Ringkasan",
+        "aboutUmmAlQura": "Tentang Umm al‑Qura",
+        "privacy": "Privasi & Ketentuan Penggunaan",
+        "howToUse": "Cara Menggunakan Situs",
+        "news": "Berita & Acara",
+        "slaStats": "Statistik SLA",
+        "mobileApp": "Aplikasi Mobile",
+        "rss": "RSS",
+        "bottomLink": "Tautan Bawah",
+        "sitemap": "Peta Situs",
+        "copyright": "Hak Cipta © 2025 Kota Ilmu & Teknologi Raja Abdul Aziz. Semua hak dilindungi.",
+        "developedBy": "Dikembangkan & Dipelihara oleh Code Company",
+        "lastUpdated": "Terakhir diperbarui: 04/05/2025"
+    },
+    "aboutUsDetails": {
+        "hero": {
+            "title": "Siapa Kami",
+            "subtitle": "Referensi resmi waktu Hijriyah di Arab Saudi"
+        },
+        "breadcrumb": {
+            "home": "Beranda",
+            "about": "Tentang Kami",
+            "whoWeAre": "Siapa Kami"
+        },
+        "description": "Kalender Umm al‑Qura adalah referensi resmi dan diakui untuk penentuan hari dan tanggal Hijriyah di Arab Saudi, digunakan oleh lembaga pemerintah, institusi, dan individu. Berdasarkan perhitungan astronomis akurat untuk menentukan awal bulan Hijriyah berdasarkan referensi langit Mekkah. Hal ini menjadikan kalender ini salah satu yang paling tepat dan teratur dalam dunia Islam.",
+        "mission": {
+            "title": "Misi Kami",
+            "description": "Menyediakan kalender Hijriyah yang akurat dan terpercaya, berdasarkan asas astronomis, yang membantu mengatur ibadah dan jadwal resmi secara profesional dan modern."
+        },
+        "vision": {
+            "title": "Visi Kami",
+            "description": "Menjadi referensi utama dan terpercaya untuk waktu dan tanggal Hijriyah baik di tingkat nasional maupun internasional, yang melayani kebutuhan individu dan lembaga resmi."
+        },
+        "features": {
+            "title": "Keunggulan Kami",
+            "smartDevices": "Kompatibel sepenuhnya dengan perangkat pintar",
+            "easyDesign": "Desain sederhana dan mudah digunakan",
+            "astronomicalUpdates": "Pembaruan terus-menerus berdasarkan perhitungan astronomis untuk cakrawala Mekkah",
+            "officialApproval": "Disetujui secara resmi oleh otoritas terkait"
+        },
+        "extendedDescription": "Kalender Umm al‑Qura berbeda dari kalender Hijriyah lainnya karena didasarkan pada perhitungan astronomis akurat posisi matahari dan bulan, disesuaikan dengan cakrawala Mekkah. Keakuratan ini, terkait dengan tempat paling suci di bumi, memberi kalender ini kredibilitas tinggi bagi lembaga resmi dan komunitas Islam di dalam dan luar negeri.\n\nKarena kami memahami pentingnya waktu dalam kehidupan seorang Muslim, kami menyediakan pengalaman digital terpadu yang memudahkan pengguna untuk mengakses kalender harian, menggabungkan tanggal Hijriyah dan Masehi, menampilkan waktu sholat, dan peristiwa Islami penting secara fleksibel dan lancar. Antarmuka dirancang agar responsif di perangkat pintar, memungkinkan pengguna menjelajahi kalender dengan cepat tanpa kerumitan.\n\nKalender Umm al‑Qura bukan hanya sekadar kalender; ia adalah sistem waktu yang akurat dan terpercaya yang menghubungkan manusia dengan waktu, astronomi dengan ibadah, Mekkah dengan dunia.",
+        "users": {
+            "title": "Siapa yang menggunakan Umm al‑Qura?",
+            "list": "• Lembaga pemerintah dan resmi\n• Masjid dan pusat Islam\n• Sekolah dan universitas\n• Individu dalam kehidupan sehari-hari\n• Perusahaan & institusi dalam mengatur jadwal"
+        },
+        "finalWord": {
+            "title": "Kata Penutup",
+            "description": "Di era teknologi yang bergerak cepat, Kalender Umm al‑Qura tetap menjadi patokan untuk mengatur waktu ibadah dan hidup kita. Ia lebih dari sekadar angka; ia adalah jembatan antara manusia dan waktu, astronomi dan agama, Mekkah dan dunia."
+        },
+        "lastModified": "Terakhir diubah: 04/05/2025 – 16:13 waktu Saudi"
+    },
+    "contactUs": {
+        "breadcrumb": {
+            "home": "Beranda",
+            "contact": "Hubungi Kami"
+        },
+        "title": "Hubungi Kami",
+        "description": "Kalender Umm al‑Qura adalah kalender resmi Kerajaan Arab Saudi, digunakan untuk mengatur kehidupan sehari‑hari dan menentukan peristiwa agama dan nasional.",
+        "contactCard": {
+            "title": "Hubungi Kami",
+            "phone": {
+                "label": "Nomor Ponsel",
+                "value": "9200343222"
+            },
+            "sms": {
+                "label": "SMS",
+                "value": "199099"
+            },
+            "email": {
+                "label": "Email",
+                "value": "help@company.sa"
+            },
+            "fax": {
+                "label": "Faks",
+                "value": "00966-11-434-6654"
+            },
+            "location": {
+                "label": "Lokasi",
+                "value": "Riyadh"
+            },
+            "followUs": "Ikuti Kami",
+            "emergencyContacts": "Kontak Darurat",
+            "civilDefense": "Pertahanan Sipil",
+            "police": "Polisi",
+            "ambulance": "Ambulans",
+            "viewMore": "Lihat Lebih Banyak"
+        },
+        "form": {
+            "firstName": {
+                "label": "Nama Depan",
+                "placeholder": "Masukkan nama depan",
+                "required": true
+            },
+            "lastName": {
+                "label": "Nama Belakang",
+                "placeholder": "Masukkan nama belakang",
+                "required": true
+            },
+            "phone": {
+                "label": "Nomor Ponsel",
+                "placeholder": "00 000 0000",
+                "required": true
+            },
+            "email": {
+                "label": "Email",
+                "placeholder": "Masukkan email",
+                "required": true
+            },
+            "category": {
+                "label": "Kategori",
+                "placeholder": "Usulan"
+            },
+            "subject": {
+                "label": "Subjek",
+                "placeholder": "Tulis subjek Anda"
+            },
+            "fileUpload": {
+                "label": "Unggah Lampiran",
+                "helperText": "Ukuran file maksimum 2MB, format didukung: .jpg, .png, .pdf",
+                "browse": "Telusuri file"
+            },
+            "message": {
+                "label": "Bagaimana kami bisa membantu?",
+                "placeholder": "Isi pesan Anda"
+            },
+            "submit": "Kirim Kontak"
+        },
+        "feedback": {
+            "lastModified": "Terakhir diubah: 04/05/2025 – 16:13 waktu Saudi",
+            "stats": "60% dari pengguna menjawab ya dari 2843 komentar",
+            "question": "Apakah halaman ini bermanfaat?",
+            "yes": "Ya",
+            "no": "Tidak"
+        },
+        "datePickers": {
+            "title": "Pilih Rentang Tanggal",
+            "selectStartDate": "Pilih tanggal awal",
+            "selectEndDate": "Pilih tanggal akhir",
+            "gregorian": {
+                "title": "Kalender Masehi",
+                "dateRange": "Rentang Masehi",
+                "selectDate": "Pilih tanggal",
+                "selectYear": "Pilih tahun",
+                "selectMonth": "Pilih bulan",
+                "selectDay": "Pilih hari",
+                "months": {
+                    "january": "Januari",
+                    "february": "Februari",
+                    "march": "Maret",
+                    "april": "April",
+                    "may": "Mei",
+                    "june": "Juni",
+                    "july": "Juli",
+                    "august": "Agustus",
+                    "september": "September",
+                    "october": "Oktober",
+                    "november": "November",
+                    "december": "Desember"
+                }
+            },
+            "hijri": {
+                "title": "Kalender Hijriyah",
+                "dateRange": "Rentang Hijriyah",
+                "selectDate": "Pilih tanggal Hijriyah",
+                "placeholder": "Format: hari/bulan/tahun (contoh: 15/03/1445)",
+                "formatHint": "Format: hari/bulan/tahun",
+                "selectYear": "Pilih tahun",
+                "selectMonth": "Pilih bulan",
+                "selectDay": "Pilih hari"
+            },
+            "example": {
+                "title": "Contoh pemilih tanggal",
+                "gregorianExample": "Contoh pemilih tanggal Masehi",
+                "hijriExample": "Contoh pemilih tanggal Hijriyah",
+                "selectedDate": "Tanggal terpilih",
+                "noDateSelected": "Belum ada tanggal dipilih",
+                "instructions": "Instruksi penggunaan",
+                "instruction1": "Klik input untuk membuka kalender",
+                "instruction2": "Gunakan tombol atas untuk berpindah tahun, bulan, hari",
+                "instruction3": "Pilih tanggal dari grid kalender",
+                "instruction4": "Bekerja responsif di ponsel dan desktop",
+                "resetHijri": "Reset Hijriyah",
+                "resetGregorian": "Reset Masehi"
+            }
+        },
+        "citySelect": {
+            "location": "Pilih Lokasi",
+            "selectCity": "Pilih kota",
+            "selectCityPlaceholder": "Pilih kota",
+            "loadingCities": "Sedang memuat kota...",
+            "citiesLoadError": "Gagal memuat kota",
+            "getCurrentLocation": "Deteksi lokasi otomatis",
+            "autoDetectLocation": "Deteksi otomatis",
+            "detectedLocation": "Lokasi terdeteksi",
+            "latitude": "Lintang",
+            "longitude": "Bujur",
+            "geolocationNotSupported": "Browser tidak mendukung geolokasi",
+            "locationDenied": "Akses lokasi ditolak",
+            "locationUnavailable": "Lokasi tidak tersedia",
+            "locationTimeout": "Waktu penentuan lokasi habis",
+            "locationError": "Kesalahan saat menentukan lokasi"
+        },
+        "unifiedDatePicker": {
+            "selectDate": "Pilih tanggal",
+            "selectHijriDate": "Pilih tanggal Hijriyah",
+            "selectGregorianDate": "Pilih tanggal Masehi",
+            "placeholderHijri": "Pilih tanggal Hijriyah",
+            "placeholderGregorian": "Pilih tanggal Masehi",
+            "today": "Hari ini",
+            "cancel": "Batal",
+            "hijriCalendar": "Kalender Hijriyah",
+            "gregorianCalendar": "Kalender Masehi",
+            "selectYear": "Pilih tahun",
+            "selectMonth": "Pilih bulan",
+            "selectDay": "Pilih hari",
+            "demo": {
+                "title": "Demo pemilih tanggal terpadu",
+                "hijriExample": "Contoh pemilih Hijriyah",
+                "gregorianExample": "Contoh pemilih Masehi",
+                "selectedDate": "Tanggal terpilih",
+                "noDateSelected": "Belum ada tanggal dipilih",
+                "instructions": "Instruksi cara penggunaan",
+                "instruction1": "Klik input untuk membuka kalender",
+                "instruction2": "Gunakan tombol atas untuk berpindah tahun/bulan/hari",
+                "instruction3": "Klik tanggal di grid untuk memilih",
+                "instruction4": "Responsif di ponsel dan desktop",
+                "resetHijri": "Reset Hijriyah",
+                "resetGregorian": "Reset Masehi"
+            }
+        }
+    },
+    "dateConverter": {
+        "hijriToGregorian": "Hijriyah ke Masehi",
+        "gregorianToHijri": "Masehi ke Hijriyah",
+        "hijriDate": "Tanggal Hijriyah",
+        "gregorianDate": "Tanggal Masehi",
+        "selectDate": "Pilih tanggal",
+        "selectDateToConvert": "Pilih tanggal untuk dikonversi",
+        "convert": "Konversi",
+        "conversionError": "Kesalahan konversi",
+        "conversionResult": "Hasil konversi",
+        "tryAgain": "Silakan coba lagi",
+        "result": "Hasil"
+    },
+    "components": {
+        "comingSoon": "Segera hadir"
+    },
+    "common": {
+        "loading": "Memuat...",
+        "cancel": "Batal",
+        "select": "Pilih",
+        "close": "Tutup",
+        "converting": "Mengonversi..."
+    },
+    "apiPage": {
+        "startService": "Mulai layanan",
+        "breadcrumb": {
+            "home": "Beranda",
+            "api": "API"
+        },
+        "title": "API",
+        "new": "Baru",
+        "apiLabel": "API",
+        "description": "API (Antarmuka Pemrograman Aplikasi) adalah kumpulan aturan dan prosedur yang memungkinkan program berinteraksi satu sama lain.",
+        "sla": "SLA (Service Level Agreement)",
+        "tabs": {
+            "steps": "Langkah",
+            "terms": "Syarat Penggunaan",
+            "docs": "Dokumentasi Teknis"
+        },
+        "steps": {
+            "1": "Masuk ke portal pendaftaran nasional melalui Absher.",
+            "2": "Pilih layanan API.",
+            "3": "Isi data yang diperlukan dan unggah dokumen.",
+            "4": "Bayar biaya melalui pembayaran elektronik.",
+            "5": "Tunggu verifikasi data dan proses.",
+            "6": "Terima lisensi setelah disetujui."
+        },
+        "feedbackTitle": "Komentar & Saran",
+        "feedbackDesc": "Untuk pertanyaan atau masukan tentang API silakan isi data.",
+        "feedbackButton": "Hubungi Kami"
+    },
+    "apiSidebar": {
+        "targetGroup": "Kelompok Sasaran",
+        "targetGroupDesc": "Warga negara, perusahaan, lembaga pemerintah",
+        "serviceDuration": "Durasi Layanan",
+        "serviceDurationDesc": "Lisensi",
+        "serviceChannels": "Saluran Layanan",
+        "serviceChannelsDesc": "Web & Aplikasi Mobile",
+        "serviceCost": "Biaya Layanan",
+        "serviceCostDesc": "Gratis",
+        "paymentChannels": "Saluran Pembayaran",
+        "faq": "FAQ",
+        "faqLink": "Halaman FAQ Kementerian",
+        "phone": "920033222",
+        "email": "help@company.sa",
+        "downloadGuide": "Unduh Panduan Pengguna",
+        "mobileApps": "Aplikasi Mobile"
+    },
+    "prayerTimes": {
+        "title": "Waktu Sholat",
+        "showAll": "Tampilkan Semua",
+        "description": "Dapatkan waktu sholat berdasarkan lokasi Anda dari sini."
+    },
+    "prayers2": {
+        "fajr": {
+            "title": "Sholat Subuh",
+            "description": "سبحان الله وبحمده"
+        },
+        "dhuhr": {
+            "title": "Sholat Dzuhur",
+            "description": "سبحان الله العظيم"
+        },
+        "asr": {
+            "title": "Sholat Ashar",
+            "description": "الرحمن علم القرآن"
+        },
+        "maghrib": {
+            "title": "Sholat Maghrib",
+            "description": "لا حول ولا قوة إلا بالله"
+        },
+        "Ishaa": {
+            "title": "Sholat Isya",
+            "description": "لا حول ولا قوة إلا بالله"
+        },
+        "qiblaDirection": "Arah Kiblat",
+        "mosqueNearest": "Masjid Terdekat"
+    },
+    "review": {
+        "description": "Layanan ini dinilai rata‑rata 3.9",
+        "sendReview": "Nilai layanan ini",
+        "rating": "Penilaian"
+    },
+    "communicationShare": {
+        "heroSection": {
+            "title": "Partisipasi Elektronik",
+            "description": "Agar Anda menjadi bagian dari proses pengambilan keputusan, kami memberi Anda kesempatan untuk menyampaikan ide & pendapat tentang Kalender Umm al‑Qura."
+        },
+        "breadcrumb": {
+            "home": "Beranda",
+            "about": "Tentang Kami",
+            "communicationShare": "Komunikasi & Partisipasi"
+        },
+        "aboutUsDetails": {
+            "title": "Siapa Kami",
+            "description": "Kalender Umm al‑Qura adalah referensi resmi waktu Hijriyah."
+        },
+        "topics": {
+            "title": "Komunikasi & Tukar Informasi",
+            "description": "Hubungi kami melalui berbagai topik & saluran.",
+            "title1": "Strategi",
+            "title2": "Struktur Organisasi",
+            "title3": "Tentang Institusi",
+            "title4": "Partisipasi Elektronik",
+            "title5": "Tender & Pengadaan",
+            "title6": "Anggaran & Pengeluaran",
+            "title7": "Karir",
+            "title8": "Pembangunan Berkelanjutan"
+        }
+    },
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "BACK": "Kembali",
+    "HIJRI_CALENDAR": "Kalender Hijriyah",
+    "GREGORIAN_CALENDAR": "Kalender Masehi",
+    "LOADING_CALENDAR": "Sedang memuat kalender...",
+    "ERROR_LOADING_CALENDAR": "Kesalahan memuat data kalender",
+    "RETRY": "Coba Lagi",
+    "SelectKey": "Pilih kunci",
+    "EditingKey": "Mengedit kunci",
+    "Save": "Simpan",
+    "Key": "Kunci",
+    "Add": "Tambah",
+    "Cancel": "Batal",
+    "AddNewTranslation": "Tambah Terjemahan Baru"
+}

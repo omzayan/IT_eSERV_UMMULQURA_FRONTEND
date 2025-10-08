@@ -1,0 +1,654 @@
+{
+    "ABOUT_US": {
+        "BREADCRUMB": {
+            "HOME": "Ana Sayfa",
+            "ABOUT": "Hakkımızda"
+        }
+    },
+    "header": {
+        "login": "Giriş Yap",
+        "search": "Ara",
+        "calendar": "Takvim",
+        "blog": "Blog",
+        "prayerTimes": "Namaz Vakitleri",
+        "about": "Hakkında",
+        "home": "Ana Sayfa",
+        "aboutUs": "Hakkımızda",
+        "contactUs": "İletişim",
+        "apis": "API’ler",
+        "communicationShare": "İletişim & Paylaşım",
+        "aboutUsDetails": "Hakkımızda Detayları",
+        "language": {
+            "en": "İngilizce",
+            "ar": "Arapça"
+        }
+    },
+    "stamp": {
+        "howToVerify": "Nasıl doğrulanır?",
+        "govSite": "Dijital Hükümet Kurumu tarafından kayıtlı bir resmi site"
+    },
+    "hero": {
+        "title": "Umm al‑Qura Takvimi",
+        "description": "Suudi Arabistan Krallığı’nın resmi takvimi. Umm al‑Qura takvimine göre zamanla ilgili araçlar ve bilgiler sunan kapsamlı bir sayfa.",
+        "download": "Uygulamamızı resmi mağazalardan şimdi indir",
+        "slide2": {
+            "title": "Namaz Vakitleri & Kıble Yönü",
+            "description": "Herhangi bir konum için doğru namaz vakitlerini alın ve kapsamlı İslami araçlarımız ve özelliklerimizle kıble yönünü belirleyin.",
+            "download": "Tüm özelliklere mobil uygulamamızdan erişin"
+        }
+    },
+    "prayTimeSection": {
+        "title": "Namaz Vakitleri",
+        "description": "Doğru namaz vakitlerini, kıble yönünü ve en yakın mescidi görmek için konumunuzu seçin.",
+        "search": "Ara",
+        "loading": "Yükleniyor...",
+        "selectCity": "Şehir Seçin",
+        "chooseCity": "Bir şehir seçin",
+        "orCoordinates": "Ya da koordinat girin",
+        "latitude": "Enlem",
+        "longitude": "Boylam",
+        "selectCityOrLocation": "Lütfen şehir seçin veya koordinat girin",
+        "error": "Namaz vakitleri alınırken hata oluştu",
+        "remaining": "Kalan Süre",
+        "gregorianDate": "Miladi Tarih",
+        "hijriDate": "Hicri Tarih"
+    },
+    "prayTimeHero": {
+        "title": "Namaz Vakitleri",
+        "description": "Şehriniz için günlük doğru namaz vakitlerini alın, yerel zamanı otomatik olarak güncelleyin"
+    },
+    "prayTime": {
+        "imageSection": {
+            "title": "Namaz Vakitleri Hizmeti",
+            "subtitle": "Krallıkta tüm şehirler için doğru namaz vakitleri"
+        }
+    },
+    "prayers": {
+        "isha": "İşa",
+        "maghrib": "Akşam",
+        "asr": "İkindi",
+        "dhuhr": "Öğle",
+        "sunrise": "Güneş Doğuşu",
+        "fajr": "İmsak",
+        "cityTime": "Şehir / Zaman",
+        "remainingTime": "Namaza kadar kalan süre"
+    },
+    "prayCard": {
+        "remainingTime": "Kalan Süre",
+        "nearestMosque": "En Yakın Mescid",
+        "qiblaDirection": "Kıble Yönü",
+        "currentPrayer": "Şuanki Namaz",
+        "selectedDate": "Seçilen Tarih"
+    },
+    "table": {
+        "title": "Umm al‑Qura",
+        "subtitle": "Suudi Arabistan Krallığı’nın resmi takvimi",
+        "noData": "Gösterilecek veri yok",
+        "error": "Namaz vakitleri alınamadı"
+    },
+    "aboutUs": {
+        "breadcrumb": {
+            "home": "Ana Sayfa",
+            "about": "Hakkımızda"
+        },
+        "title": "Umm al‑Qura Takvimi Hakkında",
+        "description": "Umm al‑Qura takvimi, Suudi Arabistan Krallığı’nın resmi takvimidir. Günlük yaşamı düzenlemek ve Hicri ay başlangıçları, namaz vakitleri, Ramazan, Kadir Gecesi ve Kurban Bayramı gibi dini ve ulusal zamanı belirlemek için kullanılır.",
+        "feedback": {
+            "lastModified": "Son değiştirilme: 04/12/2020 - 16:13 Suudi saatiyle",
+            "stats": "2843 yorumdan %60’ı evet dedi",
+            "question": "Bu sayfa faydalı oldu mu?",
+            "yes": "Evet",
+            "no": "Hayır"
+        }
+    },
+    "services": {
+        "strategy": "Strateji, Politikalar ve Mevzuat",
+        "orgStructure": "Organizasyon Yapısı",
+        "aboutUs": "Hakkımızda",
+        "eParticipation": "E‑Katılım",
+        "tenders": "İhaleler ve Alımlar",
+        "budget": "Bütçe ve Harcamalar",
+        "careers": "Kariyer",
+        "sustainability": "Sürdürülebilirlik",
+        "partners": "Ortaklarımız / İşbirlikleri",
+        "contact": "İletişim",
+        "news": "Haberler ve Etkinlikler"
+    },
+    "qiblaCompass": {
+        "title": "Kıble Pusulası",
+        "description": "En son konum teknolojileriyle kıble yönünü doğru şekilde belirlemek için akıllı hizmet",
+        "loading": "Konumunuz alınıyor ve kıble yönü hesaplanıyor...",
+        "retry": "Tekrar Dene",
+        "direction": "Kıble Yönü",
+        "coordinates": "Konumunuz"
+    },
+    "webServices": {
+        "title": "Web Hizmetleri",
+        "description": "Umm al‑Qura Takvimi Portalı, resmi takvimi sunmayı amaçlayan resmi bir platformdur. Namaz vakitleri, İslami günler ve gök bilimsel olarak belirlenmiş tarihler için hizmet verir.",
+        "dateConversion": {
+            "title": "Tarih Dönüştürme",
+            "subtitle": "Bu araçla Gregoryen ile Hicri tarih arasında dönüşüm yapabilirsiniz"
+        },
+        "prayerTimes": {
+            "title": "Namaz Vakitleri",
+            "subtitle": "Onaylanmış Umm al‑Qura takvimine göre bulunduğunuz yer için doğru namaz vakitlerini alın"
+        },
+        "startService": "Hizmet Başlat"
+    },
+    "partners": {
+        "title": "Ortaklarımız"
+    },
+    "hijriMonthSelect": {
+        "selectMonth": "Ay Seçin",
+        "months": {
+            "10": "Şevval",
+            "11": "Zu’l-Kaide",
+            "12": "Zu’l-Hicce",
+            "01": "Muharrem",
+            "02": "Sefar",
+            "03": "Rebiülevvel",
+            "04": "Rebiülsani",
+            "05": "Cümadelülevvel",
+            "06": "Cümadelsani",
+            "07": "Recep",
+            "08": "Şaban",
+            "09": "Ramazan"
+        }
+    },
+    "miladiMonthSelect": {
+        "selectMonth": "Ay Seçin",
+        "months": {
+            "10": "Ekim",
+            "11": "Kasım",
+            "12": "Aralık",
+            "01": "Ocak",
+            "02": "Şubat",
+            "03": "Mart",
+            "04": "Nisan",
+            "05": "Mayıs",
+            "06": "Haziran",
+            "07": "Temmuz",
+            "08": "Ağustos",
+            "09": "Eylül"
+        }
+    },
+    "weekSelect": {
+        "selectWeek": "Hafta Seçin",
+        "selectWeekPlaceholder": "Bir hafta seçin",
+        "weeks": {
+            "week1": "1. Hafta",
+            "week2": "2. Hafta",
+            "week3": "3. Hafta",
+            "week4": "4. Hafta"
+        }
+    },
+    "daySelect": {
+        "selectDay": "Gün Seçin",
+        "selectDayPlaceholder": "Bir gün seçin",
+        "days": {
+            "sunday": "Pazar",
+            "monday": "Pazartesi",
+            "tuesday": "Salı",
+            "wednesday": "Çarşamba",
+            "thursday": "Perşembe",
+            "friday": "Cuma",
+            "saturday": "Cumartesi"
+        }
+    },
+    "citySelect": {
+        "selectCity": "Şehir Seçin",
+        "selectCityPlaceholder": "Şehir seçin",
+        "getCurrentLocation": "Mevcut Konumu Al",
+        "autoDetectLocation": "Otomatik Konum Bul",
+        "geolocationNotSupported": "Tarayıcı coğrafi konumlamayı desteklemiyor",
+        "locationDenied": "Konum erişimi reddedildi. Lütfen tarayıcı ayarlarından konuma izin verin",
+        "locationUnavailable": "Konum bilgisi kullanılamıyor",
+        "locationTimeout": "Konum isteği zaman aşımına uğradı",
+        "locationError": "Konum alınırken hata oluştu",
+        "detectedLocation": "Algılanan Konum",
+        "latitude": "Enlem",
+        "longitude": "Boylam",
+        "citiesLoadError": "Şehirler yüklenirken hata oluştu",
+        "loadingCities": "Şehirler yükleniyor..."
+    },
+    "prayTimeTable": {
+        "tabs": {
+            "daily": "Bugün",
+            "weekly": "Haftalık",
+            "monthly": "Miladi Ay",
+            "monthlyHijri": "Hicri Ay"
+        },
+        "showPrayerTimes": "Namaz Vakitlerini Göster",
+        "selectDateRange": "Tarih Aralığı Tipi Seçin",
+        "headers": {
+            "dayTime": "Gün / Zaman",
+            "dayName": "Haftanın Günü",
+            "hijriDate": "Hicri Tarih",
+            "gregorianDate": "Miladi Tarih",
+            "hijri": "Hicri",
+            "gregorian": "Miladi"
+        }
+    },
+    "loading": "Yükleniyor...",
+    "errors": {
+        "missingRequiredFields": "Lütfen bir ay ve konum/şehir seçin",
+        "failedToLoadPrayerTimes": "Namaz vakitleri yüklenemedi. Lütfen tekrar deneyin."
+    },
+    "error": {
+        "locationAccess": "Konum erişimi reddedildi",
+        "fetchPrayerTimes": "Namaz vakitleri alınamadı"
+    },
+    "calendar": {
+        "title": "Takvim",
+        "description": "Umm al‑Qura takvimine göre zaman araçları ve bilgiler içeren kapsamlı bir sayfa",
+        "tabs": {
+            "hijri": "Hicri Takvim – Umm al‑Qura",
+            "gregorian": "Miladi Takvim",
+            "prayTime": "Namaz Vakitleri",
+            "umqurra": "Umm al‑Qura Takvimi",
+            "dateConverter": "Tarih Dönüştürücü"
+        },
+        "conversion": {
+            "title": "Şundan Dönüştür",
+            "hijriToGregorian": "Hicri → Miladi",
+            "gregorianToHijri": "Miladi → Hicri"
+        },
+        "selectDate": "Tarih Seç",
+        "convertNow": "Şimdi Dönüştür",
+        "years": {
+            "hijri": "Muharrem Yılı",
+            "gregorian": "Ocak"
+        },
+        "monthNames": {
+            "hijri": {
+                "1447": "Muharrem 1447",
+                "safar": "Sefar 1447"
+            },
+            "gregorian": {
+                "2024": "Ocak 2024",
+                "2025": "Ocak 2025"
+            }
+        },
+        "days": {
+            "sat": "Cts",
+            "sun": "Paz",
+            "mon": "Pzt",
+            "tue": "Sal",
+            "wed": "Çar",
+            "thu": "Per",
+            "fri": "Cum"
+        },
+        "dualCalendar": {
+            "annualCalendarUmmAlQura": "Yıllık – Umm al‑Qura",
+            "annualCalendarGregorian": "Yıllık – Miladi",
+            "hijriRange": "Muharrem 1447AH – Sefar 1447AH",
+            "gregorianRange": "2025 Haziran – 2025 Temmuz"
+        },
+        "errorMessage": "Sonuç görüntülenemedi",
+        "errorSubMessage": "Tarih ve şehir seçilmeden namaz vakitleri doğru görüntülenemez.",
+        "selectCity": "Şehir Seçin"
+    },
+    "footer": {
+        "followUs": "Bizi Takip Edin",
+        "accessibilityTools": "Erişilebilirlik Araçları",
+        "groupTitle": "Grup Başlığı",
+        "clients": "Müşteriler",
+        "contactUs": "İletişim",
+        "participate": "Katıl",
+        "complaint": "Şikayet Gönder",
+        "reportCorruption": "Yolsuzluk Bildir",
+        "importantLinks": "Önemli Linkler",
+        "link1": "Ulusal Hizmet Portalı",
+        "link2": "Açık Hükümet Verileri",
+        "link3": "Ulusal Veri & Yapay Zeka Stratejisi",
+        "link4": "Açık Veri Portalı",
+        "link5": "E‑Katılım Portalı",
+        "summary": "Özet",
+        "aboutUmmAlQura": "Umm al‑Qura Takvimi Hakkında",
+        "privacy": "Gizlilik ve Kullanım Şartları",
+        "howToUse": "Umm al‑Qura web sitesi nasıl kullanılır",
+        "news": "Haberler & Etkinlikler",
+        "slaStats": "SLA İstatistikleri",
+        "mobileApp": "Mobil Uygulama",
+        "rss": "RSS",
+        "bottomLink": "Alt Bağlantı",
+        "sitemap": "Site Haritası",
+        "copyright": "© 2025 Umm al‑Qura Takvimi tüm hakları saklıdır",
+        "developedBy": "CODE şirketi tarafından geliştirilmiş ve bakımı yapılmaktadır",
+        "lastUpdated": "Son güncelleme: 05/04/2025"
+    },
+    "aboutUsDetails": {
+        "hero": {
+            "title": "Biz Kimiz",
+            "subtitle": "Krallıkta Hicri zamanı resmi referans"
+        },
+        "breadcrumb": {
+            "home": "Ana Sayfa",
+            "about": "Hakkımızda",
+            "whoWeAre": "Biz Kimiz"
+        },
+        "description": "Umm al‑Qura takvimi, Hicri gün ve tarihleri hesaplamada kullanılan resmi ve onaylı referanstır, tüm devlet ve özel kurumlar tarafından kullanılır ve Ramazan, bayramlar gibi dini günleri belirlemek için de onaylanmıştır. Takvim, Hicri ay başlangıçlarını belirlemek için Mekke horizonuna bağlı olarak gün batımı ve ay‐güneş konjüksiyonunu esas alan hassas astronomik hesaplamalara dayanır. Böylece İslam dünyasında en doğru ve düzenli takvimlerden biridir. Web sitesi, kullanıcılara Hicri ve Miladi tarihleri, namaz vakitlerini ve İslami günleri yüksek doğrulukla görüntüleme imkânı veren güncel ve kolay kullanımlı dijital bir deneyim sunmayı amaçlar.",
+        "mission": {
+            "title": "Misyonumuz",
+            "description": "Doğru ve güvenilir bir Hicri takvim sağlamak, onaylı astronomik temeller üzerine inşa edilerek ibadet işlemlerini ve resmi planlamaları profesyonel ve modern bir şekilde desteklemek."
+        },
+        "vision": {
+            "title": "Vizyonumuz",
+            "description": "Yerel ve küresel ölçekte güvenilir ilk Hicri zaman referansı olmak, bireylerin ve resmi kurumların ihtiyaçlarına hizmet etmek."
+        },
+        "features": {
+            "title": "Öne Çıkan Özelliklerimiz",
+            "smartDevices": "Akıllı cihazlarla tam uyumluluk",
+            "easyDesign": "Basit ve kullanımı kolay tasarım",
+            "astronomicalUpdates": "Mekke horizonuna göre sürekli astronomik güncellemeler",
+            "officialApproval": "İlgili Krallık kurumlarından resmi onay"
+        },
+        "extendedDescription": "Umm al‑Qura takvimi, Mekke horizonuna göre gün batımı ve ay‐güneş konjüksiyonu zamanlarını hassas şekilde hesaplayarak Hicri ay başlangıcını belirler. Bu temeli sayesinde diğer Hicri takvimler arasında dini gerçekliğe en yakın referanstır. Zamanın Müslümanların hayatında önemini anlıyor, günlük takvime erişimi kolaylaştıran, Hicri ve Miladi tarihleri entegre eden, namaz vakitleri ve önemli İslami günleri gösteren kapsamlı bir dijital deneyim sunuyoruz. Arayüz, tüm akıllı cihazlarla uyumlu olacak şekilde tasarlanmıştır, kullanıcıların takvimi hızlı ve kolay bir şekilde gezmesine imkân tanır. Umm al‑Qura takvimi yalnızca bir takvim değil; insan ile zaman, astronomi ile ibadet, Mekke ile dünya arasında bağlantı kuran doğru ve güvenilir bir zaman sistemidir.",
+        "users": {
+            "title": "Umm al‑Qura Takvimini Kimler Kullanır?",
+            "list": "• Devlet ve resmi kurumlar\n• Mescitler ve İslam merkezleri\n• Okullar ve üniversiteler\n• Bireyler günlük yaşamında\n• Şirketler ve kurumlar programlama düzenlemek için"
+        },
+        "finalWord": {
+            "title": "Son Söz",
+            "description": "Teknolojinin hızlandığı çağda, Umm al‑Qura takvimi ibadet vakitlerimizi ve günlerimizi düzenlemek için güvendiğimiz sabit noktadır; sadece kağıt üzerindeki sayılar değildir; insan ile zaman, astronomi ile din, Mekke ile dünya arasındaki bağlantıdır."
+        },
+        "lastModified": "Son değiştirilme: 05/04/2025 - 16:13 Suudi saatiyle"
+    },
+    "contactUs": {
+        "breadcrumb": {
+            "home": "Ana Sayfa",
+            "contact": "İletişim"
+        },
+        "title": "Bizimle İletişime Geçin",
+        "description": "Umm al‑Qura takvimi Suudi Arabistan’ın resmi takvimidir; günlük yaşamı düzenlemek ve Hicri ayların başlangıcı, namaz vakitleri, Ramazan ve bayramlar gibi dini ve ulusal günleri belirlemek için kullanılır.",
+        "contactCard": {
+            "title": "İletişim Kişisi Aamer",
+            "phone": {
+                "label": "Cep Telefonu",
+                "value": "9200343222"
+            },
+            "sms": {
+                "label": "SMS",
+                "value": "199099"
+            },
+            "email": {
+                "label": "E‑posta",
+                "value": "help@company.sa"
+            },
+            "fax": {
+                "label": "Faks",
+                "value": "00966-11-434-6654"
+            },
+            "location": {
+                "label": "Konum",
+                "value": "Riyad"
+            },
+            "followUs": "Bizi Takip Edin",
+            "emergencyContacts": "Acil Durum İletişimleri",
+            "civilDefense": "Sivil Savunma",
+            "police": "Polis",
+            "ambulance": "Ambulans",
+            "viewMore": "Daha Fazla Gör"
+        },
+        "form": {
+            "firstName": {
+                "label": "İsim",
+                "placeholder": "İsim girin",
+                "required": true
+            },
+            "lastName": {
+                "label": "Soyisim",
+                "placeholder": "Soyisim girin",
+                "required": true
+            },
+            "phone": {
+                "label": "Cep Telefonu",
+                "placeholder": "00 000 0000",
+                "required": true
+            },
+            "email": {
+                "label": "E‑posta",
+                "placeholder": "E‑posta adresi girin",
+                "required": true
+            },
+            "category": {
+                "label": "Kategori",
+                "placeholder": "Öneri"
+            },
+            "subject": {
+                "label": "Konu",
+                "placeholder": "Konu girin"
+            },
+            "fileUpload": {
+                "label": "Ek Dosya Yükle",
+                "helperText": "Maksimum dosya boyutu 2MB, desteklenen formatlar .jpg, .png ve .pdf.",
+                "browse": "Dosyalara Gözat"
+            },
+            "message": {
+                "label": "Size nasıl yardımcı olabiliriz?",
+                "placeholder": "Mesajınızı girin"
+            },
+            "submit": "Gönder"
+        },
+        "feedback": {
+            "lastModified": "Son değiştirilme: 05/04/2025 - 16:13 Suudi saatiyle",
+            "stats": "2843 yorumdan %60’ı evet dedi",
+            "question": "Bu sayfa faydalı oldu mu?",
+            "yes": "Evet",
+            "no": "Hayır"
+        },
+        "datePickers": {
+            "title": "Tarih Aralığı Seçimi",
+            "selectStartDate": "Başlangıç Tarihi Seçin",
+            "selectEndDate": "Bitiş Tarihi Seçin",
+            "gregorian": {
+                "title": "Miladi",
+                "dateRange": "Miladi Tarih Aralığı",
+                "selectDate": "Miladi Tarih Seçin",
+                "selectYear": "Yıl Seçin",
+                "selectMonth": "Ay Seçin",
+                "selectDay": "Gün Seçin"
+            },
+            "hijri": {
+                "title": "Hicri",
+                "dateRange": "Hicri Tarih Aralığı",
+                "selectDate": "Hicri Tarih Seçin",
+                "selectYear": "Yıl Seçin",
+                "selectMonth": "Ay Seçin",
+                "selectDay": "Gün Seçin"
+            }
+        },
+        "citySelect": {
+            "location": "Konum Seçimi",
+            "selectCity": "Şehir Seçin",
+            "selectCityPlaceholder": "Bir şehir seçin",
+            "loadingCities": "Şehirler yükleniyor...",
+            "citiesLoadError": "Şehirler yüklenirken hata oluştu",
+            "getCurrentLocation": "Konumu Al",
+            "autoDetectLocation": "Otomatik Konum",
+            "detectedLocation": "Algılanan Konum",
+            "latitude": "Enlem",
+            "longitude": "Boylam",
+            "geolocationNotSupported": "Tarayıcı konumlamayı desteklemiyor",
+            "locationDenied": "Konuma erişim reddedildi",
+            "locationUnavailable": "Konum bilgisi bulunamıyor",
+            "locationTimeout": "Konum isteği zaman aşımına uğradı",
+            "locationError": "Konum alınırken hata oluştu",
+            "example": {
+                "title": "Şehir Seçici Örneği",
+                "demonstration": "Otomatik algılamalı şehir seçici",
+                "results": "Seçim Sonuçları",
+                "selectedCity": "Seçilen Şehir ID",
+                "cityName": "Şehir İsmi",
+                "instructions": "Kullanım Talimatları",
+                "instruction1": "Koordinat almak için açılır menüden şehir seçin",
+                "instruction2": "Mevcut konumu kullanmak için otomatik algılama düğmesine basın",
+                "instruction3": "Bileşen algılanan koordinatları aşağıda gösterecek"
+            }
+        },
+        "unifiedDatePicker": {
+            "selectDate": "Tarih Seçin",
+            "selectHijriDate": "Hicri Tarih Seçin",
+            "selectGregorianDate": "Miladi Tarih Seçin",
+            "placeholderHijri": "Hicri tarih seçin",
+            "placeholderGregorian": "Miladi tarih seçin",
+            "today": "Bugün",
+            "cancel": "İptal",
+            "hijriCalendar": "Hicri Takvim",
+            "gregorianCalendar": "Miladi Takvim",
+            "selectYear": "Yıl Seçin",
+            "selectMonth": "Ay Seçin",
+            "selectDay": "Gün Seçin",
+            "demo": {
+                "title": "Birleşik Tarih Seçici Demo",
+                "hijriExample": "Hicri Tarih Seçici",
+                "gregorianExample": "Miladi Tarih Seçici",
+                "selectedDate": "Seçilen Tarih",
+                "noDateSelected": "Tarih seçilmedi",
+                "instructions": "Kullanım Talimatı",
+                "instruction1": "Takvim penceresini açmak için giriş alanına tıklayın",
+                "instruction2": "Başlık düğmeleri ile yıl/ay/gün görünümleri arasında geçiş yapın",
+                "instruction3": "Takvim ızgarasındaki bir tarihe tıklayarak seçim yapın",
+                "instruction4": "Pencere mobil, tablet ve masaüstü için uyumludur",
+                "resetHijri": "Hicri Tarihi Sıfırla",
+                "resetGregorian": "Miladi Tarihi Sıfırla"
+            }
+        }
+    },
+    "dateConverter": {
+        "hijriToGregorian": "Hicri → Miladi",
+        "gregorianToHijri": "Miladi → Hicri",
+        "hijriDate": "Hicri Tarih",
+        "gregorianDate": "Miladi Tarih",
+        "selectDate": "Tarih Seçin",
+        "selectDateToConvert": "Dönüştürülecek tarihi seçin",
+        "convert": "Dönüştür",
+        "conversionError": "Dönüşüm Hatası",
+        "conversionResult": "Dönüşüm Sonucu",
+        "tryAgain": "Lütfen tekrar deneyin",
+        "result": "Sonuç"
+    },
+    "components": {
+        "comingSoon": "Yakında"
+    },
+    "common": {
+        "loading": "Yükleniyor...",
+        "cancel": "İptal",
+        "select": "Seç",
+        "close": "Kapat",
+        "converting": "Dönüştürülüyor..."
+    },
+    "apiPage": {
+        "startService": "Hizmeti Başlat",
+        "breadcrumb": {
+            "home": "Ana Sayfa",
+            "api": "Uygulama Programlama Arayüzü"
+        },
+        "title": "Uygulama Programlama Arayüzleri (API)",
+        "new": "Yeni",
+        "apiLabel": "API Etiketi",
+        "description": "Uygulama Programlama Arayüzü (API), programların birbirleriyle etkileşmesine olanak tanıyan bir dizi kural ve talimattır. Örneğin bir mobil uygulamanın veri almak için bir sunucuyla etkileşime geçmesi API’lerle olur.",
+        "sla": "Hizmet Seviyesi Anlaşması",
+        "tabs": {
+            "steps": "Adımlar",
+            "terms": "Kullanım Şartları",
+            "docs": "Teknik Belgeler"
+        },
+        "steps": {
+            "1": "Absher platformu üzerinden Ulusal Birleşik Kayıt Portalı’na erişin.",
+            "2": "Lisans vermek için Uygulama Programlama Arayüzü hizmetini seçin.",
+            "3": "Gerekli verileri doldurun ve gerekli belgeleri ekleyin.",
+            "4": "Elektronik ödeme geçidi üzerinden ücreti ödeyin ve ödeme belgesini ekleyin.",
+            "5": "Veri doğrulaması ve gerekli işlemlerin tamamlanmasını bekleyin.",
+            "6": "Nihai onaydan sonra lisansı alın. Ücreti ödeyin ve lisansı teslim alın."
+        },
+        "feedbackTitle": "Yorumlar ve Öneriler",
+        "feedbackDesc": "Hükümet hizmetleriyle ilgili sorularınız veya geri bildirimleriniz varsa lütfen gerekli bilgileri doldurun.",
+        "feedbackButton": "İletişime Geç"
+    },
+    "apiSidebar": {
+        "targetGroup": "Hedef Grup",
+        "targetGroupDesc": "Körfez İşbirliği Konseyi ülkeleri vatandaşları, şirketler ve devlet kurumları",
+        "serviceDuration": "Hizmet Süresi",
+        "serviceDurationDesc": "Lisans",
+        "serviceChannels": "Hizmet Kanalları",
+        "serviceChannelsDesc": "Web ve mobil uygulama",
+        "serviceCost": "Hizmet Ücreti",
+        "serviceCostDesc": "Ücretsiz",
+        "paymentChannels": "Ödeme Kanalları",
+        "faq": "SSS",
+        "faqLink": "Bakanlık SSS sayfası",
+        "phone": "920033222",
+        "email": "help@company.sa",
+        "downloadGuide": "Kullanıcı Kılavuzunu İndir",
+        "mobileApps": "Mobil Uygulamalar"
+    },
+    "prayerTimes": {
+        "title": "Namaz Vakitleri",
+        "showAll": "Tümünü Göster",
+        "description": "Bölgenize göre namaz vakitlerini buradan keşfedebilirsiniz."
+    },
+    "prayers2": {
+        "fajr": {
+            "title": "İmsak",
+            "description": "Allah’a hamd, O’na üstünlük olsun"
+        },
+        "dhuhr": {
+            "title": "Öğle Namazı",
+            "description": "Yüce Allah’a hamd olsun"
+        },
+        "asr": {
+            "title": "İkindi Namazı",
+            "description": "Merhametlilerden olan Allah Kur’an’ı öğretti"
+        },
+        "maghrib": {
+            "title": "Akşam Namazı",
+            "description": "Güç yalnızca Allah’ındır"
+        },
+        "Ishaa": {
+            "title": "İşte Namazı",
+            "description": "Güç yalnızca Allah’ındır"
+        },
+        "qiblaDirection": "Kıble Yönü",
+        "mosqueNearest": "En Yakın Mescid"
+    },
+    "review": {
+        "description": "Bu hizmet ortalama 3,9 puan almıştır",
+        "sendReview": "Hizmeti Puanla",
+        "rating": "Puan"
+    },
+    "communicationShare": {
+        "breadcrumb": {
+            "home": "Ana Sayfa",
+            "about": "Hakkımızda",
+            "communicationShare": "İletişim ve Paylaşım"
+        },
+        "topics": {
+            "title": "İletişim ve Bilgi Paylaşımı",
+            "description": "Önemli bilgilere erişim sağlayın ve çeşitli kanallar aracılığıyla organizasyonumuzla iletişim kurun.",
+            "title1": "Strateji",
+            "title2": "Organizasyon Yapısı",
+            "title3": "Kuruluş Hakkında",
+            "title4": "E‑Katılım",
+            "title5": "İhaleler & Alımlar",
+            "title6": "Bütçe & Harcamalar",
+            "title7": "Kariyer",
+            "title8": "Sürdürülebilirlik"
+        }
+    },
+    "startDate": "Başlangıç Tarihi",
+    "endDate": "Bitiş Tarihi",
+    "BACK": "Geri",
+    "HIJRI_CALENDAR": "Hicri Takvim",
+    "GREGORIAN_CALENDAR": "Miladi Takvim",
+    "LOADING_CALENDAR": "Takvim Yükleniyor",
+    "ERROR_LOADING_CALENDAR": "Takvim verisi yüklenirken hata oluştu",
+    "RETRY": "Tekrar Dene",
+    "SelectKey": "Anahtar Seç",
+    "EditingKey": "Anahtar Düzenleniyor",
+    "Save": "Kaydet",
+    "Key": "Anahtar",
+    "Add": "Ekle",
+    "Cancel": "İptal",
+    "AddNewTranslation": "Yeni Çeviri Ekle"
+}
