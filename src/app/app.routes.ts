@@ -62,12 +62,19 @@ export const routes: Routes = [
             './features/components/date-converter/date-converter.component'
           ).then((c) => c.DateConverterComponent),
       },
-       {
-         path: 'app-pray-time',
+        {
+         path: 'date-converter',
         loadComponent: () =>
           import(
-            './features/pages/pray-time/pray-time.component'
-          ).then((c) => c.PrayTimeComponent),
+            './features/components/date-converter/date-converter.component'
+          ).then((c) => c.DateConverterComponent),
+      },
+       {
+         path: 'weekly-prayer-times',
+        loadComponent: () =>
+          import(
+            './features/components/weekly-prayer-times/weekly-prayer-times.component'
+          ).then((c) => c.WeeklyPrayerTimesComponent),
       },
       
       {

@@ -330,3 +330,32 @@ export interface City {
   longitude?: number;// خط الطول
   cityName?: string;
 }
+
+export interface PrayerTimesResult {
+  months: MonthPrayerTimes[];
+}
+
+// Response type
+export type PrayerTimesResponse = BaseResponse<PrayerTimesResult>;
+
+///////////////////////////////////////
+export interface PrayerTimesBetweenDatesInput {
+  fromHijriYear: number;
+  fromHijriMonth: number;
+  fromHijriDay: number;
+  toHijriYear: number;
+  toHijriMonth: number;
+  toHijriDay: number;
+  longitude: number;
+  latitude: number;
+  cityNumber?: number;
+}
+export interface FarmerDate {
+  solar_hijri_date_year: number;
+  solar_hijri_date_month_name: string;
+  solar_hijri_date_day: number;
+  stellar_dawn_date_month_name: string;
+  stellar_dawn_date_day: number;
+  frequently_used_by_farmers_month_name: string;
+  frequently_used_by_farmers_day: number;
+}

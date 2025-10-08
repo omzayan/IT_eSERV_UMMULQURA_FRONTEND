@@ -3,23 +3,19 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { interval, Subscription, Subject, takeUntil } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
-
-interface CarouselResponsive {
-  desktop: { breakpoint: { max: number; min: number }; items: number };
-  tablet: { breakpoint: { max: number; min: number }; items: number };
-  mobile: { breakpoint: { max: number; min: number }; items: number };
-}
+import { ApiService } from '../../../core';
+import { environment } from '../../../../environments/environment';
 
 interface SlideContent {
   id: number;
   title: string;
   description: string;
-  download: string;
-  backgroundImage: string;
-  gradientDirection: string;
-  textAlignment: string;
-  imagePosition: string;
-  images: string[];
+  download?: string;
+  imageUrl: string;
+  displayOrder: number;
+  showInWebsite: boolean;
+  backgroundImage?: string;
+  imagePosition?: string;
 }
 
 @Component({
@@ -34,12 +30,13 @@ interface SlideContent {
           class="flex transition-transform duration-500 ease-in-out h-full"
           [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
         >
-          <div
-            *ngFor="let slide of slides; let i = index"
-            class="w-full h-[490px] bg-cover bg-center bg-no-repeat relative py-6 px-[61px] flex-shrink-0"
-            [style.background-image]="slide.backgroundImage"
-            [style.direction]="isAr ? 'rtl' : 'ltr'"
-          >
+        <div
+  *ngFor="let slide of slides; let i = index"
+  class="min-w-full h-[490px] bg-cover bg-center bg-no-repeat relative py-6 px-[61px] flex-shrink-0"
+  [style.background-image]="'url(' + slide.imageUrl + ')'"
+  [style.direction]="isAr ? 'rtl' : 'ltr'"
+>
+
             <div class="flex justify-between items-center h-full">
               <!-- Text Content -->
               <div
@@ -53,12 +50,12 @@ interface SlideContent {
                   <span
                     class="text-white text-[60px] font-bold leading-tight font-ibm-plex-arabic"
                   >
-                    {{ slide.title | translate }}
+                    {{ slide.title }}
                   </span>
                   <span
                     class="text-white text-[20px] leading-relaxed font-ibm-plex-arabic"
                   >
-                    {{ slide.description | translate }}
+                    {{ slide.description }}
                   </span>
                 </div>
                 <div class="flex flex-col gap-3">
@@ -66,7 +63,7 @@ interface SlideContent {
                     class="text-white text-[20px] font-ibm-plex-arabic"
                     [class]="getTextAlignment(slide, isAr)"
                   >
-                    {{ slide.download | translate }}
+                    {{ 'hero.download' | translate }}
                   </span>
                   <div class="flex gap-3">
                     <img
@@ -86,9 +83,8 @@ interface SlideContent {
               <!-- Images -->
               <div class="flex gap-2" [class]="getImagePosition(slide)">
                 <img
-                  *ngFor="let image of slide.images"
-                  [src]="image"
-                  [alt]="'hero image ' + (i + 1)"
+                  [src]="slide.imageUrl"
+                  alt="hero image"
                   class="w-[400px] h-[400px] rounded-[20px] shadow-lg object-cover"
                 />
               </div>
@@ -111,14 +107,6 @@ interface SlideContent {
       </div>
     </div>
   `,
-  styles: [
-    `
-      .hero-section {
-        width: 100%;
-        height: 490px;
-      }
-    `,
-  ],
 })
 export class HeroSectionComponent implements OnInit, OnDestroy {
   currentSlide = 0;
@@ -126,45 +114,23 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   private autoPlaySubscription?: Subscription;
   private destroy$ = new Subject<void>();
 
-  slides: SlideContent[] = [
-    {
-      id: 1,
-      title: 'hero.title',
-      description: 'hero.description',
-      download: 'hero.download',
-      backgroundImage: `linear-gradient(to right, transparent 0%, #092A1E 49%), url("assets/images/city.jpg")`,
-      gradientDirection: 'to right',
-      textAlignment: 'left',
-      imagePosition: 'right',
-      images: ['assets/images/mock-up-2.png', 'assets/images/mock-up-1.png'],
-    },
-    {
-      id: 2,
-      title: 'hero.slide2.title',
-      description: 'hero.slide2.description',
-      download: 'hero.slide2.download',
-      backgroundImage: `linear-gradient(to left, transparent 0%, #1a4b3a 49%), url("assets/images/city.jpg")`,
-      gradientDirection: 'to left',
-      textAlignment: 'right',
-      imagePosition: 'left',
-      images: ['assets/images/mock-up-1.png', 'assets/images/mock-up-2.png'],
-    },
-  ];
+  slides: SlideContent[] = [];
+  baseUrl = environment.apiBaseUrl;
 
   constructor(
     private translate: TranslateService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to language changes using the language service
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
         this.isAr = language === 'ar';
       });
 
-    // Start auto-play
+    this.fetchBanners();
     this.startAutoPlay();
   }
 
@@ -172,6 +138,35 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.stopAutoPlay();
+  }
+
+  fetchBanners(): void {
+    this.apiService.getBanners().subscribe({
+      next: (res) => {
+        if (res && res.result) {
+          this.slides = res.result
+            .filter((b: SlideContent) => b.showInWebsite)
+            .map((b: SlideContent, index: number) => ({
+              ...b,
+              imageUrl: b.imageUrl.startsWith('http')
+                ? b.imageUrl
+                : `${this.baseUrl}${b.imageUrl}`,
+              backgroundImage:
+                index % 2 === 0
+                  ? `linear-gradient(to right, transparent 0%, #092A1E 49%), url('${this.baseUrl}${b.imageUrl}')`
+                  : `linear-gradient(to left, transparent 0%, #1a4b3a 49%), url('${this.baseUrl}${b.imageUrl}')`,
+              imagePosition: index % 2 === 0 ? 'right' : 'left',
+            }))
+            .sort(
+              (a: SlideContent, b: SlideContent) =>
+                a.displayOrder - b.displayOrder
+            );
+
+          console.log('Slides:', this.slides);
+        }
+      },
+      error: (err) => console.error('Error loading banners', err),
+    });
   }
 
   startAutoPlay(): void {
@@ -195,19 +190,23 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   }
 
   getContentAlignment(slide: SlideContent, isAr: boolean): string {
-    if (slide.id === 1) {
-      return isAr ? 'items-end' : 'items-start';
-    } else {
-      return isAr ? 'items-start' : 'items-end';
-    }
+    return slide.imagePosition === 'left'
+      ? isAr
+        ? 'items-start'
+        : 'items-end'
+      : isAr
+      ? 'items-end'
+      : 'items-start';
   }
 
   getTextAlignment(slide: SlideContent, isAr: boolean): string {
-    if (slide.id === 1) {
-      return isAr ? 'text-right' : 'text-left';
-    } else {
-      return isAr ? 'text-left' : 'text-right';
-    }
+    return slide.imagePosition === 'left'
+      ? isAr
+        ? 'text-left'
+        : 'text-right'
+      : isAr
+      ? 'text-right'
+      : 'text-left';
   }
 
   getImagePosition(slide: SlideContent): string {

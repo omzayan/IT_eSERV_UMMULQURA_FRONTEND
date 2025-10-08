@@ -5,6 +5,7 @@ import { PrayTimeSectionComponent } from '../../components/pray-time-section/pra
 import { QiblaCompassComponent } from '../../components/qibla-compass/qibla-compass.component';
 import { WebServicesComponent } from '../../components/web-services/web-services.component';
 import { PartnersComponent } from '../../components/partners/partners.component';
+import { PrayerTimesTableComponent } from "../../components/prayer-times-table/prayer-times-table.component";
 
 @Component({
   selector: 'app-home',
@@ -16,12 +17,13 @@ import { PartnersComponent } from '../../components/partners/partners.component'
     QiblaCompassComponent,
     WebServicesComponent,
     PartnersComponent,
-  ],
+    PrayerTimesTableComponent
+],
   template: `
     <div class="home-page">
       <app-hero-section></app-hero-section>
       <app-pray-time-section></app-pray-time-section>
-      <!-- <app-prayer-times-table></app-prayer-times-table> -->
+      <app-prayer-times-table></app-prayer-times-table>
       <app-qibla-compass id="qibla-compass-section"></app-qibla-compass>
       <app-web-services></app-web-services>
       <app-partners></app-partners>

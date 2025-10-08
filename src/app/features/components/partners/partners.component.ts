@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { ApiService } from '../../../core';
+import { environment } from '../../../../environments/environment';
 
 interface Partner {
   id: number;
-  name: string;
-  logo: string;
-  nameAr: string;
+  title: string;
+  link?: string;
+  imageId?: number;
+  imageUrl: string;
+  displayOrder: number;
+  showOnWebsite?: boolean;
 }
 
 @Component({
@@ -14,47 +20,41 @@ interface Partner {
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
-    <div
-      class="p-4 md:pb-[80px] md:px-[80px] flex flex-col gap-3 overflow-hidden"
-    >
-      <div class="flex gap-3 w-full">
-        <div class="flex flex-col gap-3">
-          <!-- Title -->
-          <div class="flex gap-4 w-full">
-            <h2 class="font-ibm-plex-arabic text-[30px] font-bold">
-              {{ 'partners.title' | translate }}
-            </h2>
-          </div>
-        </div>
-      </div>
+    <div class="p-4 md:pb-[80px] md:px-[80px] flex flex-col gap-3 overflow-hidden">
+      <h2 class="font-ibm-plex-arabic text-[30px] font-bold">
+        {{ 'partners.title' | translate }}
+      </h2>
 
       <div class="relative">
         <div class="flex partners-animate-scroll">
-          <!-- First set of partners -->
-          <div *ngFor="let partner of partners" class="flex-shrink-0 mx-8">
-            <div
-              class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 w-40 h-32 flex items-center justify-center border border-gray-100"
-            >
-              <img
-                [src]="partner.logo"
-                [alt]="partner.name"
-                class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-              />
+          <ng-container *ngFor="let partner of partners">
+            <div class="flex-shrink-0 mx-8">
+              <div
+                class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 w-40 h-32 flex items-center justify-center border border-gray-100"
+              >
+                <img
+                  [src]="partner.imageUrl"
+                  [alt]="partner.title"
+                  class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
             </div>
-          </div>
+          </ng-container>
 
-          <!-- Second set of partners for infinite scroll effect -->
-          <div *ngFor="let partner of partners" class="flex-shrink-0 mx-8">
-            <div
-              class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 w-40 h-32 flex items-center justify-center border border-gray-100"
-            >
-              <img
-                [src]="partner.logo"
-                [alt]="partner.name"
-                class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-              />
+          <!-- duplicate for infinite scroll -->
+          <ng-container *ngFor="let partner of partners">
+            <div class="flex-shrink-0 mx-8">
+              <div
+                class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 w-40 h-32 flex items-center justify-center border border-gray-100"
+              >
+                <img
+                  [src]="partner.imageUrl"
+                  [alt]="partner.title"
+                  class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -62,75 +62,47 @@ interface Partner {
   styles: [
     `
       @keyframes partners-scroll {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-50%);
-        }
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
       }
-
       .partners-animate-scroll {
         animation: partners-scroll 30s linear infinite;
       }
-
       .partners-animate-scroll:hover {
         animation-play-state: paused;
       }
     `,
   ],
 })
-export class PartnersComponent {
-  partners: Partner[] = [
-    {
-      id: 1,
-      name: 'National Center for Digital Government',
-      nameAr: 'المركز الوطني للحكومة الرقمية',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 2,
-      name: 'Ministry of Media',
-      nameAr: 'وزارة الإعلام',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 3,
-      name: 'Ministry of Finance',
-      nameAr: 'وزارة المالية',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 4,
-      name: 'Ministry of Culture',
-      nameAr: 'وزارة الثقافة',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 5,
-      name: 'Saudi Public Investment Fund',
-      nameAr: 'صندوق الاستثمارات العامة',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 6,
-      name: 'National Center for Digital Government',
-      nameAr: 'المركز الوطني للحكومة الرقمية',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 7,
-      name: 'Ministry of Media',
-      nameAr: 'وزارة الإعلام',
-      logo: 'assets/images/FIN.png',
-    },
-    {
-      id: 8,
-      name: 'Ministry of Finance',
-      nameAr: 'وزارة المالية',
-      logo: 'assets/images/FIN.png',
-    },
-  ];
+export class PartnersComponent implements OnInit, OnDestroy {
+  partners: Partner[] = [];
+  private apiSub?: Subscription;
+  baseUrl = environment.apiBaseUrl;
 
-  constructor() {}
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.apiSub = this.apiService.getPartners().subscribe({
+      next: (res: any) => {
+        if (res && res.result) {
+          this.partners = res.result
+            .filter((p: any) => p.showOnWebsite)
+            .map((p: any) => ({
+              id: p.id,
+              title: p.title,
+              link: p.link,
+              displayOrder: p.displayOrder,
+              showOnWebsite: p.showOnWebsite,
+              imageUrl: p.image ? `${this.baseUrl}${p.image.fileName}` : 'assets/images/default.png',
+            }))
+            .sort((a: Partner, b: Partner) => a.displayOrder - b.displayOrder);
+        }
+      },
+      
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.apiSub?.unsubscribe();
+  }
 }

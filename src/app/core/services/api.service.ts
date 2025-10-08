@@ -23,6 +23,8 @@ import {
   MonthPrayerTimes,
   DurationPrayerTimes,
   City,
+  PrayerTimesResult,
+  PrayerTimesBetweenDatesInput,
 } from '../types/api.types';
 
 @Injectable({
@@ -201,84 +203,122 @@ getMonthlyPrayerTimesByHijri(
   /**
    * Get calendar for a full year
    */
-  getCalendar(
-    hijriYear?: number,
-    gregorianYear?: number,
-    longitude?: number,
-    latitude?: number,
-    cityId?: number
-  ): Observable<CommonResponse<CalendarYearResult>> {
-    let params = new HttpParams();
 
-    if (hijriYear !== undefined)
-      params = params.set('hijriYear', hijriYear.toString());
-    if (gregorianYear !== undefined)
-      params = params.set('gregorianYear', gregorianYear.toString());
-    if (longitude !== undefined)
-      params = params.set('longitude', longitude.toString());
-    if (latitude !== undefined)
-      params = params.set('latitude', latitude.toString());
-    if (cityId !== undefined) params = params.set('cityId', cityId.toString());
+getCalendar(
+  hijriYear: number,
+  longitude?: number,
+  latitude?: number,
+  cityId?: number
+): Observable<BaseResponse<PrayerTimesResult>> {
+  let params = new HttpParams().set('Year', hijriYear.toString());
 
-    return this.http.get<CommonResponse<CalendarYearResult>>(
-      `${this.baseUrl}/GetCalendar`,
-      { params }
-    );
-  }
+  if (longitude !== undefined)
+    params = params.set('longitude', longitude.toString());
+  if (latitude !== undefined)
+    params = params.set('latitude', latitude.toString());
+  if (cityId !== undefined)
+    params = params.set('cityId', cityId.toString());
 
+  return this.http.get<BaseResponse<PrayerTimesResult>>(
+    `${this.baseUrl}api/services/app/PrayerTimes/GetYearPrayerTimes`,
+    { params }
+  );
+}
+
+///https://localhost:44311/api/services/app/PrayerTimes/GetYearPrayerTimes?Year=1400&Longitude=120&Latitude=30
   /**
    * Get calendar for a Gregorian date range
    */
-  getGregorianDateRangeCalendar(
-    startDate: Date,
-    endDate: Date,
-    longitude?: number,
-    latitude?: number,
-    cityNumber?: number
-  ): Observable<CommonResponse<CalendarDayResult>> {
-    let params = new HttpParams()
-      .set('startDate', startDate.toISOString())
-      .set('endDate', endDate.toISOString());
+getGregorianDateRangeCalendar(
+  startDate: Date,
+  endDate: Date,
+  longitude?: number,
+  latitude?: number
+): Observable<BaseResponse<DurationPrayerTimes>> {
 
-    if (longitude !== undefined)
-      params = params.set('longitude', longitude.toString());
-    if (latitude !== undefined)
-      params = params.set('latitude', latitude.toString());
-    if (cityNumber !== undefined)
-      params = params.set('cityNumber', cityNumber.toString());
+  return new Observable<BaseResponse<DurationPrayerTimes>>(observer => {
+    // حوّل التاريخ الأول
+    this.convertGregorianToHijri({
+      year: startDate.getFullYear(),
+      month: startDate.getMonth() + 1,
+      day: startDate.getDate()
+    }).subscribe(fromResp => {
+      // حوّل التاريخ التاني
+      this.convertGregorianToHijri({
+        year: endDate.getFullYear(),
+        month: endDate.getMonth() + 1,
+        day: endDate.getDate()
+      }).subscribe(toResp => {
 
-    return this.http.get<CommonResponse<CalendarDayResult>>(
-      `${this.baseUrl}/GetGregorianDateRangeCalendar`,
-      { params }
-    );
-  }
+        if (!fromResp.success || !toResp.success) {
+          observer.error('Conversion failed');
+          return;
+        }
+
+        // نجهز input زي getHijriDateRangeCalendar
+        const input: PrayerTimesBetweenDatesInput = {
+          fromHijriYear: fromResp.result.year,
+          fromHijriMonth: fromResp.result.month,
+          fromHijriDay: fromResp.result.day,
+          toHijriYear: toResp.result.year,
+          toHijriMonth: toResp.result.month,
+          toHijriDay: toResp.result.day,
+          longitude: longitude ?? 0,
+          latitude: latitude ?? 0
+        };
+
+        // نجهز الـ params زي الهجري
+        let params = new HttpParams()
+          .set('fromHijriYear', input.fromHijriYear.toString())
+          .set('fromHijriMonth', input.fromHijriMonth.toString())
+          .set('fromHijriDay', input.fromHijriDay.toString())
+          .set('toHijriYear', input.toHijriYear.toString())
+          .set('toHijriMonth', input.toHijriMonth.toString())
+          .set('toHijriDay', input.toHijriDay.toString())
+          .set('longitude', input.longitude.toString())
+          .set('latitude', input.latitude.toString());
+
+        // ننده نفس الـ endpoint بتاع الهجري
+        this.http.get<BaseResponse<DurationPrayerTimes>>(
+          `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesBetweenDates`,
+          { params }
+        ).subscribe({
+          next: res => {
+            observer.next(res);
+            observer.complete();
+          },
+          error: err => observer.error(err)
+        });
+
+      });
+    });
+  });
+}
+
+
 
   /**
    * Get calendar for a Hijri date range
    */
-  getHijriDateRangeCalendar(
-    startDate: Date,
-    endDate: Date,
-    longitude?: number,
-    latitude?: number,
-    cityNumber?: number
-  ): Observable<CommonResponse<CalendarDayResult>> {
-    let params = new HttpParams()
-      .set('startDate', startDate.toISOString())
-      .set('endDate', endDate.toISOString());
+ 
 
-    if (longitude !== undefined)
-      params = params.set('longitude', longitude.toString());
-    if (latitude !== undefined)
-      params = params.set('latitude', latitude.toString());
-    if (cityNumber !== undefined)
-      params = params.set('cityNumber', cityNumber.toString());
+ getHijriDateRangeCalendar(input: PrayerTimesBetweenDatesInput): Observable<BaseResponse<DurationPrayerTimes>> {
+    const params = new HttpParams()
+      .set('fromHijriYear', input.fromHijriYear.toString())
+      .set('fromHijriMonth', input.fromHijriMonth.toString())
+      .set('fromHijriDay', input.fromHijriDay.toString())
+      .set('toHijriYear', input.toHijriYear.toString())
+      .set('toHijriMonth', input.toHijriMonth.toString())
+      .set('toHijriDay', input.toHijriDay.toString())
+      .set('longitude', input.longitude.toString())
+      .set('latitude', input.latitude.toString());
 
-    return this.http.get<CommonResponse<CalendarDayResult>>(
-      `${this.baseUrl}/GetHijirDateRangeCalendar`,
+    return this.http.get<BaseResponse<DurationPrayerTimes>>(
+      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesBetweenDates`,
       { params }
     );
   }
+
 
   // ==================== QIBLA & LOCATION SERVICES ====================
 
@@ -376,5 +416,14 @@ getQibla(
       `${this.baseUrl}/static_page`,
       { params }
     );
+  }
+
+  // api.service.ts
+getBanners() {
+  return this.http.get<any>(`${this.baseUrl}api/services/app/Banner/GetList`);
+}
+
+ getPartners(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/services/app/Partner/GetList`);
   }
 }

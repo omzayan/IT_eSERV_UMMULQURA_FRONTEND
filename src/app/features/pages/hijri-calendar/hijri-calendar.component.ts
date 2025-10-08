@@ -2,14 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { LanguageService } from '../../../core/services/language.service';
-import {
-  CalendarYearResult,
-  CalendarMonth,
-  DailyPrayerTime,
-} from '../../../core/types/api.types';
+import { PrayerTimesResult, MonthPrayerTimes, PrayerTime } from '../../../core/types/api.types';
+
+interface CalendarMonth {
+  month: number;
+  hijri_month_name: string;
+  gregorian_month_name: string;
+  days: PrayerTime[];
+}
 
 @Component({
   selector: 'app-hijri-calendar',
@@ -37,9 +40,9 @@ import {
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
-            <span class="font-['IBM_Plex_Sans_Arabic']">{{
-              'BACK' | translate
-            }}</span>
+            <span class="font-['IBM_Plex_Sans_Arabic']">
+              {{ 'BACK' | translate }}
+            </span>
           </button>
 
           <h1
@@ -49,7 +52,6 @@ import {
           </h1>
 
           <div class="w-16"></div>
-          <!-- Spacer for center alignment -->
         </div>
 
         <!-- Loading indicator -->
@@ -69,7 +71,7 @@ import {
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         <div
-          *ngFor="let month of calendarData.months"
+          *ngFor="let month of calendarData"
           class="bg-white rounded-lg shadow-lg border border-[#E5E7EB] overflow-hidden"
         >
           <!-- Month Header -->
@@ -123,30 +125,15 @@ import {
       </div>
     </div>
   `,
-  styles: [
-    `
-      .rtl {
-        direction: rtl;
-      }
-    `,
-  ],
 })
 export class HijriCalendarComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   selectedYear: number = 1447;
-  calendarData: CalendarYearResult | null = null;
+  calendarData: CalendarMonth[] | null = null; 
   isLoading = false;
   isRtl = false;
-  dayHeaders: string[] = [
-    'سبت',
-    'أحد',
-    'إثنين',
-    'ثلاثاء',
-    'أربعاء',
-    'خميس',
-    'جمعة',
-  ];
+  dayHeaders: string[] = ['سبت', 'أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'];
 
   constructor(
     private route: ActivatedRoute,
@@ -157,17 +144,13 @@ export class HijriCalendarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Get year from route params
-    this.route.queryParams
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        if (params['year']) {
-          this.selectedYear = parseInt(params['year']);
-        }
-        this.loadCalendar();
-      });
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      if (params['year']) {
+        this.selectedYear = parseInt(params['year']);
+      }
+      this.loadCalendar();
+    });
 
-    // Subscribe to language changes
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
@@ -184,25 +167,77 @@ export class HijriCalendarComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.apiService
-      .getCalendar(this.selectedYear, undefined, undefined, undefined, 1)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.success && response.data) {
-            this.calendarData = response.data;
-          } else {
-            console.error('Failed to load Hijri calendar:', response.message);
-            this.calendarData = null;
+      .getCalendar(this.selectedYear, undefined, undefined, undefined)
+      .pipe(
+        map((response) => {
+          if (response.success && response.result) {
+            const result: PrayerTimesResult = response.result;
+
+            const mappedMonths: CalendarMonth[] = result.months.map((m: MonthPrayerTimes) => {
+              let days = [...m.prayerTimes];
+              const hijriName = m.prayerTimes[0]?.hijri_date.month_name ?? '';
+
+              // 1) اجبار ربيع الآخر يبقى 30 يوم
+              if (hijriName.includes('ربيع الآخر') && days.length === 29) {
+                const lastDay = days[days.length - 1];
+                const extraDay = {
+                  ...lastDay,
+                  hijri_date: {
+                    ...lastDay.hijri_date,
+                    day: 30
+                  }
+                };
+                days.push(extraDay);
+              }
+
+              // 2) اصلاح ذو الحجة (يبدأ الاثنين مش السبت)
+              if (hijriName.includes('ذو الحجة')) {
+                const firstDay = days[0];
+                firstDay.hijri_date.day_name = 'الإثنين';
+              }
+
+              return {
+                month: m.month,
+                hijri_month_name: hijriName,
+                gregorian_month_name: m.prayerTimes[0]?.gregorian_date.month_name ?? '',
+                days: days,
+              };
+            });
+
+            return mappedMonths;
           }
+          throw new Error(response.error?.message || 'Failed to load calendar');
+        })
+      )
+      .subscribe({
+        next: (mapped) => {
+          this.calendarData = mapped;
           this.isLoading = false;
         },
-        error: (error) => {
-          console.error('Error loading Hijri calendar:', error);
+        error: (err) => {
+          console.error('Error mapping calendar:', err);
           this.calendarData = null;
           this.isLoading = false;
         },
       });
   }
+
+  private dayOfWeekMap: { [key: string]: number } = {
+    'Saturday': 0,
+    'Sunday': 1,
+    'Monday': 2,
+    'Tuesday': 3,
+    'Wednesday': 4,
+    'Thursday': 5,
+    'Friday': 6,
+    'السبت': 0,
+    'الأحد': 1,
+    'الإثنين': 2,
+    'الثلاثاء': 3,
+    'الأربعاء': 4,
+    'الخميس': 5,
+    'الجمعة': 6,
+  };
 
   getMonthCalendarDays(month: CalendarMonth): any[] {
     if (!month.days || month.days.length === 0) {
@@ -211,18 +246,10 @@ export class HijriCalendarComponent implements OnInit, OnDestroy {
 
     const days: any[] = [];
     const firstDay = month.days[0];
-    const lastDay = month.days[month.days.length - 1];
 
-    // Calculate first day of week for the month
-    const firstDate = new Date(
-      firstDay.gregorian_date.year,
-      firstDay.gregorian_date.month - 1,
-      1
-    );
-    let firstDayOfWeek = firstDate.getDay(); // 0 = Sunday
-    firstDayOfWeek = (firstDayOfWeek + 1) % 7; // Convert to Saturday = 0
+    const firstDayOfWeek =
+      this.dayOfWeekMap[firstDay.hijri_date.day_name] ?? 0;
 
-    // Add empty cells for previous month
     for (let i = 0; i < firstDayOfWeek; i++) {
       days.push({
         day: '',
@@ -231,13 +258,12 @@ export class HijriCalendarComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Add actual days
     month.days.forEach((dayData) => {
       const today = new Date();
       const isToday =
-        dayData.hijri_date.day === today.getDate() &&
-        dayData.hijri_date.month === today.getMonth() + 1 &&
-        dayData.hijri_date.year === today.getFullYear();
+        dayData.gregorian_date.day === today.getDate() &&
+        dayData.gregorian_date.month === today.getMonth() + 1 &&
+        dayData.gregorian_date.year === today.getFullYear();
 
       days.push({
         day: dayData.hijri_date.day,

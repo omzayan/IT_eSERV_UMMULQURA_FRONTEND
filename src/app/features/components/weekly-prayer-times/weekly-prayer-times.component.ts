@@ -10,7 +10,7 @@ import {
 } from '../../shared/unified-date-picker/unified-date-picker.component';
 import { ApiService } from '../../../core/services/api.service';
 import { LanguageService } from '../../../core/services/language.service';
-import { City, DailyPrayerTime } from '../../../core/types/api.types';
+import { City, DailyPrayerTime, PrayerTimesBetweenDatesInput } from '../../../core/types/api.types';
 
 interface LocationState {
   cityId?: number;
@@ -146,7 +146,7 @@ type DateRangeType = 'gregorian' | 'hijri';
               <tr>
                 <th *ngFor="let header of ['dayName','hijriDate','gregorianDate','fajr','sunrise','dhuhr','asr','maghrib','isha']"
                     class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] whitespace-nowrap border-s first:border-s-0">
-                  {{ ('prayTimeTable.headers.' + header | translate) || ('prayers.' + header | translate) }}
+                  {{ ('prayTimeHeader.headers.' + header | translate) || ('prayers.' + header | translate) }}
                 </th>
               </tr>
             </thead>
@@ -154,8 +154,21 @@ type DateRangeType = 'gregorian' | 'hijri';
               <tr *ngFor="let row of prayerTimes"
                   class="font-ibm-plex-arabic bg-white border-b border-[#D2D6DB]">
                 <td class="p-4">{{ row.day_name || '--' }}</td>
-                <td class="p-4 border-s">{{ row.hijri_date.formatted || '--' }}</td>
-                <td class="p-4 border-s">{{ row.gregorian_date.formatted || '--' }}</td>
+                <td class="p-4 border-s">
+  {{
+    row.hijri_date.day + '/' +
+    row.hijri_date.month + '/' +
+    row.hijri_date.year || '--'
+  }}
+</td>
+<td class="p-4 border-s">
+  {{
+    row.gregorian_date.day + '/' +
+    row.gregorian_date.month + '/' +
+    row.gregorian_date.year || '--'
+  }}
+</td>
+
                 <td class="p-4 border-s">{{ formatTime12(row.prayer_times.fajr) }}</td>
                 <td class="p-4 border-s">{{ formatTime12(row.prayer_times.sunrise) }}</td>
                 <td class="p-4 border-s">{{ formatTime12(row.prayer_times.dhuhr) }}</td>
@@ -256,52 +269,68 @@ handleCitySelect(city: City): void {
     return new Date(dateValue.year, dateValue.month - 1, dateValue.dayNumber);
   }
 
-  async fetchDateRangeData(): Promise<void> {
-    try {
-      this.loading = true;
-      if (!this.isFormValid()) return;
+async fetchDateRangeData(): Promise<void> {
+  try {
+    this.loading = true;
+    if (!this.isFormValid()) return;
 
-      let startDate: Date;
-      let endDate: Date;
-      let response;
+    let response;
 
-      if (this.selectedDateRangeType === 'gregorian') {
-        startDate = this.datePickerValueToGregorianDate(this.gregorianDateRange.startDate!);
-        endDate = this.datePickerValueToGregorianDate(this.gregorianDateRange.endDate!);
+    if (this.selectedDateRangeType === 'gregorian') {
+      // 1️⃣ لو التاريخ ميلادي → استخدمي الـ service اللي بيحول Gregorian إلى Hijri
+      const start = this.datePickerValueToGregorianDate(this.gregorianDateRange.startDate!);
+      const end = this.datePickerValueToGregorianDate(this.gregorianDateRange.endDate!);
 
-        if (this.selectedLocation.cityId) {
-          response = await this.apiService
-            .getGregorianDateRangeCalendar(startDate, endDate, undefined, undefined, this.selectedLocation.cityId)
-            .toPromise();
-        } else if (this.selectedLocation.lat && this.selectedLocation.lng) {
-          response = await this.apiService
-            .getGregorianDateRangeCalendar(startDate, endDate, this.selectedLocation.lng, this.selectedLocation.lat, undefined)
-            .toPromise();
-        }
-      } else {
-        startDate = this.datePickerValueToHijriDate(this.hijriDateRange.startDate!);
-        endDate = this.datePickerValueToHijriDate(this.hijriDateRange.endDate!);
+      response = await this.apiService
+        .getGregorianDateRangeCalendar(
+          start,
+          end,
+          this.selectedLocation.lng ?? 46.69,
+          this.selectedLocation.lat ?? 24.67
+        )
+        .toPromise();
+    } else {
+      // 2️⃣ لو التاريخ هجري → استخدمي API مباشر بالـ input
+      const input: PrayerTimesBetweenDatesInput = {
+        fromHijriYear: this.hijriDateRange.startDate!.year,
+        fromHijriMonth: this.hijriDateRange.startDate!.month,
+        fromHijriDay: this.hijriDateRange.startDate!.dayNumber,
+        toHijriYear: this.hijriDateRange.endDate!.year,
+        toHijriMonth: this.hijriDateRange.endDate!.month,
+        toHijriDay: this.hijriDateRange.endDate!.dayNumber,
+        longitude: this.selectedLocation.lng ?? 46.69,
+        latitude: this.selectedLocation.lat ?? 24.67,
+      };
 
-        if (this.selectedLocation.cityId) {
-          response = await this.apiService
-            .getHijriDateRangeCalendar(startDate, endDate, undefined, undefined, this.selectedLocation.cityId)
-            .toPromise();
-        } else if (this.selectedLocation.lat && this.selectedLocation.lng) {
-          response = await this.apiService
-            .getHijriDateRangeCalendar(startDate, endDate, this.selectedLocation.lng, this.selectedLocation.lat, undefined)
-            .toPromise();
-        }
-      }
-
-      if (response && response.success && response.data) {
-        this.prayerTimes = response.data.days!;
-      }
-    } catch (error) {
-      console.error('Error fetching date range prayer times:', error);
-    } finally {
-      this.loading = false;
+      response = await this.apiService.getHijriDateRangeCalendar(input).toPromise();
     }
+
+    // ✅ المعالجة الموحدة للـ Response
+    if (response && response.success && response.result) {
+      this.prayerTimes = response.result.prayerTimes.map((pt) => ({
+        hijri_date: pt.hijri_date,
+        gregorian_date: pt.gregorian_date,
+        day_name: pt.gregorian_date.day_name, // خديها مباشرة لو بترجع من الـ API
+        prayer_times: {
+          fajr: pt.fajr,
+          sunrise: pt.sunrise,
+          dhuhr: pt.dhuhr,
+          asr: pt.asr,
+          maghrib: pt.maghrib,
+          isha: pt.isha,
+          sunset: pt.sunset,
+        },
+      }));
+    }
+  } catch (error) {
+    console.error('Error fetching date range prayer times:', error);
+  } finally {
+    this.loading = false;
   }
+}
+
+
+
 
   formatTime12(time: string | undefined): string {
     if (!time) return '--';

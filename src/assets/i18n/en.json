@@ -672,5 +672,23 @@
   "GREGORIAN_CALENDAR": "Gregorian Calendar",
   "LOADING_CALENDAR": "Loading calendar",
   "ERROR_LOADING_CALENDAR": "Error loading calendar data",
-  "RETRY": "Retry"
+  "RETRY": "Retry",
+
+
+  
+  "prayTimeHeader": {
+    "headers": {
+      "dayName": "Day",
+      "hijriDate": "Hijri Date",
+      "gregorianDate": "Gregorian Date",
+      "fajr": "Fajr",
+      "sunrise": "Sunrise",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha"
+    }
+  }
+
+
 }

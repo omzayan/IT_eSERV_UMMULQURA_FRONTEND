@@ -675,5 +675,22 @@
   "GREGORIAN_CALENDAR": "التقويم الميلادي",
   "LOADING_CALENDAR": "جاري تحميل التقويم",
   "ERROR_LOADING_CALENDAR": "خطأ في تحميل بيانات التقويم",
-  "RETRY": "إعادة المحاولة"
+  "RETRY": "إعادة المحاولة",
+
+  
+  "prayTimeHeader": {
+    "headers": {
+      "dayName": "اليوم",
+      "hijriDate": "التاريخ الهجري",
+      "gregorianDate": "التاريخ الميلادي",
+      "fajr": "الفجر",
+      "sunrise": "الشروق",
+      "dhuhr": "الظهر",
+      "asr": "العصر",
+      "maghrib": "المغرب",
+      "isha": "العشاء"
+    }
+  }
+
+
 }
