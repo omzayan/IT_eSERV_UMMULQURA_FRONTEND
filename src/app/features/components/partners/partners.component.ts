@@ -85,20 +85,27 @@ export class PartnersComponent implements OnInit, OnDestroy {
     this.apiSub = this.apiService.getPartners().subscribe({
       next: (res: any) => {
         if (res && res.result) {
-          this.partners = res.result
-            .filter((p: any) => p.showOnWebsite)
-            .map((p: any) => ({
-              id: p.id,
-              title: p.title,
-              link: p.link,
-              displayOrder: p.displayOrder,
-              showOnWebsite: p.showOnWebsite,
-              imageUrl: p.image ? `${this.baseUrl}${p.image.fileName}` : 'assets/images/default.png',
-            }))
-            .sort((a: Partner, b: Partner) => a.displayOrder - b.displayOrder);
+  this.partners = res.result
+  .filter((p: any) => p.showOnWebsite)
+  .map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    link: p.link,
+    displayOrder: Number(p.displayOrder),
+    showOnWebsite: p.showOnWebsite,
+    imageUrl: p.image && p.image.bytes
+      ? `data:image/png;base64,${p.image.bytes}`
+      : 'assets/images/default.png',
+  }))
+  .sort((a: Partner, b: Partner) => a.displayOrder - b.displayOrder);
+
+console.log(this.partners);
+
+
+              console.log(this.partners);
         }
       },
-      
+     
     });
   }
 
