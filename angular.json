@@ -70,6 +70,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+            "options": {
+    "ssl": true,
+    "port": 4200,
+    "host": "localhost"
+  },
           "configurations": {
             "production": {
               "buildTarget": "Um-alquraa-Angular:build:production"
