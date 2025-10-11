@@ -424,6 +424,7 @@ getBanners() {
 }
 
  getPartners(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/services/app/Partner/GetList`);
+    return this.http.get<any>(`${this.baseUrl}api/services/app/Partner/GetList`);
   }
+  
 }
