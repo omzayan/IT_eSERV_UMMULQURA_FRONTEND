@@ -25,18 +25,16 @@ interface SlideContent {
       <div class="relative w-full h-full">
         <div
           class="flex transition-transform duration-500 ease-in-out h-full"
-          [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
         >
           <div
             *ngFor="let slide of slides; let i = index"
-            class="min-w-full h-[490px] bg-cover bg-center bg-no-repeat relative py-6 px-[61px] flex-shrink-0"
-            [ngStyle]="{'background-image': 'url(' + slide.imageUrl + ')'}"
-            [style.direction]="isAr ? 'rtl' : 'ltr'"
-          >
-            <!-- overlay عشان النص يبان -->
-            <div class="absolute inset-0 bg-black/40"></div>
-
-            <div class="relative flex flex-col gap-[50px] justify-center h-full z-10">
+        class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+        [ngStyle]="{ opacity: currentSlide === i ? 1 : 0 }"
+      >
+        <img [src]="slide.imageUrl" alt="{{ slide.title }}" class="absolute inset-0 w-full h-full object-cover" />
+            
+        <div class="absolute inset-0 bg-black/40"></div>
+            <div class="relative flex flex-col gap-[50px] justify-center h-full z-10 px-[61px] py-6">
               <!-- Title & Description -->
               <div class="flex flex-col gap-6">
                 <span class="text-white text-[60px] font-bold leading-tight font-ibm-plex-arabic">
