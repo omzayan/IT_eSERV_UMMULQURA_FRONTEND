@@ -76,6 +76,14 @@ export const routes: Routes = [
             './features/components/weekly-prayer-times/weekly-prayer-times.component'
           ).then((c) => c.WeeklyPrayerTimesComponent),
       },
+      {
+         path: 'umm-qura-calender',
+        loadComponent: () =>
+          import(
+            './features/components/umm-qura-calender/umm-qura-calender.component'
+          ).then((c) => c.UmmQuraCalenderComponent),
+      },
+      
       
       {
         path: 'about-us-details',

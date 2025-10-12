@@ -36,28 +36,36 @@ export class ReferenceDataService {
   /**
    * Get Gregorian months
    */
-  getGregorianMonths(): Observable<MonthResult[]> {
-    return this.apiService
-      .getGregorianMonths()
-      .pipe(
-        map((response) =>
-          response.success && response.data ? response.data : []
-        )
-      );
-  }
+getGregorianMonths(): Observable<MonthResult[]> {
+  return this.apiService
+    .getGregorianMonths()
+    .pipe(
+      map((response: any) =>
+        response.success && response.result
+          ? response.result.map((m: any) => ({
+              month_number: m.id.toString(),
+              month_name: m.name
+            }))
+          : []
+      )
+    );
+}
 
-  /**
-   * Get Hijri months
-   */
-  getHijriMonths(): Observable<MonthResult[]> {
-    return this.apiService
-      .getHijriMonths()
-      .pipe(
-        map((response) =>
-          response.success && response.data ? response.data : []
-        )
-      );
-  }
+getHijriMonths(): Observable<MonthResult[]> {
+  return this.apiService
+    .getHijriMonths()
+    .pipe(
+      map((response: any) =>
+        response.success && response.result
+          ? response.result.map((m: any) => ({
+              month_number: m.id.toString(),
+              month_name: m.name
+            }))
+          : []
+      )
+    );
+}
+
 
   /**
    * Get all available cities

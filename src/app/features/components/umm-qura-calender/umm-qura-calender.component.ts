@@ -56,7 +56,7 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
   // Date state
   currentHijriYear = 1447;
   currentHijriMonth = 1; // Muharram
-  currentGregorianYear = 2024;
+  currentGregorianYear = 2025;
   currentGregorianMonth = 1; // January
 
   // Dropdown states
@@ -653,19 +653,20 @@ private generateHijriCalendarFromData(): void {
     }
   }
 
-  getHijriMonthName(month: number): string {
-    const monthData = this.hijriMonths.find(
-      (m) => parseInt(m.month_number) === month
-    );
-    return monthData ? monthData.month_name : '';
-  }
+ getHijriMonthName(month: number): string {
+  const monthData = this.hijriMonths.find(
+    (m) => parseInt(m.month_number, 10) === month
+  );
+  return monthData ? monthData.month_name : '';
+}
 
-  getGregorianMonthName(month: number): string {
-    const monthData = this.gregorianMonths.find(
-      (m) => parseInt(m.month_number) === month
-    );
-    return monthData ? monthData.month_name : '';
-  }
+getGregorianMonthName(month: number): string {
+  const monthData = this.gregorianMonths.find(
+    (m) => parseInt(m.month_number, 10) === month
+  );
+  return monthData ? monthData.month_name : '';
+}
+
 
   // Utility method for template use
   parseInt(value: string): number {

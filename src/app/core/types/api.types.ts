@@ -139,6 +139,7 @@ export interface MonthResult {
   month_name: string;
 }
 
+
 export interface CityResult {
   id: number;
   name: string;
