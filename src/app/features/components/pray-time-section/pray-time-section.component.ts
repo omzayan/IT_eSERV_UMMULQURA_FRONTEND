@@ -413,7 +413,7 @@ export class PrayTimeSectionComponent
 
     // If there's a pending date update, apply it now
     if (this.pendingDateUpdate) {
-      console.log('Applying pending date update:', this.pendingDateUpdate);
+    
       this.selectedGregorianDate = this.pendingDateUpdate;
       this.pendingDateUpdate = null;
       this.cdr.detectChanges();
@@ -489,7 +489,7 @@ export class PrayTimeSectionComponent
     this.isShowingTomorrowData = false;
     this.isShowingCustomDate = false; // Auto-selected date is not custom
 
-    console.log('Set date picker to today:', todayDate);
+  
 
     if (this.viewInitialized) {
       this.selectedGregorianDate = todayDate;
@@ -1013,14 +1013,7 @@ private handleHijriDateSearch(): void {
 
       this.isShowingCustomDate = !isToday && !isTomorrow;
 
-      console.log('Custom date check:', {
-        selectedDate: selectedDate.toDateString(),
-        today: today.toDateString(),
-        tomorrow: tomorrow.toDateString(),
-        isToday,
-        isTomorrow,
-        isCustomDate: this.isShowingCustomDate,
-      });
+      
     }
     // For Hijri dates, consider them custom for now (unless you want to implement Hijri comparison)
     else if (this.selectedHijriDate) {

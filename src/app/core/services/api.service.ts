@@ -344,7 +344,8 @@ export class ApiService {
   /**
    * Get prayer times for all cities
    */
-  getCitiesByCountry(country: string): Observable<City[] | null> {
+ 
+ getCitiesByCountry(country: string): Observable<City[] | null> {
     const params = new HttpParams().set('country', country);
 
     return this.http
@@ -354,7 +355,6 @@ export class ApiService {
       )
       .pipe(map((res) => (res.success ? res.result : null)));
   }
-
 
   // ==================== REFERENCE DATA SERVICES ====================
 
@@ -421,8 +421,9 @@ export class ApiService {
   }
 
   // api.service.ts
-  getBanners() {
-    return this.http.get<any>(`${this.baseUrl}api/services/app/Banner/GetList`);
+
+ getBanners() {
+    return this.http.get<any>(`${environment.apiBaseUrl}api/services/app/Banner/GetList`);
   }
 
   getPartners(): Observable<any> {

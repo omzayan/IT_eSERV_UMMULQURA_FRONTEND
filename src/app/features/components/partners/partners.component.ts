@@ -99,10 +99,6 @@ export class PartnersComponent implements OnInit, OnDestroy {
   }))
   .sort((a: Partner, b: Partner) => a.displayOrder - b.displayOrder);
 
-console.log(this.partners);
-
-
-              console.log(this.partners);
         }
       },
      
