@@ -388,7 +388,7 @@ export class PrayTimeSectionComponent
       });
 
     // Update time every second
-    this.timeSubscription = interval(1000).subscribe(() => {
+    this.timeSubscription = interval(60000).subscribe(() => {
       this.now = new Date();
     });
 
@@ -893,16 +893,7 @@ private handleHijriDateSearch(): void {
 
     let diff = Math.floor((prayerTime.getTime() - this.now.getTime()) / 1000);
 
-    // Debug logging
-    if (key === 'fajr' && this.isShowingTomorrowData) {
-      console.log(`Time remaining for ${key}:`, {
-        timeStr,
-        prayerTime: prayerTime.toLocaleString(),
-        currentTime: this.now.toLocaleString(),
-        diffInSeconds: diff,
-        isShowingTomorrow: this.isShowingTomorrowData,
-      });
-    }
+  
 
     if (diff < 0) return '--';
 

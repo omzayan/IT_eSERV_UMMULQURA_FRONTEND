@@ -72,18 +72,18 @@ export class ReferenceDataService {
   /**
    * Get application settings
    */
-  getAppSettings(): Observable<AppSettingResult | null> {
-    return this.apiService
-      .getAppSettings()
-      .pipe(map((response) => (response.success ? response.data : null)));
-  }
+  // getAppSettings(): Observable<AppSettingResult | null> {
+  //   return this.apiService
+  //     .getAppSettings()
+  //     .pipe(map((response) => (response.success ? response.data : null)));
+  // }
 
   /**
    * Get static page content
    */
-  getStaticPage(pageLink: string): Observable<StaticPageResult | null> {
-    return this.apiService
-      .getStaticPage(pageLink)
-      .pipe(map((response) => (response.success ? response.data : null)));
-  }
+  // getStaticPage(pageLink: string): Observable<StaticPageResult | null> {
+  //   return this.apiService
+  //     .getStaticPage(pageLink)
+  //     .pipe(map((response) => (response.success ? response.data : null)));
+  // }
 }

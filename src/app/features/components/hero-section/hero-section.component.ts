@@ -90,7 +90,7 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-     console.log('HeroSectionComponent initialized'); 
+   
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
@@ -108,12 +108,11 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   }
 
  fetchBanners(): void {
-  const url = `${this.baseUrl}api/services/app/Banner/GetList`;
-  console.log('Requesting banners from:', url);
+
 
   this.apiService.getBanners().subscribe({
     next: (res) => {
-      console.log('API response:', res);
+     
        
       if (res && res.result) {
         this.slides = res.result.map((b: any) => ({
@@ -124,7 +123,7 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
           displayOrder: b.displayOrder,
           showInWebsite: b.showInWebsite,
         }));
-        console.log('Slides:', this.slides);
+ 
        
       }
     },
