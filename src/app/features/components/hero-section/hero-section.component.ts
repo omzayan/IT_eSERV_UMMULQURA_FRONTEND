@@ -10,12 +10,9 @@ interface SlideContent {
   id: number;
   title: string;
   description: string;
-  download?: string;
   imageUrl: string;
   displayOrder: number;
   showInWebsite: boolean;
-  backgroundImage?: string;
-  imagePosition?: string;
 }
 
 @Component({
@@ -30,63 +27,34 @@ interface SlideContent {
           class="flex transition-transform duration-500 ease-in-out h-full"
           [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
         >
-        <div
-  *ngFor="let slide of slides; let i = index"
-  class="min-w-full h-[490px] bg-cover bg-center bg-no-repeat relative py-6 px-[61px] flex-shrink-0"
-  [style.background-image]="'url(' + slide.imageUrl + ')'"
-  [style.direction]="isAr ? 'rtl' : 'ltr'"
->
+          <div
+            *ngFor="let slide of slides; let i = index"
+            class="min-w-full h-[490px] bg-cover bg-center bg-no-repeat relative py-6 px-[61px] flex-shrink-0"
+            [ngStyle]="{'background-image': 'url(' + slide.imageUrl + ')'}"
+            [style.direction]="isAr ? 'rtl' : 'ltr'"
+          >
+            <!-- overlay عشان النص يبان -->
+            <div class="absolute inset-0 bg-black/40"></div>
 
-            <div class="flex justify-between items-center h-full">
-              <!-- Text Content -->
-              <div
-                class="flex flex-col gap-[50px]"
-                [class]="getContentAlignment(slide, isAr)"
-              >
-                <div
-                  class="flex flex-col gap-6"
-                  [class]="getTextAlignment(slide, isAr)"
-                >
-                  <span
-                    class="text-white text-[60px] font-bold leading-tight font-ibm-plex-arabic"
-                  >
-                    {{ slide.title }}
-                  </span>
-                  <span
-                    class="text-white text-[20px] leading-relaxed font-ibm-plex-arabic"
-                  >
-                    {{ slide.description }}
-                  </span>
-                </div>
-                <div class="flex flex-col gap-3">
-                  <span
-                    class="text-white text-[20px] font-ibm-plex-arabic"
-                    [class]="getTextAlignment(slide, isAr)"
-                  >
-                    {{ 'hero.download' | translate }}
-                  </span>
-                  <div class="flex gap-3">
-                    <img
-                      src="assets/images/apple-store.png"
-                      alt="apple store"
-                      class="w-[120px] h-[48px] cursor-pointer hover:opacity-80 transition-opacity"
-                    />
-                    <img
-                      src="assets/images/google-play.png"
-                      alt="google play"
-                      class="w-[120px] h-[48px] cursor-pointer hover:opacity-80 transition-opacity"
-                    />
-                  </div>
-                </div>
+            <div class="relative flex flex-col gap-[50px] justify-center h-full z-10">
+              <!-- Title & Description -->
+              <div class="flex flex-col gap-6">
+                <span class="text-white text-[60px] font-bold leading-tight font-ibm-plex-arabic">
+                  {{ slide.title }}
+                </span>
+                <span class="text-white text-[20px] leading-relaxed font-ibm-plex-arabic">
+                  {{ slide.description }}
+                </span>
               </div>
 
-              <!-- Images -->
-              <div class="flex gap-2" [class]="getImagePosition(slide)">
-                <img
-                  [src]="slide.imageUrl"
-                  alt="hero image"
-                  class="w-[400px] h-[400px] rounded-[20px] shadow-lg object-cover"
-                />
+              <!-- Download Section -->
+              <div class="flex flex-col gap-3 mt-6">
+             
+             <div class="flex gap-3">
+               <img src="assets/images/apple-store.png" alt="apple store" 
+               class="w-[120px] h-[48px] cursor-pointer hover:opacity-80 transition-opacity" /> 
+               <img src="assets/images/google-play.png" alt="google play"
+                class="w-[120px] h-[48px] cursor-pointer hover:opacity-80 transition-opacity" /> </div>
               </div>
             </div>
           </div>
@@ -94,9 +62,7 @@ interface SlideContent {
       </div>
 
       <!-- Dots Indicators -->
-      <div
-        class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2"
-      >
+      <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
         <button
           *ngFor="let slide of slides; let i = index"
           (click)="goToSlide(i)"
@@ -124,6 +90,7 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+     console.log('HeroSectionComponent initialized'); 
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
@@ -140,34 +107,31 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     this.stopAutoPlay();
   }
 
-  fetchBanners(): void {
-    this.apiService.getBanners().subscribe({
-      next: (res) => {
-        if (res && res.result) {
-          this.slides = res.result
-            .filter((b: SlideContent) => b.showInWebsite)
-            .map((b: SlideContent, index: number) => ({
-              ...b,
-              imageUrl: b.imageUrl.startsWith('http')
-                ? b.imageUrl
-                : `${this.baseUrl}${b.imageUrl}`,
-              backgroundImage:
-                index % 2 === 0
-                  ? `linear-gradient(to right, transparent 0%, #092A1E 49%), url('${this.baseUrl}${b.imageUrl}')`
-                  : `linear-gradient(to left, transparent 0%, #1a4b3a 49%), url('${this.baseUrl}${b.imageUrl}')`,
-              imagePosition: index % 2 === 0 ? 'right' : 'left',
-            }))
-            .sort(
-              (a: SlideContent, b: SlideContent) =>
-                a.displayOrder - b.displayOrder
-            );
+ fetchBanners(): void {
+  const url = `${this.baseUrl}api/services/app/Banner/GetList`;
+  console.log('Requesting banners from:', url);
 
-          console.log('Slides:', this.slides);
-        }
-      },
-      error: (err) => console.error('Error loading banners', err),
-    });
-  }
+  this.apiService.getBanners().subscribe({
+    next: (res) => {
+      console.log('API response:', res);
+       
+      if (res && res.result) {
+        this.slides = res.result.map((b: any) => ({
+          id: b.id,
+          title: b.title,
+          description: b.description,
+          imageUrl: b.image?.imageUrl ? `https://localhost:44311${b.image.imageUrl}` : 'assets/images/placeholder.png',
+          displayOrder: b.displayOrder,
+          showInWebsite: b.showInWebsite,
+        }));
+        console.log('Slides:', this.slides);
+       
+      }
+    },
+    error: (err) => console.error('Error loading banners', err),
+  });
+}
+
 
   startAutoPlay(): void {
     this.autoPlaySubscription = interval(5000).subscribe(() => {
@@ -187,29 +151,5 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
 
   goToSlide(index: number): void {
     this.currentSlide = index;
-  }
-
-  getContentAlignment(slide: SlideContent, isAr: boolean): string {
-    return slide.imagePosition === 'left'
-      ? isAr
-        ? 'items-start'
-        : 'items-end'
-      : isAr
-      ? 'items-end'
-      : 'items-start';
-  }
-
-  getTextAlignment(slide: SlideContent, isAr: boolean): string {
-    return slide.imagePosition === 'left'
-      ? isAr
-        ? 'text-left'
-        : 'text-right'
-      : isAr
-      ? 'text-right'
-      : 'text-left';
-  }
-
-  getImagePosition(slide: SlideContent): string {
-    return slide.imagePosition === 'left' ? 'order-first' : 'order-last';
   }
 }
