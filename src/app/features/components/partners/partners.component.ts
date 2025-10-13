@@ -132,7 +132,7 @@ export class PartnersComponent implements OnInit, OnDestroy {
                 imageId: p.imageId,
                 displayOrder: Number(p.displayOrder),
                 showOnWebsite: p.showOnWebsite,
-                imageUrl: 'assets/images/default.png' // default لحد ما نجيب الـ bytes
+                imageUrl: p.image?.imageUrl ? `https://localhost:44311${p.image.imageUrl}` : '',
               } as Partner;
             })
             .sort((a: Partner, b: Partner) => a.displayOrder - b.displayOrder);
