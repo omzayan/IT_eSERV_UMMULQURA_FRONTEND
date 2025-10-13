@@ -11,6 +11,7 @@ import {
   City,
   WeekDayDto,
 } from '../types/api.types';
+import { environment } from '../../../environments/environment';
 
 /**
  * Reference data service - convenience wrapper for static/reference data API calls
@@ -33,36 +34,32 @@ getWeekDays(): Observable<WeekDayDto[]> {
   /**
    * Get Gregorian months
    */
-getGregorianMonths(): Observable<MonthResult[]> {
-  return this.apiService
-    .getGregorianMonths()
-    .pipe(
+ getGregorianMonths(): Observable<MonthResult[]> {
+    return this.apiService.getGregorianMonths().pipe(
       map((response: any) =>
-        response.success && response.result
+        response && response.result
           ? response.result.map((m: any) => ({
               month_number: m.id.toString(),
-              month_name: m.name
+              month_name: m.name,
             }))
           : []
       )
     );
-}
+  }
 
-getHijriMonths(): Observable<MonthResult[]> {
-  return this.apiService
-    .getHijriMonths()
-    .pipe(
+
+ getHijriMonths(): Observable<MonthResult[]> {
+    return this.apiService.getHijriMonths().pipe(
       map((response: any) =>
-        response.success && response.result
+        response && response.result
           ? response.result.map((m: any) => ({
               month_number: m.id.toString(),
-              month_name: m.name
+              month_name: m.name,
             }))
           : []
       )
     );
-}
-
+  }
 
   /**
    * Get all available cities

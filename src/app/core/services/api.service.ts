@@ -143,61 +143,47 @@ export class ApiService {
    */
 
 
-  getMonthlyPrayerTimesByHijri(
-    gregorianYear: number,
-    gregorianMonth: number,
-    latitude: number = 24.67,
-    longitude: number = 46.69
-  ): Observable<BaseResponse<MonthPrayerTimes>> {
-    const input: GregorianDateInput = {
-      day: 1, // نختار أول يوم في الشهر
-      month: gregorianMonth,
-      year: gregorianYear,
-    };
+ getMonthlyPrayerTimesByHijri(
+  hijriYear: number,
+  hijriMonth: number,
+  latitude: number = 24.67,
+  longitude: number = 46.69
+): Observable<BaseResponse<MonthPrayerTimes>> {
+  const body = { year: hijriYear, month: hijriMonth, latitude, longitude };
+ return this.http.get<BaseResponse<MonthPrayerTimes>>(
+  `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate?year=${hijriYear}&month=${hijriMonth}&latitude=${latitude}&longitude=${longitude}`
+);
 
-    return this.convertGregorianToHijri(input).pipe(
-      switchMap((response: BaseResponse<Result>) => {
-        if (response.success && response.result) {
-          const hijriYear = response.result.year;
-          const hijriMonth = response.result.month;
+}
 
-          const body = {
-            year: hijriYear,
-            month: hijriMonth,
-            latitude,
-            longitude,
-          };
+// الميلادي: بس بيحوّله لهجري الأول
+getMonthlyPrayerTimesByGregorian(
+  gregorianYear: number,
+  gregorianMonth: number,
+  latitude: number = 24.67,
+  longitude: number = 46.69
+): Observable<BaseResponse<MonthPrayerTimes>> {
+  const input: GregorianDateInput = {
+    day: 1,
+    month: gregorianMonth,
+    year: gregorianYear
+  };
 
-          return this.http.post<BaseResponse<MonthPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate`,
-            body
-          );
-        }
+  return this.convertGregorianToHijri(input).pipe(
+    switchMap((response: BaseResponse<Result>) => {
+      if (response.success && response.result) {
+        return this.getMonthlyPrayerTimesByHijri(
+          response.result.year,
+          response.result.month,
+          latitude,
+          longitude
+        );
+      }
+      return throwError(() => new Error('Failed to convert Gregorian to Hijri'));
+    })
+  );
+}
 
-
-        return throwError(() => new Error('Failed to convert Gregorian to Hijri'));
-      })
-    );
-  }
-
-  getMonthlyPrayerTimesByGregorian(
-    year: number,
-    month: number,
-    latitude: number = 24.67,
-    longitude: number = 46.69
-  ): Observable<BaseResponse<MonthPrayerTimes>> {
-    const body = {
-      year,
-      month,
-      latitude,
-      longitude
-    };
-
-    return this.http.post<BaseResponse<MonthPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate`,
-      body
-    );
-  }
 
 
   // ==================== CALENDAR SERVICES ====================
@@ -374,22 +360,22 @@ getWeekDays(): Observable<WeekDayDto[]> {
   /**
    * Get Gregorian months
    */
-  getGregorianMonths(): Observable<any> {
-    return this.http.get<{ result: any }>(`${environment.apiBaseUrl}api/services/app/Months/GetGregorianMonths`)
-      .pipe(
-        map(response => response.result)
-      );
-  }
+  // core/services/api.service.ts
+getGregorianMonths(): Observable<any> {
+  return this.http.get<any>(
+    `${environment.apiBaseUrl}api/services/app/Months/GetGregorianMonths`
+  );
+}
 
   /**
    * Get Hijri months
    */
-  getHijriMonths(): Observable<any> {
-    return this.http.get<{ result: any }>(`${environment.apiBaseUrl}api/services/app/Months/GetHijriMonths`)
-      .pipe(
-        map(response => response.result)
-      );
-  }
+ // core/services/api.service.ts
+getHijriMonths(): Observable<any> {
+  return this.http.get<any>(
+    `${environment.apiBaseUrl}api/services/app/Months/GetHijriMonths`
+  );
+}
 
   /**
    * Get available cities

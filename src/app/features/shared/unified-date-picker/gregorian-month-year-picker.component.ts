@@ -90,21 +90,22 @@ export class GregorianMonthYearPickerComponent
     }
   }
 
-  private loadMonths() {
-    this.referenceDataService
-      .getGregorianMonths()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (months) => {
-          this.months = months;
-        },
-        error: (error) => {
-          console.error('Error loading months:', error);
-          // Fallback to default months
-          this.setFallbackMonths();
-        },
-      });
-  }
+ private loadMonths() {
+  this.referenceDataService
+    .getGregorianMonths()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (months) => {
+        this.months = months;
+        console.log('months', this.months);
+      },
+      error: (error) => {
+        console.error('Error loading months:', error);
+        this.setFallbackMonths();
+      },
+    });
+}
+
 
   private setFallbackMonths() {
     this.months = [

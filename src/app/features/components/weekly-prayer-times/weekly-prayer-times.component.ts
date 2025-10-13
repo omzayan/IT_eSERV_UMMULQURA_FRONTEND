@@ -218,8 +218,8 @@ type DateRangeType = 'gregorian' | 'hijri';
 })
 export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
   selectedDateRangeType: DateRangeType = 'gregorian';
-  gregorianDateRange: DateRangeState = {};
-  hijriDateRange: DateRangeState = {};
+  gregorianDateRange: DateRangeState = { startDate: null, endDate: null };
+  hijriDateRange: DateRangeState = { startDate: null, endDate: null };
   selectedLocation: LocationState = {};
   prayerTimes: DailyPrayerTime[] = [];
   loading = false;

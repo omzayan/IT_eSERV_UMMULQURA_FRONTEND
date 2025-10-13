@@ -90,21 +90,22 @@ export class HijriMonthYearPickerComponent
     }
   }
 
-  private loadMonths() {
-    this.referenceDataService
-      .getHijriMonths()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (months) => {
-          this.months = months;
-        },
-        error: (error) => {
-          console.error('Error loading months:', error);
-          // Fallback to default months
-          this.setFallbackMonths();
-        },
-      });
-  }
+ private loadMonths() {
+  this.referenceDataService
+    .getHijriMonths()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (months) => {
+        this.months = months;
+        console.log('Hijri months:', this.months);
+      },
+      error: (error) => {
+        console.error('Error loading hijri months:', error);
+        this.setFallbackMonths(); // ممكن تعمل نسخة fallback للهجري لو حابب
+      },
+    });
+}
+
 
   private setFallbackMonths() {
     this.months = [

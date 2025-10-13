@@ -104,12 +104,13 @@ interface LocationState {
                   <td class="text-[#384250] p-4 whitespace-nowrap">
                     {{ row.day_name || '--' }}
                   </td>
-                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
-                    {{ row.hijri_date.formatted || '--' }}
-                  </td>
-                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
-                    {{ row.gregorian_date.formatted || '--' }}
-                  </td>
+  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+  {{ row.hijri_date.day }} {{ row.hijri_date.month_name }} {{ row.hijri_date.year }}
+</td>
+<td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+  {{ row.gregorian_date.day }} {{ row.gregorian_date.month_name }} {{ row.gregorian_date.year }}
+</td>
+
                   <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.fajr) }}
                   </td>
@@ -237,6 +238,7 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
       const response = await this.prayerService
         .getMonthlyPrayerTimesByGregorian(year, month, longitude, latitude)
         .toPromise();
+        console.log("res",response);
 
       if (response && response.success && response.result) {
         this.prayerTimes = {

@@ -160,19 +160,16 @@ interface PrayerTimeRow {
                   class="font-ibm-plex-arabic"
                   [class]="i % 2 === 0 ? 'bg-white' : 'bg-[#F9FAFB]'"
                 >
-                  <td class="text-[#384250] p-4 whitespace-nowrap">
-                    {{ row.day_name || '--' }}
-                  </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
-                    {{ row.hijri_date.formatted || '--' }}
-                  </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
-                    {{ row.gregorian_date.formatted || '--' }}
-                  </td>
+               <td class="text-[#384250] p-4 whitespace-nowrap">
+ {{ row.gregorian_date.day_name || '--' }}
+</td>
+<td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+  {{ row.hijri_date.day }} {{ row.hijri_date.month_name }} {{ row.hijri_date.year }}
+</td>
+<td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
+  {{ row.gregorian_date.day }} {{ row.gregorian_date.month_name }} {{ row.gregorian_date.year }}
+</td>
+
                   <td
                     class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
                   >
