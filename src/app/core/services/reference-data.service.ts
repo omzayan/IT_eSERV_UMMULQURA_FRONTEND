@@ -9,6 +9,7 @@ import {
   AppSettingResult,
   StaticPageResult,
   City,
+  WeekDayDto,
 } from '../types/api.types';
 
 /**
@@ -23,15 +24,11 @@ export class ReferenceDataService {
   /**
    * Get all week days
    */
-  getWeekDays(): Observable<WeekDayResult[]> {
-    return this.apiService
-      .getWeekDays()
-      .pipe(
-        map((response) =>
-          response.success && response.data ? response.data : []
-        )
-      );
-  }
+// core/services/reference-data.service.ts
+getWeekDays(): Observable<WeekDayDto[]> {
+  return this.apiService.getWeekDays();
+}
+
 
   /**
    * Get Gregorian months

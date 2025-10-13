@@ -25,7 +25,9 @@ import {
   City,
   PrayerTimesResult,
   PrayerTimesBetweenDatesInput,
+  WeekDayDto,
 } from '../types/api.types';
+import { ApiResponse } from '../types/ApiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -361,11 +363,13 @@ export class ApiService {
   /**
    * Get week days
    */
-  getWeekDays(): Observable<CommonResponse<WeekDayResult[]>> {
-    return this.http.get<CommonResponse<WeekDayResult[]>>(
-      `${this.baseUrl}/GetWeekDays`
-    );
-  }
+ // core/services/api.service.ts
+getWeekDays(): Observable<WeekDayDto[]> {
+  return this.http
+    .get<BaseResponse<WeekDayDto[]>>(`${this.baseUrl}api/services/app/Months/GetWeekDays`)
+    .pipe(map(res => (res.success && res.result ? res.result : [])));
+}
+
 
   /**
    * Get Gregorian months
@@ -426,8 +430,17 @@ export class ApiService {
     return this.http.get<any>(`${environment.apiBaseUrl}api/services/app/Banner/GetList`);
   }
 
-  getPartners(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}api/services/app/Partner/GetList`);
-  }
+ // core/api.service.ts
+getPartners() {
+  return this.http.get<any>(`${this.baseUrl}api/services/app/Partner/GetList`);
+}
+
+getAttachment(id: number) {
+ 
+  return this.http.get<any>(`${this.baseUrl}api/services/app/PartnerAttachment/GetAttachment`, {
+    params: { id }
+  });
+}
+
 
 }

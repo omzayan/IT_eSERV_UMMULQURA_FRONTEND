@@ -13,6 +13,7 @@ import {
   DailyPrayerTime,
   WeekDayResult,
   MonthPrayerTimes,
+  WeekDayDto,
 } from '../../../core/types/api.types';
 
 interface CalendarDay {
@@ -69,8 +70,7 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
   hijriCalendarDays: CalendarDay[] = [];
   gregorianCalendarDays: CalendarDay[] = [];
 
-  dayHeaders: string[] = [];
-  weekDaysData: WeekDayResult[] = [];
+
 
   hijriMonths: MonthResult[] = [];
   gregorianMonths: MonthResult[] = [];
@@ -86,6 +86,9 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
   // Loading states
   isLoadingHijriCalendar = false;
   isLoadingGregorianCalendar = false;
+
+  weekDaysData: WeekDayDto[] = [];
+dayHeaders: string[] = [];
 
   constructor(
     private translate: TranslateService,
@@ -151,13 +154,13 @@ export class UmmQuraCalenderComponent implements OnInit, OnDestroy {
       });
 
     // Load week days
-    this.referenceDataService
-      .getWeekDays()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((weekDays) => {
-        this.weekDaysData = weekDays;
-        this.setupDayHeaders();
-      });
+     this.referenceDataService
+    .getWeekDays()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((weekDays) => {
+      this.weekDaysData = weekDays ?? [];
+      this.setupDayHeaders();
+    });
   }
 
   private initializeYearRanges(): void {
@@ -743,36 +746,19 @@ getGregorianMonthName(month: number): string {
     };
   }
 
-  private setupDayHeaders(): void {
-    if (this.weekDaysData.length === 0) {
-      // Fallback to static headers
-      this.dayHeaders = [
-        'سبت',
-        'جمعة',
-        'خميس',
-        'أربعاء',
-        'ثلاثاء',
-        'إثنين',
-        'أحد',
-      ];
-      return;
-    }
-
-    // Sort the week days by day_id to ensure correct order
-    const sortedWeekDays = [...this.weekDaysData].sort(
-      (a, b) => a.day_id - b.day_id
-    );
-
-    // For Arabic calendar, we typically want: Saturday, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday
-    // But displayed right-to-left, so we reverse for display
-    if (this.isRtl) {
-      // For RTL, reverse the order for proper display
-      this.dayHeaders = sortedWeekDays.reverse().map((day) => day.day_name);
-    } else {
-      // For LTR, use normal order
-      this.dayHeaders = sortedWeekDays.map((day) => day.day_name);
-    }
+private setupDayHeaders(): void {
+  if (!this.weekDaysData?.length) {
+    //Fallback عربي
+    this.dayHeaders = ['سبت','جمعة','خميس','أربعاء','ثلاثاء','إثنين','أحد'];
+    return;
   }
+
+  // نضمن الترتيب من 0..6 حسب الباك (الأحد..السبت)
+  const ordered = [...this.weekDaysData].sort((a, b) => a.id - b.id).map(d => d.name);
+
+  // للـ RTL نعرضها بالعكس علشان تبدأ بالسبت
+  this.dayHeaders = this.isRtl ? [...ordered].reverse() : ordered;
+}
 
   // Navigation methods
   navigateToGregorianCalendar(): void {

@@ -138,7 +138,10 @@ export interface MonthResult {
   month_number: string;
   month_name: string;
 }
-
+export interface WeekDayDto {
+  id: number;    // 0..6
+  name: string;  // Sunday..Saturday (أو مترجم حسب لغة الـ API)
+}
 
 export interface CityResult {
   id: number;
