@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CityData, CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
+import { CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
 import {
   GregorianMonthYearPickerComponent,
   GregorianMonthYearValue,
@@ -10,29 +10,14 @@ import {
 import { PrayerService } from '../../../core/services/prayer.service';
 import { LanguageService } from '../../../core/services/language.service';
 import {
-  BaseResponse,
   City,
-  CommonResponse,
   MonthlyPrayerTimesResult,
-  MonthPrayerTimes,
 } from '../../../core/types/api.types';
 
 interface LocationState {
   cityId?: number;
   lat?: number;
   lng?: number;
-}
-
-interface PrayerTimeRow {
-  day: string;
-  hijriDate: string;
-  gregorianDate: string;
-  fajr: string;
-  sunrise: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
 }
 
 @Component({
@@ -49,6 +34,7 @@ interface PrayerTimeRow {
       class="p-4 md:p-[80px] flex flex-col gap-6 bg-[#F9FAFB]"
       [style.direction]="isAr ? 'rtl' : 'ltr'"
     >
+      <!-- Month/Year & City -->
       <div class="flex gap-3 w-full">
         <div class="w-1/2">
           <app-gregorian-month-year-picker
@@ -73,6 +59,7 @@ interface PrayerTimeRow {
         {{ error }}
       </div>
 
+      <!-- Fetch Button -->
       <div class="flex w-full">
         <button
           (click)="fetchMonthlyData()"
@@ -91,115 +78,54 @@ interface PrayerTimeRow {
           }}
         </button>
       </div>
+
       <!-- Prayer Times Table -->
       <div
         *ngIf="prayerTimes?.daily_prayer_times?.length! > 0"
         class="flex flex-col w-full rounded-2xl border border-[#D2D6DB] overflow-hidden"
       >
-        <!-- Table Container with Horizontal Scroll -->
         <div class="overflow-x-auto">
           <div class="min-w-max">
-            <!-- Prayer Times Table -->
             <table class="w-full border-collapse min-w-[800px]">
               <thead>
                 <tr>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] whitespace-nowrap"
-                  >
-                    {{ 'prayTimeTable.headers.dayName' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayTimeTable.headers.hijriDate' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayTimeTable.headers.gregorianDate' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.fajr' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.sunrise' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.dhuhr' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.asr' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.maghrib' | translate }}
-                  </th>
-                  <th
-                    class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] border-s whitespace-nowrap"
-                  >
-                    {{ 'prayers.isha' | translate }}
+                  <th *ngFor="let header of tableHeaders"
+                      class="text-[#384250] bg-[#F3F4F6] p-4 text-start font-ibm-plex-arabic border-b border-[#D2D6DB] whitespace-nowrap border-s first:border-s-0">
+                    {{ header | translate }}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  *ngFor="
-                    let row of prayerTimes?.daily_prayer_times
-                    let i = index
-                  "
+                  *ngFor="let row of prayerTimes?.daily_prayer_times; let i = index"
                   class="font-ibm-plex-arabic"
                   [class]="i % 2 === 0 ? 'bg-white' : 'bg-[#F9FAFB]'"
                 >
                   <td class="text-[#384250] p-4 whitespace-nowrap">
                     {{ row.day_name || '--' }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ row.hijri_date.formatted || '--' }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ row.gregorian_date.formatted || '--' }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.fajr) }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.sunrise) }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.dhuhr) }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.asr) }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.maghrib) }}
                   </td>
-                  <td
-                    class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap"
-                  >
+                  <td class="text-[#384250] p-4 border-s border-[#D2D6DB] whitespace-nowrap">
                     {{ formatTime12(row.prayer_times.isha) }}
                   </td>
                 </tr>
@@ -214,10 +140,22 @@ interface PrayerTimeRow {
 export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
   selectedMonthYear: GregorianMonthYearValue | null = null;
   selectedLocation: LocationState = {};
-  prayerTimes: MonthlyPrayerTimesResult| null = null;
+  prayerTimes: MonthlyPrayerTimesResult | null = null;
   loading = false;
   error: string | null = null;
   isAr = false;
+
+  tableHeaders = [
+    'prayTimeTable.headers.dayName',
+    'prayTimeTable.headers.hijriDate',
+    'prayTimeTable.headers.gregorianDate',
+    'prayers.fajr',
+    'prayers.sunrise',
+    'prayers.dhuhr',
+    'prayers.asr',
+    'prayers.maghrib',
+    'prayers.isha',
+  ];
 
   private destroy$ = new Subject<void>();
 
@@ -228,7 +166,6 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to language changes
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
@@ -241,108 +178,109 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-handleLocationSelect(location: { lat?: number; lng?: number }): void {
-  this.selectedLocation = {
-    lat: location.lat ?? undefined,
-    lng: location.lng ?? undefined,
-    cityId: undefined,
-  };
+  handleLocationSelect(location: { lat?: number; lng?: number }): void {
+    this.selectedLocation = {
+      lat: location.lat ?? undefined,
+      lng: location.lng ?? undefined,
+      cityId: undefined,
+    };
+    if (this.error) this.error = null;
+    this.tryAutoFetch();
+  }
 
-  if (this.error) this.error = null;
-}
-
-
-handleCitySelect(city: City): void {
-  this.selectedLocation = {
-    lat: city.latitude,
-    lng: city.longitude,
-    cityId: city.id,
-    
-  };
-}
-
-
-
-
+  handleCitySelect(city: City): void {
+    this.selectedLocation = {
+      lat: city.latitude,
+      lng: city.longitude,
+      cityId: city.id,
+    };
+    if (this.error) this.error = null;
+    this.tryAutoFetch();
+  }
 
   handleMonthYearSelect(value: GregorianMonthYearValue | null): void {
     this.selectedMonthYear = value;
-    // Clear error when user makes a selection
     if (this.error) this.error = null;
+    this.tryAutoFetch();
   }
 
- async fetchMonthlyData(): Promise<void> {
-  if (
-    this.selectedMonthYear === null ||
-    (!this.selectedLocation.cityId &&
-      !(this.selectedLocation.lat && this.selectedLocation.lng))
-  ) {
-    this.error = this.translate.instant('errors.missingRequiredFields');
-    return;
-  }
-
-  try {
-    this.loading = true;
-    this.error = null;
-
-    const { year, month } = this.selectedMonthYear;
-    const latitude = this.selectedLocation.lat;
-    const longitude = this.selectedLocation.lng;
-    const cityId = this.selectedLocation.cityId;
-
-    // Use the getMonthlyPrayerTimesByGregorian API
-    const response = await this.prayerService
-      .getMonthlyPrayerTimesByGregorian(year, month, longitude, latitude)
-      .toPromise();
-
-    if (response && response.success && response.result) {
-      const mappedResult: MonthlyPrayerTimesResult = {
-        days_in_month: response.result.prayerTimes.length,
-        location: {
-          city_id: cityId ?? null,
-          latitude: latitude ?? 24.67,
-          longitude: longitude ?? 46.69,
-        },
-        daily_prayer_times: response.result.prayerTimes.map((pt) => ({
-          hijri_date: pt.hijri_date,
-          gregorian_date: pt.gregorian_date,
-          day_name: pt.gregorian_date?.day_name ?? '', // لو API مش بيرجعها
-          prayer_times: {
-            fajr: pt.fajr,
-            sunrise: pt.sunrise,
-            dhuhr: pt.dhuhr,
-            asr: pt.asr,
-            maghrib: pt.maghrib,
-            isha: pt.isha,
-            sunset: pt.sunset,
-          },
-        })),
-      };
-
-      this.prayerTimes = mappedResult;
-    } else {
-      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+  private tryAutoFetch(): void {
+    // بمجرد اختيار الشهر + المدينة يبدأ يجلب الداتا أوتوماتيك
+    if (
+      this.selectedMonthYear &&
+      (this.selectedLocation.cityId ||
+        (this.selectedLocation.lat && this.selectedLocation.lng))
+    ) {
+      this.fetchMonthlyData();
     }
-  } catch (err) {
-    console.error('Error fetching monthly prayer times:', err);
-    this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
-  } finally {
-    this.loading = false;
   }
-}
+
+  async fetchMonthlyData(): Promise<void> {
+    if (
+      this.selectedMonthYear === null ||
+      (!this.selectedLocation.cityId &&
+        !(this.selectedLocation.lat && this.selectedLocation.lng))
+    ) {
+      this.error = this.translate.instant('errors.missingRequiredFields');
+      return;
+    }
+
+    try {
+      this.loading = true;
+      this.error = null;
+
+      const { year, month } = this.selectedMonthYear;
+      const latitude = this.selectedLocation.lat ?? 24.67;
+      const longitude = this.selectedLocation.lng ?? 46.69;
+      const cityId = this.selectedLocation.cityId;
+
+      const response = await this.prayerService
+        .getMonthlyPrayerTimesByGregorian(year, month, longitude, latitude)
+        .toPromise();
+
+      if (response && response.success && response.result) {
+        this.prayerTimes = {
+          days_in_month: response.result.prayerTimes.length,
+          location: {
+            city_id: cityId ?? null,
+            latitude,
+            longitude,
+          },
+          daily_prayer_times: response.result.prayerTimes.map((pt) => ({
+            hijri_date: pt.hijri_date,
+            gregorian_date: pt.gregorian_date,
+            day_name: pt.gregorian_date?.day_name ?? '',
+            prayer_times: {
+              fajr: pt.fajr,
+              sunrise: pt.sunrise,
+              dhuhr: pt.dhuhr,
+              asr: pt.asr,
+              maghrib: pt.maghrib,
+              isha: pt.isha,
+              sunset: pt.sunset,
+            },
+          })),
+        };
+      } else {
+        this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+      }
+    } catch (err) {
+      console.error('Error fetching monthly prayer times:', err);
+      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+    } finally {
+      this.loading = false;
+    }
+  }
 
   formatTime12(time: string | undefined): string {
     if (!time || time === '--') return '--';
-
     const [h, m] = time.split(':');
     if (h === undefined || m === undefined) return time;
-
     let hour = parseInt(h, 10);
     const minute = m;
     const ampm = hour >= 12 ? 'PM' : 'AM';
     hour = hour % 12;
     if (hour === 0) hour = 12;
-
     return `${hour}:${minute} ${ampm}`;
   }
 }

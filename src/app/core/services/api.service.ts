@@ -87,7 +87,7 @@ export class ApiService {
           const hijri = response.result;
 
           return this.http.get<BaseResponse<DurationPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDuration`,
+            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDurationByHijriDate`,
             {
               params: {
                 Year: hijri.year.toString(),
@@ -116,7 +116,7 @@ export class ApiService {
     longitude: number
   ): Observable<BaseResponse<DurationPrayerTimes>> {
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDuration`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDurationByHijriDate`,
       {
         params: {
           Year: year.toString(),
@@ -169,7 +169,7 @@ export class ApiService {
           };
 
           return this.http.post<BaseResponse<MonthPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimes`,
+            `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate`,
             body
           );
         }
@@ -194,7 +194,7 @@ export class ApiService {
     };
 
     return this.http.post<BaseResponse<MonthPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimes`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate`,
       body
     );
   }
@@ -222,7 +222,7 @@ export class ApiService {
       params = params.set('cityId', cityId.toString());
 
     return this.http.get<BaseResponse<PrayerTimesResult>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetYearPrayerTimes`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetYearPrayerTimesByHijriDate`,
       { params }
     );
   }
@@ -282,7 +282,7 @@ export class ApiService {
 
           // ننده نفس الـ endpoint بتاع الهجري
           this.http.get<BaseResponse<DurationPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesBetweenDates`,
+            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDates`,
             { params }
           ).subscribe({
             next: res => {
@@ -316,7 +316,7 @@ export class ApiService {
       .set('latitude', input.latitude.toString());
 
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesBetweenDates`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDates`,
       { params }
     );
   }
