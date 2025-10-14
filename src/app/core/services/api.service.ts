@@ -428,5 +428,11 @@ getAttachment(id: number) {
   });
 }
 
+getBannerAttachment(id: number) {
+ 
+  return this.http.get<any>(`${this.baseUrl}api/services/app/BannerAttachment/GetAttachment`, {
+    params: { id }
+  });
+}
 
 }

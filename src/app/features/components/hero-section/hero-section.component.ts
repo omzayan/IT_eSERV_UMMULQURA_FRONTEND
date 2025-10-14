@@ -11,6 +11,7 @@ interface SlideContent {
   title: string;
   description: string;
   imageUrl: string;
+  imageId:number;
   displayOrder: number;
   showInWebsite: boolean;
 }
@@ -106,22 +107,39 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   }
 
  fetchBanners(): void {
-
-
+  const cached = JSON.parse(localStorage.getItem('banners') || 'null');
+  const oneDay = 24 * 60 * 60 * 1000;  
+  if (cached && (Date.now() - cached.timestamp < oneDay)) {
+    this.slides = cached.data;
+    return;
+  }
+  
   this.apiService.getBanners().subscribe({
-    next: (res) => {
-     
-       
+    next: async (res) => {   
       if (res && res.result) {
         this.slides = res.result.map((b: any) => ({
           id: b.id,
           title: b.title,
           description: b.description,
+          imageId: b.image?.id,
           imageUrl: b.image?.imageUrl ? `https://localhost:44311${b.image.imageUrl}` : 'assets/images/placeholder.png',
           displayOrder: b.displayOrder,
           showInWebsite: b.showInWebsite,
         }));
- 
+
+        await Promise.all(this.slides.map(async (slide, idx) => {
+        if (!slide.imageId) return;
+        try {
+          const dto: any = await this.apiService.getBannerAttachment(slide.imageId).toPromise();
+          const att = dto?.result ?? dto ?? {};
+          if (att.bytes) {
+            const mime = this.detectMimeFromName(att.fileName ?? att.fileExt);
+            slide.imageUrl = `data:${mime};base64,${att.bytes}`;
+          }
+        } catch {}
+      }));
+      
+        localStorage.setItem('banners', JSON.stringify({ data: this.slides, timestamp: Date.now() }));
        
       }
     },
@@ -129,7 +147,21 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
   });
 }
 
+private detectMimeFromName(nameOrExt?: string): string {
+    const ext = ((nameOrExt || '').includes('.')
+      ? nameOrExt!.slice(nameOrExt!.lastIndexOf('.'))
+      : nameOrExt || ''
+    ).toLowerCase();
 
+    switch (ext) {
+      case '.png': return 'image/png';
+      case '.jpg':
+      case '.jpeg': return 'image/jpeg';
+      case '.gif': return 'image/gif';
+      default: return 'image/jpeg';
+    }
+  }
+  
   startAutoPlay(): void {
     this.autoPlaySubscription = interval(5000).subscribe(() => {
       this.nextSlide();

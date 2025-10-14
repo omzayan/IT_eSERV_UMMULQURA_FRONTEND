@@ -117,6 +117,13 @@ export class PartnersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const cached = JSON.parse(localStorage.getItem('partners') || 'null');
+    const maxAge = 24 * 60 * 60 * 1000; 
+    if (cached && (Date.now() - cached.timestamp < maxAge)) {
+      this.partners = cached.data;
+      return;
+    }
+
     this.apiSub = this.apiService.getPartners().subscribe({
       next: (res: any) => {
         if (res && res.result) {
@@ -176,6 +183,7 @@ export class PartnersComponent implements OnInit, OnDestroy {
           this.partners[r.idx].imageUrl = r.dataUrl;
         }
       });
+      localStorage.setItem('partners', JSON.stringify({ data: this.partners, timestamp: Date.now() }));
     });
   }
 
