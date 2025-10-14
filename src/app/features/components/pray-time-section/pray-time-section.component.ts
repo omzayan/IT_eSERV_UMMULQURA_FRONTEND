@@ -22,7 +22,6 @@ import {
   City,
 } from '../../../core/types/api.types';
 import {
-  CityData,
   CitySelectorComponent,
   LocationData,
 } from '../../shared/city-selector/city-selector.component';
@@ -141,7 +140,7 @@ interface PrayerCardMeta {
             >
               <div class="flex flex-col">
                 <h3 class="text-2xl font-bold font-ibm-plex-arabic mb-1">
-                  {{ meta.name }}
+                  {{ meta.name | translate }}
                 </h3>
                 <p
                   class="text-base font-bold font-ibm-plex-arabic text-black bg-white w-fit h-fit rounded px-2"
@@ -420,40 +419,17 @@ export class PrayTimeSectionComponent
     }
   }
 
-  private updatePrayerNames(): void {
-    this.prayerCardMeta = [
-      {
-        key: 'fajr',
-        name: this.translate.instant('prayers.fajr'),
-        bg: 'assets/images/fajr-time.png',
-      },
-      {
-        key: 'sunrise',
-        name: this.translate.instant('prayers.sunrise'),
-        bg: 'assets/images/sunrise-time.png',
-      },
-      {
-        key: 'dhuhr',
-        name: this.translate.instant('prayers.dhuhr'),
-        bg: 'assets/images/dhuhr-time.png',
-      },
-      {
-        key: 'asr',
-        name: this.translate.instant('prayers.asr'),
-        bg: 'assets/images/asr-time.png',
-      },
-      {
-        key: 'maghrib',
-        name: this.translate.instant('prayers.maghrib'),
-        bg: 'assets/images/maghrib-time.png',
-      },
-      {
-        key: 'isha',
-        name: this.translate.instant('prayers.isha'),
-        bg: 'assets/images/isha-time.png',
-      },
-    ];
-  }
+private updatePrayerNames(): void {
+  this.prayerCardMeta = [
+    { key: 'fajr',    name: 'prayers.fajr',    bg: 'assets/images/fajr-time.png' },
+    { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
+    { key: 'dhuhr',   name: 'prayers.dhuhr',   bg: 'assets/images/dhuhr-time.png' },
+    { key: 'asr',     name: 'prayers.asr',     bg: 'assets/images/asr-time.png' },
+    { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
+    { key: 'isha',    name: 'prayers.isha',    bg: 'assets/images/isha-time.png' },
+  ];
+}
+
 
   /**
    * Set initial coordinates when loading prayer times for the first time
@@ -664,32 +640,34 @@ export class PrayTimeSectionComponent
     this.updateCustomDateFlag();
   }
 
+
 onCitySelect(city: City): void {
-  // id الخاص بالمدينة
   this.selectedCityId = city.id;
+  this.selectedCoords = null;
 
-  // الإحداثيات
-  this.selectedCoords = {
-    lat: city.latitude ?? 0,
-    lng: city.longitude ?? 0,
-  };
-
-  // الاسم كمان (اختياري)
-  //this.selectedCityName = city.name;
+  // نعمل reset للـ citySelector ونحدث الاسم
+  if (this.citySelector) {
+    this.citySelector.reset();
+    this.citySelector['selectedCityName'] = city.cityName ?? '';
+  }
 }
+
+onLocationSelect(location: LocationData): void {
+  this.selectedCoords = location;
+  this.selectedCityId = null;
+
+  if (this.citySelector) {
+    this.citySelector.reset();
+    this.citySelector['selectedCityName'] = ''; // نفرغ الاسم لأن المستخدم اختار Location
+  }
+}
+
 
 
   
 
 
-  onLocationSelect(location: LocationData): void {
-    this.selectedCoords = location;
-    // Reset city selection when coordinates are used
-    this.selectedCityId = null;
-    if (this.citySelector) {
-      this.citySelector.reset();
-    }
-  }
+  
 
   handleSearch(): void {
     this.loading = true;

@@ -458,34 +458,7 @@
                 "selectDay": "选择日期"
             }
         },
-        "citySelect": {
-            "location": "位置选择",
-            "selectCity": "选择城市",
-            "selectCityPlaceholder": "选择一个城市",
-            "loadingCities": "正在加载城市…",
-            "citiesLoadError": "加载城市出错",
-            "getCurrentLocation": "自动检测位置",
-            "autoDetectLocation": "自动检测",
-            "detectedLocation": "已检测位置",
-            "latitude": "纬度",
-            "longitude": "经度",
-            "geolocationNotSupported": "此浏览器不支持地理定位",
-            "locationDenied": "用户拒绝访问位置",
-            "locationUnavailable": "位置信息不可用",
-            "locationTimeout": "位置请求超时",
-            "locationError": "未知位置错误",
-            "example": {
-                "title": "城市选择器示例",
-                "demonstration": "带自动检测的城市选择器",
-                "results": "选择结果",
-                "selectedCity": "选择的城市 ID",
-                "cityName": "城市名",
-                "instructions": "如何使用",
-                "instruction1": "从下拉菜单中选择城市以获取其坐标",
-                "instruction2": "点击自动检测按钮以使用当前位置信息",
-                "instruction3": "组件将下面显示检测到的坐标"
-            }
-        },
+ 
         "unifiedDatePicker": {
             "selectDate": "选择日期",
             "selectHijriDate": "选择希吉来日期",

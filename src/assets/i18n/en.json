@@ -195,22 +195,28 @@
       "saturday": "Saturday"
     }
   },
-  "citySelect": {
-    "selectCity": "Select City",
-    "selectCityPlaceholder": "Select City",
-    "getCurrentLocation": "Get Current Location",
-    "autoDetectLocation": "Auto Detect Location",
-    "geolocationNotSupported": "Geolocation is not supported by this browser",
-    "locationDenied": "Location access denied. Please allow location access in browser settings",
-    "locationUnavailable": "Location information is unavailable",
-    "locationTimeout": "Location request timed out",
-    "locationError": "An error occurred while retrieving location",
-    "detectedLocation": "Detected Location",
-    "latitude": "Latitude",
-    "longitude": "Longitude",
-    "citiesLoadError": "Error loading cities",
-    "loadingCities": "Loading cities..."
-  },
+ "citySelect": {
+  "title": "Select Location",
+  "selectCity": "Select City",
+  "selectCityPlaceholder": "Enter city name",
+  "byCity": "City",
+  "byCoords": "Coordinates",
+  "currentLocation": "My Current Location",
+  "getCurrentLocation": "Get Current Location",
+  "autoDetectLocation": "Auto Detect",
+  "detectedLocation": "Detected Location",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "loadingCities": "Loading cities...",
+  "citiesLoadError": "Error loading cities",
+  "geolocationNotSupported": "Geolocation is not supported by this browser",
+  "locationDenied": "Location access was denied",
+  "locationUnavailable": "Location information unavailable",
+  "locationTimeout": "Location request timed out",
+  "locationError": "An error occurred while retrieving location",
+  "showPrayerTimes": "Show Prayer Times"
+}
+,
   "prayTimeTable": {
     "tabs": {
       "daily": "Today",
@@ -458,34 +464,7 @@
         "selectDay": "Select Day"
       }
     },
-    "citySelect": {
-      "location": "Location Selection",
-      "selectCity": "Select City",
-      "selectCityPlaceholder": "Choose a city",
-      "loadingCities": "Loading cities...",
-      "citiesLoadError": "Error loading cities",
-      "getCurrentLocation": "Auto-detect location",
-      "autoDetectLocation": "Auto-detect",
-      "detectedLocation": "Detected Location",
-      "latitude": "Latitude",
-      "longitude": "Longitude",
-      "geolocationNotSupported": "Geolocation is not supported by this browser",
-      "locationDenied": "Location access denied by user",
-      "locationUnavailable": "Location information is unavailable",
-      "locationTimeout": "Location request timed out",
-      "locationError": "Unknown location error",
-      "example": {
-        "title": "City Selector Example",
-        "demonstration": "City Selector with Auto-Detection",
-        "results": "Selection Results",
-        "selectedCity": "Selected City ID",
-        "cityName": "City Name",
-        "instructions": "How to use",
-        "instruction1": "Select a city from the dropdown to get its coordinates",
-        "instruction2": "Click the auto-detect button to use your current location",
-        "instruction3": "The component will show detected coordinates below the selector"
-      }
-    },
+  
     "unifiedDatePicker": {
       "selectDate": "Select Date",
       "selectHijriDate": "Select Hijri Date",

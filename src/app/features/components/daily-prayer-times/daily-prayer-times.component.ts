@@ -17,7 +17,6 @@ import {
 } from '../../../core/services';
 import { City, PrayerTime, PrayerTimeWithDateResult } from '../../../core/types/api.types';
 import {
-  CityData,
   CitySelectorComponent,
   LocationData,
 } from '../../shared/city-selector/city-selector.component';
@@ -396,9 +395,7 @@ onCitySelect(city: City): void {
     this.selectedCoords = location;
     // Reset city selection when coordinates are used
     this.selectedCityId = null;
-    if (this.citySelector) {
-      this.citySelector.reset();
-    }
+    
   }
 
   handleSearch(): void {

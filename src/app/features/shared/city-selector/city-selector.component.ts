@@ -11,18 +11,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ReferenceDataService } from '../../../core/services';
-import { City, CityResult } from '../../../core/types/api.types';
+import { City } from '../../../core/types/api.types';
 
 export interface LocationData {
   lat?: number;
   lng?: number;
   city?: string;
-}
-
-export interface CityData {
-  value: string;
-  name: string;
-  coordinates: { lat: number; lng: number };
 }
 
 @Component({
@@ -34,19 +28,25 @@ export interface CityData {
 })
 export class CitySelectorComponent implements OnInit, OnDestroy {
   @Input() label?: string = 'citySelect.selectCity';
-  @Input() disabled: boolean = false;
   @Output() locationSelect = new EventEmitter<LocationData>();
   @Output() citySelect = new EventEmitter<City>();
 
   private destroy$ = new Subject<void>();
 
-  selectedCity: string = '';
-  currentCoordinates: { lat: number; lng: number } | null = null;
-  isGettingLocation: boolean = false;
+  // Modal control
+  isOpen: boolean = false;
+  activeTab: 'city' | 'coords' = 'city';
 
+  // city state
   cities: City[] = [];
+  filteredCities: City[] = [];
+  searchText: string = '';
   loadingCities: boolean = false;
   citiesError: string | null = null;
+  selectedCityName: string = ''; // اسم المدينة المختارة
+
+  // coords state
+  coords = { lat: 0, lng: 0 };
 
   constructor(
     private referenceDataService: ReferenceDataService,
@@ -55,6 +55,24 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.fetchCities();
+     // Debugging الترجمة
+  const keysToCheck = [
+    'citySelect.title',
+    'citySelect.byCity',
+    'citySelect.byCoords',
+    'citySelect.currentLocation',
+    'citySelect.selectCityPlaceholder'
+  ];
+
+  keysToCheck.forEach(key => {
+    this.translate.get(key).subscribe(val => {
+      if (val === key) {
+        console.error(`❌ Translation missing for key: ${key}`);
+      } else {
+        console.log(`✅ ${key} => ${val}`);
+      }
+    });
+  });
   }
 
   ngOnDestroy() {
@@ -62,101 +80,70 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-private fetchCities() {
-  this.loadingCities = true;
-  this.citiesError = null;
+  private fetchCities() {
+    this.loadingCities = true;
+    this.referenceDataService
+      .getCities()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (apiCities: City[] | null) => {
+          this.cities = apiCities ?? [];
+          this.filteredCities = this.cities;
+          this.loadingCities = false;
+        },
+        error: () => {
+          this.citiesError = this.translate.instant('citySelect.citiesLoadError');
+          this.loadingCities = false;
+        },
+      });
+  }
 
-  this.referenceDataService
-    .getCities()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (apiCities: City[] | null) => {
-        if (apiCities) {
-          console.log(this.cities)
-          this.cities = apiCities; // هنا بتخزن الـ City على طول زي ما جاي من الـ API
-        } else {
-          this.cities = [];
-        }
-        this.loadingCities = false;
-      },
-      error: (error) => {
-        console.error('Error fetching cities:', error);
-        this.citiesError = this.translate.instant('citySelect.citiesLoadError');
-        this.loadingCities = false;
-      },
-    });
+  toggleModal() {
+    this.isOpen = !this.isOpen;
+  }
+
+  filterCities() {
+    const text = this.searchText.toLowerCase();
+    this.filteredCities = this.cities.filter((c) =>
+      (c.cityName ?? '').toLowerCase().includes(text)
+    );
+  }
+
+ onCitySelect(city: City) {
+  this.citySelect.emit(city);
+  this.selectedCityName = city.cityName ?? ''; // يظهر مكان "اختر المدينة"
+  this.isOpen = false;
 }
 
-
-
-onCityChange(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  const cityId = Number(target.value); // الـ id من select value
-  this.selectedCity = cityId.toString();
-
-  this.currentCoordinates = null;
-
-  if (cityId) {
-    const selected = this.cities.find(c => c.id === cityId);
-    if (selected) {
-      this.citySelect.emit(selected); // هترجع City object
+  onCoordsSelect() {
+    if (this.coords.lat && this.coords.lng) {
+      this.locationSelect.emit(this.coords);
+      this.isOpen = false;
     }
   }
-}
 
-
-  getCurrentLocation() {
+  selectCurrentLocation() {
     if (!navigator.geolocation) {
       alert(this.translate.instant('citySelect.geolocationNotSupported'));
       return;
     }
 
-    this.isGettingLocation = true;
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        this.isGettingLocation = false;
-
-        this.currentCoordinates = { lat: latitude, lng: longitude };
-
-        this.locationSelect.emit({
-          lat: latitude,
-          lng: longitude,
-        });
-
-        this.selectedCity = '';
+      (pos) => {
+        this.coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        this.locationSelect.emit(this.coords);
+        this.isOpen = false;
       },
-      (error) => {
-        this.isGettingLocation = false;
-        console.error('Error getting location:', error);
-
-        let errorMessage = this.translate.instant('citySelect.locationError');
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = this.translate.instant('citySelect.locationDenied');
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = this.translate.instant(
-              'citySelect.locationUnavailable'
-            );
-            break;
-          case error.TIMEOUT:
-            errorMessage = this.translate.instant('citySelect.locationTimeout');
-            break;
-        }
-        alert(errorMessage);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000,
+      () => {
+        alert(this.translate.instant('citySelect.locationError'));
       }
     );
   }
-
   reset() {
-    this.selectedCity = '';
-    this.currentCoordinates = null;
-  }
+  this.searchText = '';
+  this.filteredCities = this.cities;
+  this.coords = { lat: 0, lng: 0 };
+}
+
+
 }
