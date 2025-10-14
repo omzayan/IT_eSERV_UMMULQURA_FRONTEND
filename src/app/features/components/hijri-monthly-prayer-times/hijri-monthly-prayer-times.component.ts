@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CityData, CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
+import {  CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
 import {
   HijriMonthYearPickerComponent,
   HijriMonthYearValue,

@@ -195,22 +195,7 @@
             "saturday": "ہفتہ"
         }
     },
-    "citySelect": {
-        "selectCity": "شہر منتخب کریں",
-        "selectCityPlaceholder": "شہر منتخب کریں",
-        "getCurrentLocation": "موجودہ مقام حاصل کریں",
-        "autoDetectLocation": "خود بخود مقام تلاش کریں",
-        "geolocationNotSupported": "یہ براؤزر جغرافیائی مقام کی حمایت نہیں کرتا",
-        "locationDenied": "مقام تک رسائی مسترد کر دی گئی۔ براہ کرم براؤزر کی ترتیبات میں مقام کی اجازت دیں",
-        "locationUnavailable": "مقام کی معلومات دستیاب نہیں",
-        "locationTimeout": "مقام کی درخواست کا وقت ختم ہوگیا",
-        "locationError": "مقام حاصل کرنے میں خرابی",
-        "detectedLocation": "تلاش کردہ مقام",
-        "latitude": "عرض بلد",
-        "longitude": "طول بلد",
-        "citiesLoadError": "شہر لوڈ کرنے میں خرابی",
-        "loadingCities": "شہر لوڈ ہو رہے ہیں…"
-    },
+ 
     "prayTimeTable": {
         "tabs": {
             "daily": "آج",

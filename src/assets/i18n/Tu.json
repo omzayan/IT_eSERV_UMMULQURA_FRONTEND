@@ -195,22 +195,7 @@
             "saturday": "Cumartesi"
         }
     },
-    "citySelect": {
-        "selectCity": "Şehir Seçin",
-        "selectCityPlaceholder": "Şehir seçin",
-        "getCurrentLocation": "Mevcut Konumu Al",
-        "autoDetectLocation": "Otomatik Konum Bul",
-        "geolocationNotSupported": "Tarayıcı coğrafi konumlamayı desteklemiyor",
-        "locationDenied": "Konum erişimi reddedildi. Lütfen tarayıcı ayarlarından konuma izin verin",
-        "locationUnavailable": "Konum bilgisi kullanılamıyor",
-        "locationTimeout": "Konum isteği zaman aşımına uğradı",
-        "locationError": "Konum alınırken hata oluştu",
-        "detectedLocation": "Algılanan Konum",
-        "latitude": "Enlem",
-        "longitude": "Boylam",
-        "citiesLoadError": "Şehirler yüklenirken hata oluştu",
-        "loadingCities": "Şehirler yükleniyor..."
-    },
+ 
     "prayTimeTable": {
         "tabs": {
             "daily": "Bugün",
@@ -458,34 +443,28 @@
                 "selectDay": "Gün Seçin"
             }
         },
-        "citySelect": {
-            "location": "Konum Seçimi",
-            "selectCity": "Şehir Seçin",
-            "selectCityPlaceholder": "Bir şehir seçin",
-            "loadingCities": "Şehirler yükleniyor...",
-            "citiesLoadError": "Şehirler yüklenirken hata oluştu",
-            "getCurrentLocation": "Konumu Al",
-            "autoDetectLocation": "Otomatik Konum",
-            "detectedLocation": "Algılanan Konum",
-            "latitude": "Enlem",
-            "longitude": "Boylam",
-            "geolocationNotSupported": "Tarayıcı konumlamayı desteklemiyor",
-            "locationDenied": "Konuma erişim reddedildi",
-            "locationUnavailable": "Konum bilgisi bulunamıyor",
-            "locationTimeout": "Konum isteği zaman aşımına uğradı",
-            "locationError": "Konum alınırken hata oluştu",
-            "example": {
-                "title": "Şehir Seçici Örneği",
-                "demonstration": "Otomatik algılamalı şehir seçici",
-                "results": "Seçim Sonuçları",
-                "selectedCity": "Seçilen Şehir ID",
-                "cityName": "Şehir İsmi",
-                "instructions": "Kullanım Talimatları",
-                "instruction1": "Koordinat almak için açılır menüden şehir seçin",
-                "instruction2": "Mevcut konumu kullanmak için otomatik algılama düğmesine basın",
-                "instruction3": "Bileşen algılanan koordinatları aşağıda gösterecek"
-            }
-        },
+      "citySelect": {
+  "title": "Konum Seçimi",
+  "selectCity": "Şehir Seçin",
+  "selectCityPlaceholder": "Şehir adı girin",
+  "byCity": "Şehre göre",
+  "byCoords": "Koordinatlara göre",
+  "currentLocation": "Mevcut konumum",
+  "getCurrentLocation": "Mevcut konumu al",
+  "autoDetectLocation": "Otomatik algılama",
+  "detectedLocation": "Algılanan konum",
+  "latitude": "Enlem",
+  "longitude": "Boylam",
+  "loadingCities": "Şehirler yükleniyor...",
+  "citiesLoadError": "Şehirler yüklenirken hata oluştu",
+  "geolocationNotSupported": "Tarayıcı konum belirlemeyi desteklemiyor",
+  "locationDenied": "Konuma erişim reddedildi",
+  "locationUnavailable": "Konum bilgisi mevcut değil",
+  "locationTimeout": "Konum isteği zaman aşımına uğradı",
+  "locationError": "Konum alınırken hata oluştu",
+  "showPrayerTimes": "Namaz vakitlerini göster"
+}
+,
         "unifiedDatePicker": {
             "selectDate": "Tarih Seçin",
             "selectHijriDate": "Hicri Tarih Seçin",

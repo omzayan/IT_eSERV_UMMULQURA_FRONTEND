@@ -195,22 +195,27 @@
       "saturday": "السبت"
     }
   },
-  "citySelect": {
-    "selectCity": "اختر المدينة",
-    "selectCityPlaceholder": "اختر المدينة",
-    "getCurrentLocation": "حدد الموقع الحالي",
-    "autoDetectLocation": "حدد الموقع تلقائياً",
-    "geolocationNotSupported": "المتصفح لا يدعم تحديد الموقع الجغرافي",
-    "locationDenied": "تم رفض الوصول إلى الموقع. يرجى السماح بالوصول للموقع في إعدادات المتصفح",
-    "locationUnavailable": "الموقع غير متاح حالياً",
-    "locationTimeout": "انتهت مهلة تحديد الموقع",
-    "locationError": "حدث خطأ أثناء تحديد الموقع",
-    "detectedLocation": "الموقع المكتشف",
-    "latitude": "خط العرض",
-    "longitude": "خط الطول",
-    "citiesLoadError": "خطأ في تحميل المدن",
-    "loadingCities": "جاري تحميل المدن..."
-  },
+"citySelect": {
+  "title": "اختيار المدينة",
+  "byCity": "حسب المدينة",
+  "byCoords": "حسب الإحداثيات",
+  "currentLocation": "موقعي الحالي",
+  "selectCity": "اختر المدينة",
+  "selectCityPlaceholder": "اختر المدينة",
+  "getCurrentLocation": "حدد الموقع الحالي",
+  "autoDetectLocation": "حدد الموقع تلقائياً",
+  "geolocationNotSupported": "المتصفح لا يدعم تحديد الموقع الجغرافي",
+  "locationDenied": "تم رفض الوصول إلى الموقع",
+  "locationUnavailable": "الموقع غير متاح حالياً",
+  "locationTimeout": "انتهت مهلة تحديد الموقع",
+  "locationError": "حدث خطأ أثناء تحديد الموقع",
+  "detectedLocation": "الموقع المكتشف",
+  "latitude": "خط العرض",
+  "longitude": "خط الطول",
+  "citiesLoadError": "خطأ في تحميل المدن",
+  "loadingCities": "جاري تحميل المدن..."
+}
+,
   "prayTimeTable": {
     "tabs": {
       "daily": "اليوم",
@@ -480,34 +485,8 @@
         "selectedDate": "التاريخ المختار"
       }
     },
-    "citySelect": {
-      "location": "اختيار الموقع",
-      "selectCity": "اختر المدينة",
-      "selectCityPlaceholder": "اختر مدينة",
-      "loadingCities": "جاري تحميل المدن...",
-      "citiesLoadError": "خطأ في تحميل المدن",
-      "getCurrentLocation": "تحديد الموقع تلقائياً",
-      "autoDetectLocation": "تحديد تلقائي",
-      "detectedLocation": "الموقع المحدد",
-      "latitude": "خط العرض",
-      "longitude": "خط الطول",
-      "geolocationNotSupported": "تحديد الموقع غير مدعوم في هذا المتصفح",
-      "locationDenied": "تم رفض الوصول للموقع من قبل المستخدم",
-      "locationUnavailable": "معلومات الموقع غير متاحة",
-      "locationTimeout": "انتهت مهلة طلب الموقع",
-      "locationError": "خطأ غير معروف في الموقع",
-      "example": {
-        "title": "مثال على منتقي المدينة",
-        "demonstration": "منتقي المدينة مع التحديد التلقائي",
-        "results": "نتائج الاختيار",
-        "selectedCity": "معرف المدينة المختارة",
-        "cityName": "اسم المدينة",
-        "instructions": "كيفية الاستخدام",
-        "instruction1": "اختر مدينة من القائمة المنسدلة للحصول على إحداثياتها",
-        "instruction2": "اضغط على زر التحديد التلقائي لاستخدام موقعك الحالي",
-        "instruction3": "ستظهر الإحداثيات المكتشفة أسفل المنتقي"
-      }
-    },
+
+
     "unifiedDatePicker": {
       "selectDate": "اختر التاريخ",
       "selectHijriDate": "اختر التاريخ الهجري",

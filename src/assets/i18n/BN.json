@@ -195,22 +195,28 @@
             "saturday": "শনিবার"
         }
     },
-    "citySelect": {
-        "selectCity": "শহর নির্বাচন করুন",
-        "selectCityPlaceholder": "একটি শহর নির্বাচন করুন",
-        "getCurrentLocation": "বর্তমান অবস্থান পেতে",
-        "autoDetectLocation": "অটোম্যাটিক অবস্থান নির্ধারণ",
-        "geolocationNotSupported": "ব্রাউজার অবস্থান নির্ধারণ সমর্থন করে না",
-        "locationDenied": "অবস্থান প্রবেশাধিকার অস্বীকার করা হয়েছে — অনুগ্রহ করে অনুমতি দিন",
-        "locationUnavailable": "অবস্থা পাওয়া যাচ্ছে না",
-        "locationTimeout": "অবস্থান নির্ধারণের সময়সীমা পেরেছে",
-        "locationError": "অবস্থান নির্ধারণে ত্রুটি হয়েছে",
-        "detectedLocation": "নির্ধারিত অবস্থান",
-        "latitude": "অক্ষাংশ",
-        "longitude": "দ্রাঘিমাংশ",
-        "citiesLoadError": "শহর লোড করতে ত্রুটি",
-        "loadingCities": "শহর লোড হচ্ছে…"
-    },
+   "citySelect": {
+  "title": "অবস্থান নির্বাচন করুন",
+  "selectCity": "শহর নির্বাচন করুন",
+  "selectCityPlaceholder": "শহরের নাম লিখুন",
+  "byCity": "শহর অনুযায়ী",
+  "byCoords": "অবস্থানাঙ্ক অনুযায়ী",
+  "currentLocation": "আমার বর্তমান অবস্থান",
+  "getCurrentLocation": "বর্তমান অবস্থান পান",
+  "autoDetectLocation": "স্বয়ংক্রিয় অবস্থান নির্ধারণ",
+  "detectedLocation": "সনাক্তকৃত অবস্থান",
+  "latitude": "অক্ষাংশ",
+  "longitude": "দ্রাঘিমাংশ",
+  "loadingCities": "শহর লোড হচ্ছে…",
+  "citiesLoadError": "শহর লোড করতে ত্রুটি",
+  "geolocationNotSupported": "এই ব্রাউজার অবস্থান নির্ধারণ সমর্থন করে না",
+  "locationDenied": "অবস্থানে প্রবেশাধিকার অস্বীকার করা হয়েছে",
+  "locationUnavailable": "অবস্থান তথ্য পাওয়া যাচ্ছে না",
+  "locationTimeout": "অবস্থান অনুরোধের সময়সীমা শেষ হয়েছে",
+  "locationError": "অবস্থান নির্ধারণে ত্রুটি হয়েছে",
+  "showPrayerTimes": "নামাজের সময় দেখান"
+}
+,
     "prayTimeTable": {
         "tabs": {
             "daily": "দৈনিক",
@@ -488,23 +494,7 @@
                 "resetGregorian": "মিলাদী পুনঃনির্ধারণ"
             }
         },
-        "citySelect": {
-            "location": "অবস্থান নির্বাচন",
-            "selectCity": "শহর নির্বাচন করুন",
-            "selectCityPlaceholder": "একটি শহর নির্বাচন করুন",
-            "loadingCities": "শহর লোড হচ্ছে…",
-            "citiesLoadError": "শহর লোড করতে ত্রুটি",
-            "getCurrentLocation": "অটোম্যাটিক অবস্থান নির্ধারণ",
-            "autoDetectLocation": "অটোম্যাটিক",
-            "detectedLocation": "নির্ধারিত অবস্থান",
-            "latitude": "অক্ষাংশ",
-            "longitude": "দ্রাঘিমাংশ",
-            "geolocationNotSupported": "এই ব্রাউজারে লোকেশন সমর্থিত নয়",
-            "locationDenied": "জন⁤্যিক লোকেশন ব্যবহারকারীর অনুমোদন নেই",
-            "locationUnavailable": "অবস্থান পাওয়া যাচ্ছে না",
-            "locationTimeout": "অবস্থান নির্ধারণ সময়সীমা পেরেছে",
-            "locationError": "লোকেশন নির্ধারণে ত্রুটি"
-        },
+       
         "unifiedDatePicker": {
             "selectDate": "তারিখ নির্বাচন করুন",
             "selectHijriDate": "হিজরি তারিখ নির্বাচন করুন",

@@ -195,22 +195,7 @@
             "saturday": "Sabtu"
         }
     },
-    "citySelect": {
-        "selectCity": "Pilih kota",
-        "selectCityPlaceholder": "Pilih kota",
-        "getCurrentLocation": "Dapatkan lokasi saat ini",
-        "autoDetectLocation": "Deteksi otomatis lokasi",
-        "geolocationNotSupported": "Browser tidak mendukung geolokasi",
-        "locationDenied": "Akses lokasi ditolak. Mohon izinkan akses di pengaturan browser",
-        "locationUnavailable": "Lokasi tidak tersedia sekarang",
-        "locationTimeout": "Waktu penentuan lokasi habis",
-        "locationError": "Terjadi kesalahan saat menentukan lokasi",
-        "detectedLocation": "Lokasi terdeteksi",
-        "latitude": "Lintang",
-        "longitude": "Bujur",
-        "citiesLoadError": "Gagal memuat kota",
-        "loadingCities": "Memuat kota..."
-    },
+  
     "prayTimeTable": {
         "tabs": {
             "daily": "Harian",
@@ -488,23 +473,28 @@
                 "resetGregorian": "Reset Masehi"
             }
         },
-        "citySelect": {
-            "location": "Pilih Lokasi",
-            "selectCity": "Pilih kota",
-            "selectCityPlaceholder": "Pilih kota",
-            "loadingCities": "Sedang memuat kota...",
-            "citiesLoadError": "Gagal memuat kota",
-            "getCurrentLocation": "Deteksi lokasi otomatis",
-            "autoDetectLocation": "Deteksi otomatis",
-            "detectedLocation": "Lokasi terdeteksi",
-            "latitude": "Lintang",
-            "longitude": "Bujur",
-            "geolocationNotSupported": "Browser tidak mendukung geolokasi",
-            "locationDenied": "Akses lokasi ditolak",
-            "locationUnavailable": "Lokasi tidak tersedia",
-            "locationTimeout": "Waktu penentuan lokasi habis",
-            "locationError": "Kesalahan saat menentukan lokasi"
-        },
+      "citySelect": {
+  "title": "Pilih Lokasi",
+  "selectCity": "Pilih kota",
+  "selectCityPlaceholder": "Masukkan nama kota",
+  "byCity": "Berdasarkan kota",
+  "byCoords": "Berdasarkan koordinat",
+  "currentLocation": "Lokasi saya saat ini",
+  "getCurrentLocation": "Dapatkan lokasi saat ini",
+  "autoDetectLocation": "Deteksi otomatis",
+  "detectedLocation": "Lokasi terdeteksi",
+  "latitude": "Lintang",
+  "longitude": "Bujur",
+  "loadingCities": "Sedang memuat kota...",
+  "citiesLoadError": "Gagal memuat kota",
+  "geolocationNotSupported": "Browser tidak mendukung geolokasi",
+  "locationDenied": "Akses lokasi ditolak",
+  "locationUnavailable": "Lokasi tidak tersedia",
+  "locationTimeout": "Waktu penentuan lokasi habis",
+  "locationError": "Kesalahan saat menentukan lokasi",
+  "showPrayerTimes": "Tampilkan waktu salat"
+}
+,
         "unifiedDatePicker": {
             "selectDate": "Pilih tanggal",
             "selectHijriDate": "Pilih tanggal Hijriyah",

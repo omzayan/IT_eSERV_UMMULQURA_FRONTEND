@@ -195,22 +195,7 @@
             "saturday": "Samedi"
         }
     },
-    "citySelect": {
-        "selectCity": "Sélectionner une ville",
-        "selectCityPlaceholder": "Sélectionner une ville",
-        "getCurrentLocation": "Obtenir la position actuelle",
-        "autoDetectLocation": "Détecter automatiquement",
-        "geolocationNotSupported": "La géolocalisation n’est pas supportée par ce navigateur",
-        "locationDenied": "Accès à la position refusé. Veuillez autoriser l’accès aux paramètres du navigateur",
-        "locationUnavailable": "Information de position non disponible",
-        "locationTimeout": "Délai dépassé pour la requête de position",
-        "locationError": "Une erreur est survenue lors de la récupération de la position",
-        "detectedLocation": "Position détectée",
-        "latitude": "Latitude",
-        "longitude": "Longitude",
-        "citiesLoadError": "Erreur de chargement des villes",
-        "loadingCities": "Chargement des villes…"
-    },
+ 
     "prayTimeTable": {
         "tabs": {
             "daily": "Aujourd’hui",
@@ -458,34 +443,28 @@
                 "selectDay": "Sélectionner le jour"
             }
         },
-        "citySelect": {
-            "location": "Sélection de l’emplacement",
-            "selectCity": "Sélectionner une ville",
-            "selectCityPlaceholder": "Choisissez une ville",
-            "loadingCities": "Chargement des villes…",
-            "citiesLoadError": "Erreur lors du chargement des villes",
-            "getCurrentLocation": "Obtenir l’emplacement actuel",
-            "autoDetectLocation": "Détecter automatiquement",
-            "detectedLocation": "Emplacement détecté",
-            "latitude": "Latitude",
-            "longitude": "Longitude",
-            "geolocationNotSupported": "La géolocalisation n’est pas prise en charge par ce navigateur",
-            "locationDenied": "Accès à la position refusé",
-            "locationUnavailable": "Informations de position indisponibles",
-            "locationTimeout": "Délai d’attente de la requête de position dépassé",
-            "locationError": "Erreur lors de l’obtention de la position",
-            "example": {
-                "title": "Exemple de sélecteur de ville",
-                "demonstration": "Sélecteur de ville avec détection automatique",
-                "results": "Résultats de sélection",
-                "selectedCity": "ID de la ville sélectionnée",
-                "cityName": "Nom de la ville",
-                "instructions": "Comment utiliser",
-                "instruction1": "Sélectionnez une ville dans le menu déroulant pour obtenir ses coordonnées",
-                "instruction2": "Cliquez sur le bouton de détection automatique pour utiliser votre position actuelle",
-                "instruction3": "Le composant affichera ci-dessous les coordonnées détectées"
-            }
-        },
+       "citySelect": {
+  "title": "Sélection de l’emplacement",
+  "selectCity": "Sélectionner une ville",
+  "selectCityPlaceholder": "Entrez le nom de la ville",
+  "byCity": "Par ville",
+  "byCoords": "Par coordonnées",
+  "currentLocation": "Ma position actuelle",
+  "getCurrentLocation": "Obtenir la position actuelle",
+  "autoDetectLocation": "Détection automatique",
+  "detectedLocation": "Position détectée",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "loadingCities": "Chargement des villes…",
+  "citiesLoadError": "Erreur lors du chargement des villes",
+  "geolocationNotSupported": "La géolocalisation n’est pas prise en charge par ce navigateur",
+  "locationDenied": "Accès à la position refusé",
+  "locationUnavailable": "Informations de position indisponibles",
+  "locationTimeout": "Délai d’attente de la requête de position dépassé",
+  "locationError": "Erreur lors de l’obtention de la position",
+  "showPrayerTimes": "Afficher les horaires de prière"
+}
+,
         "unifiedDatePicker": {
             "selectDate": "Sélectionner une date",
             "selectHijriDate": "Sélectionner une date hijri",
