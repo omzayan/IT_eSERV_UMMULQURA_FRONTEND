@@ -397,6 +397,8 @@ export class PrayTimeSectionComponent
 
     // Load initial prayer times with user's current location
     this.loadInitialPrayerTimes();
+
+    this.loadPrayerTimesWithCache();
   }
 
   ngOnDestroy(): void {
@@ -873,6 +875,90 @@ private handleHijriDateSearch(): void {
     if (hour === 0) hour = 12;
 
     return `${hour}:${minute} ${ampm}`;
+  }
+
+  // caching prayertimes 
+  loadPrayerTimesWithCache() {
+    const now = new Date();
+    const todayKey = now.toISOString().split('T')[0];
+
+    const cached = localStorage.getItem(`prayerTimesCache`);
+    if (cached) {
+      console.log('Cache used');
+      this.prayerTime = JSON.parse(cached).data;
+      this.setDatePickerToToday();
+      this.loading = false;
+      return;
+    }
+
+    console.log('Api used');
+    navigator.geolocation.getCurrentPosition(
+    (position) => this.loadTodayPrayerTimes({ 
+        latitude: position.coords.latitude, 
+        longitude: position.coords.longitude 
+    }),
+    () => this.loadTodayPrayerTimes()
+  );
+  }
+
+  loadTodayPrayerTimes(position?: { latitude: number; longitude: number }) {
+    const today = new Date();
+    const todayKey = today.toISOString().split('T')[0];
+
+    const prayerObservable = position
+      ? this.prayerService.getPrayerTimesForGregorianDate(today, position.longitude, position.latitude)
+      : this.prayerService.getPrayerTimesForGregorianDate(today);
+
+    prayerObservable.subscribe({
+      next: (todayResult: any) => {
+        const ishaTime = this.parsePrayerTimeToDate(todayResult.prayer_times?.isha);
+        const currentTime = new Date();
+
+        if (ishaTime && currentTime.getTime() > ishaTime.getTime()) {
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          const tomorrowObservable = position
+            ? this.prayerService.getPrayerTimesForGregorianDate(tomorrow, position.longitude, position.latitude)
+            : this.prayerService.getPrayerTimesForGregorianDate(tomorrow);
+
+          tomorrowObservable.subscribe({
+            next: (tomorrowResult: any) => {
+              this.prayerTime = tomorrowResult;
+              localStorage.setItem(
+                `prayerTimesCache`,
+                JSON.stringify({ data: tomorrowResult })
+              );
+              if (position) this.setInitialCoordinates(position);
+              this.setDatePickerToTomorrow();
+              this.loading = false;
+            },
+            error: () => {
+              this.prayerTime = todayResult;
+              localStorage.setItem(
+                `prayerTimesCache_${todayKey}`,
+                JSON.stringify({ data: todayResult })
+              );
+              if (position) this.setInitialCoordinates(position);
+              this.setDatePickerToToday();
+              this.loading = false;
+            },
+          });
+        } else {
+          this.prayerTime = todayResult;
+          localStorage.setItem(
+            `prayerTimesCache_${todayKey}`,
+            JSON.stringify({ data: todayResult })
+          );
+          if (position) this.setInitialCoordinates(position);
+          this.setDatePickerToToday();
+          this.loading = false;
+        }
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
   }
 
   getPrayerTime(key: string): string {
