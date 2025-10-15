@@ -210,7 +210,6 @@ getMonthlyPrayerTimesByHijri(
   );
 }
 
-
   /**
    * Get prayer times for all cities
    */

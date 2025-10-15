@@ -328,6 +328,9 @@ getMonthlyPrayerTimesByGregorian(
   }
 
 
+ getPrayerTimesForAllCities(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForAllCities`);
+  }
 
   /**
    * Get prayer times for all cities

@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PrayerService, ReferenceDataService } from '../../../core/services';
+import { ApiService, PrayerService, ReferenceDataService } from '../../../core/services';
 import {
   PrayerTimesByCitiesResult,
   HijriDateInfo,
   GregorianDateInfo,
 } from '../../../core/types/api.types';
 import { forkJoin, map } from 'rxjs';
+import { ApiResponse } from '../../../core';
 
 interface PrayerTableData {
   cityName: string;
@@ -192,7 +193,7 @@ export class PrayerTimesTableComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private prayerService: PrayerService,
+    private prayerService: ApiService,
     private referenceDataService :ReferenceDataService
   ) {}
 
@@ -220,61 +221,43 @@ private fetchData(): void {
   this.loading = true;
   this.error = null;
 
-  // 1️⃣ نجيب كل المدن
-  this.referenceDataService.getCities().subscribe({
-    next: (cities) => {
-      if (!cities || cities.length === 0) {
+  this.prayerService.getPrayerTimesForAllCities().subscribe({
+    next: (res) => {
+      if (!res?.result || res.result.length === 0) {
         this.error = this.translate.instant('table.noData') || 'No data available';
         this.loading = false;
         return;
       }
 
-      const today = new Date();
-
-      // 2️⃣ نعمل Array من Observables لكل مدينة
-   const requests = cities.map(city =>
-  this.prayerService.getPrayerTimesForGregorianDate(
-    today,
-    city.longitude ?? 0,
-    city.latitude ?? 0
-  ).pipe(
-    map(result => ({
-      cityName: city.cityName ?? city.name ?? '-',   // ⬅️ هنا الحل
-      fajr: result?.prayer_times.fajr ?? '--',
-      sunrise: result?.prayer_times.sunrise ?? '--',
-      dhuhr: result?.prayer_times.dhuhr ?? '--',
-      asr: result?.prayer_times.asr ?? '--',
-      maghrib: result?.prayer_times.maghrib ?? '--',
-      isha: result?.prayer_times.isha ?? '--',
-      hijri: result?.hijri_date ?? null,
-      gregorian: result?.gregorian_date ?? null,
-    } ))  
-  )
-);
-
-      // 3️⃣ نشغلهم كلهم مع بعض
-      forkJoin(requests).subscribe({
-        next: (results) => {
-          this.data = results;
-
-          // ناخد التاريخ من أول مدينة (كلهم نفس اليوم)
-          this.hijriInfo = results[0]?.hijri ?? null;
-          this.gregorianDateInfo = results[0]?.gregorian ?? null;
-
-          this.loading = false;
-        },
-        error: () => {
-          this.error = this.translate.instant('table.error') || 'Failed to fetch prayer times';
-          this.loading = false;
-        }
+      // نحول الريسبونس إلى الـ format اللي محتاجينه
+      this.data = res.result.map((city: any) => {
+        const pt = city.prayerTimes[0]; // كل مدينة فيها prayerTimes array فيه عنصر واحد
+        return {
+          cityName: city.cityName ?? '-',
+          fajr: pt?.fajr ?? '--',
+          sunrise: pt?.sunrise ?? '--',
+          dhuhr: pt?.dhuhr ?? '--',
+          asr: pt?.asr ?? '--',
+          maghrib: pt?.maghrib ?? '--',
+          isha: pt?.isha ?? '--',
+          hijri: pt?.hijri_date ?? null,
+          gregorian: pt?.gregorian_date ?? null,
+        };
       });
+
+      // ناخد التاريخ من أول مدينة
+    //  this.hijriInfo = this.data[0]?.hijri ?? null;
+    //  this.gregorianDateInfo = this.data[0]?.gregorian ?? null;
+
+      this.loading = false;
     },
     error: () => {
-      this.error = this.translate.instant('table.error') || 'Error loading cities';
+      this.error = this.translate.instant('table.error') || 'Failed to fetch prayer times';
       this.loading = false;
     }
   });
 }
+
   formatTime12(time: string): string {
     if (!time) return '-';
 
