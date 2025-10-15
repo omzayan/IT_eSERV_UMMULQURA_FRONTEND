@@ -252,42 +252,62 @@ private loadGregorianCalendar(): void {
     .getMonthlyPrayerTimesByGregorian(
       this.currentGregorianYear,
       this.currentGregorianMonth,
-      undefined,
-      undefined
+      24.67, // latitude
+      46.69  // longitude
     )
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (response) => {
+      
 
         if (response.success && response.result) {
-          // ✅ Mapping من MonthlyPrayerTimesResult → MonthPrayerTimes
+          const prayerTimes = response.result.prayerTimes;
+
+          // ✅ نعمل mapping يدوي للتاريخ الميلادي
           this.gregorianMonthlyData = {
-           days_in_month: response.result.prayerTimes.length,
-            location: {
-              latitude: 0, // TODO: هات من الـ API لو بيرجّع location
-              longitude: 0,
-            },
-           daily_prayer_times: response.result.prayerTimes.map((pt) => ({
-              hijri_date: pt.hijri_date,
-              gregorian_date: pt.gregorian_date,
-              day_name: pt.gregorian_date.day_name, 
-              prayer_times: {
-                fajr: pt.fajr,
-                sunrise: pt.sunrise,
-                dhuhr: pt.dhuhr,
-                asr: pt.asr,
-                maghrib: pt.maghrib,
-                isha: pt.isha,
-                sunset: pt.sunset,
-              },
-            })),
+            days_in_month: prayerTimes.length,
+            location: { latitude: 24.67, longitude: 46.69 },
+            daily_prayer_times: prayerTimes.map((pt, index) => {
+              const day = index + 1;
+              return {
+                hijri_date: pt.hijri_date ?? {
+                  day,
+                  month: this.currentHijriMonth,
+                  year: this.currentHijriYear,
+                  month_name: "",
+                  day_name: "",
+                  formatted: "",
+                  iso: ""
+                },
+                gregorian_date: {
+                  day,
+                  month: this.currentGregorianMonth,
+                  year: this.currentGregorianYear,
+                  month_name: this.getGregorianMonthName(this.currentGregorianMonth),
+                  day_name: new Date(this.currentGregorianYear, this.currentGregorianMonth - 1, day)
+                    .toLocaleDateString('en-US', { weekday: 'long' }),
+                  formatted: "",
+                  iso: ""
+                },
+                day_name: new Date(this.currentGregorianYear, this.currentGregorianMonth - 1, day)
+                  .toLocaleDateString('en-US', { weekday: 'long' }),
+                prayer_times: {
+                  fajr: pt.fajr,
+                  sunrise: pt.sunrise,
+                  dhuhr: pt.dhuhr,
+                  asr: pt.asr,
+                  maghrib: pt.maghrib,
+                  isha: pt.isha,
+                  sunset: pt.sunset,
+                }
+              };
+            })
           };
-        }
-else {
-          console.error(
-            'Failed to load Gregorian calendar data:',
-            response.error?.message || 'Unknown error'
-          );
+
+          // ✅ دلوقتي نولد التقويم
+          this.generateGregorianCalendarFromData();
+        } else {
+          console.error('Failed to load Gregorian calendar data:', response.error?.message || 'Unknown error');
           this.gregorianMonthlyData = null;
           this.generateGregorianCalendarFromData(); // Fallback
         }
@@ -302,6 +322,7 @@ else {
       },
     });
 }
+
 
 
 
