@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PrayerService } from '../../../core/services';
+import { PrayerService, ReferenceDataService } from '../../../core/services';
 import {
   PrayerTimesByCitiesResult,
   HijriDateInfo,
   GregorianDateInfo,
 } from '../../../core/types/api.types';
+import { forkJoin, map } from 'rxjs';
 
 interface PrayerTableData {
   cityName: string;
@@ -191,7 +192,8 @@ export class PrayerTimesTableComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private prayerService: PrayerService
+    private prayerService: PrayerService,
+    private referenceDataService :ReferenceDataService
   ) {}
 
   ngOnInit(): void {
@@ -200,7 +202,7 @@ export class PrayerTimesTableComponent implements OnInit {
       this.updateHeaders();
     });
 
-    //this.fetchData();
+    this.fetchData();
   }
 
   private updateHeaders(): void {
@@ -214,41 +216,65 @@ export class PrayerTimesTableComponent implements OnInit {
       this.translate.instant('prayers.isha'),
     ];
   }
+private fetchData(): void {
+  this.loading = true;
+  this.error = null;
 
-  // private fetchData(): void {
-  //   this.loading = true;
-  //   this.error = null;
+  // 1️⃣ نجيب كل المدن
+  this.referenceDataService.getCities().subscribe({
+    next: (cities) => {
+      if (!cities || cities.length === 0) {
+        this.error = this.translate.instant('table.noData') || 'No data available';
+        this.loading = false;
+        return;
+      }
 
-  //   this.prayerService.getAllCitiesPrayerTimes().subscribe({
-  //     next: (result) => {
-  //       if (result) {
-  //         this.hijriInfo = result.hijri_date;
-  //         this.gregorianDateInfo = result.gregorian_date;
+      const today = new Date();
 
-  //         this.data = result.city_prayer_times.map((item) => ({
-  //           cityName: item.city_name,
-  //           fajr: item.prayer_times.fajr,
-  //           sunrise: item.prayer_times.sunrise,
-  //           dhuhr: item.prayer_times.dhuhr,
-  //           asr: item.prayer_times.asr,
-  //           maghrib: item.prayer_times.maghrib,
-  //           isha: item.prayer_times.isha,
-  //         }));
-  //       } else {
-  //         this.error =
-  //           this.translate.instant('table.noData') || 'No data available';
-  //       }
-  //       this.loading = false;
-  //     },
-  //     error: (e) => {
-  //       this.error =
-  //         this.translate.instant('table.error') ||
-  //         'Failed to fetch prayer times';
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
+      // 2️⃣ نعمل Array من Observables لكل مدينة
+   const requests = cities.map(city =>
+  this.prayerService.getPrayerTimesForGregorianDate(
+    today,
+    city.longitude ?? 0,
+    city.latitude ?? 0
+  ).pipe(
+    map(result => ({
+      cityName: city.cityName ?? city.name ?? '-',   // ⬅️ هنا الحل
+      fajr: result?.prayer_times.fajr ?? '--',
+      sunrise: result?.prayer_times.sunrise ?? '--',
+      dhuhr: result?.prayer_times.dhuhr ?? '--',
+      asr: result?.prayer_times.asr ?? '--',
+      maghrib: result?.prayer_times.maghrib ?? '--',
+      isha: result?.prayer_times.isha ?? '--',
+      hijri: result?.hijri_date ?? null,
+      gregorian: result?.gregorian_date ?? null,
+    } ))  
+  )
+);
 
+      // 3️⃣ نشغلهم كلهم مع بعض
+      forkJoin(requests).subscribe({
+        next: (results) => {
+          this.data = results;
+
+          // ناخد التاريخ من أول مدينة (كلهم نفس اليوم)
+          this.hijriInfo = results[0]?.hijri ?? null;
+          this.gregorianDateInfo = results[0]?.gregorian ?? null;
+
+          this.loading = false;
+        },
+        error: () => {
+          this.error = this.translate.instant('table.error') || 'Failed to fetch prayer times';
+          this.loading = false;
+        }
+      });
+    },
+    error: () => {
+      this.error = this.translate.instant('table.error') || 'Error loading cities';
+      this.loading = false;
+    }
+  });
+}
   formatTime12(time: string): string {
     if (!time) return '-';
 
