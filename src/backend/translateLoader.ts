@@ -7,7 +7,7 @@ export class BackendTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) {}
 
 getTranslation(lang: string): Observable<any> {
-  return this.http.get<{ result: any }>(`${environment.apiBaseUrl}api/services/app/Translations/GetTranslation?lang=${lang}`)
+  return this.http.get<{ result: any }>(`${environment.apiBaseUrl}api/services/app/Translations/GetMergedTranslationsFromDbAndJson?lang=${lang}`)
     .pipe(
       map(response => response.result)
     );
