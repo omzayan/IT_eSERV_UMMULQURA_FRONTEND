@@ -107,20 +107,27 @@
 
     <!-- اختيار بالإحداثيات -->
     <div *ngIf="activeTab === 'coords'" class="flex flex-col gap-3">
-      <input
-        type="number"
-        step="any"
-        [(ngModel)]="coords.lat"
-        placeholder="{{ 'citySelect.latitudePlaceholder' | translate }}"
-        class="border rounded px-3 py-2"
-      />
-      <input
-        type="number"
-        step="any"
-        [(ngModel)]="coords.lng"
-        placeholder="{{ 'citySelect.longitudePlaceholder' | translate }}"
-        class="border rounded px-3 py-2"
-      />
+    <input
+  type="number"
+  step="any"
+  [(ngModel)]="coords.lat"
+  placeholder="{{ 'citySelect.latitudePlaceholder' | translate }}"
+  class="border rounded px-3 py-2"
+  dir="ltr"
+  inputmode="decimal"
+/>
+
+<input
+  type="number"
+  step="any"
+  [(ngModel)]="coords.lng"
+  placeholder="{{ 'citySelect.longitudePlaceholder' | translate }}"
+  class="border rounded px-3 py-2"
+  dir="ltr"
+  inputmode="decimal"
+/>
+
+    
       <button
         (click)="onCoordsSelect()"
         class="bg-[#1B8354] text-white py-2 rounded hover:bg-green-800 mt-2"

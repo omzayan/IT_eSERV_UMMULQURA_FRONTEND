@@ -104,7 +104,7 @@ interface PrayerCardMeta {
               <button
                 class="bg-[#092A1E] hover:bg-[#0a2f20] text-white px-6 py-2 rounded-lg transition-colors duration-200 font-medium font-ibm-plex-arabic"
                 (click)="handleSearch()"
-                [disabled]="loading || (!selectedCityId && !selectedCoords)"
+                [disabled]="loading || !selectedCoords"
               >
                 {{
                   loading
@@ -350,7 +350,7 @@ export class PrayTimeSectionComponent
   @ViewChild('gregorianDatePicker')
   gregorianDatePicker!: UnifiedDatePickerComponent;
 
-  Math = Math; // Make Math available in template
+  Math = Math;
   isAr = false;
   selectedCityId: number | null = null;
   selectedCoords: LocationData | null = null;
@@ -360,10 +360,10 @@ export class PrayTimeSectionComponent
   loading = false;
   error: string | null = null;
   now = new Date();
-  isShowingTomorrowData = false; // Flag to indicate if we're showing tomorrow's prayer times
-  isShowingCustomDate = false; // Flag to indicate if user selected a custom date
-  private viewInitialized = false; // Flag to track if view is initialized
-  private pendingDateUpdate: DatePickerValue | null = null; // Store pending date update
+  isShowingTomorrowData = false;
+  isShowingCustomDate = false;
+  private viewInitialized = false;
+  private pendingDateUpdate: DatePickerValue | null = null;
   private timeSubscription?: Subscription;
   private destroy$ = new Subject<void>();
 
@@ -374,11 +374,11 @@ export class PrayTimeSectionComponent
     private prayerService: PrayerService,
     private languageService: LanguageService,
     private geolocationService: GeolocationService,
+    private referenceDataService: ReferenceDataService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to language changes using the language service
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
@@ -386,88 +386,55 @@ export class PrayTimeSectionComponent
         this.updatePrayerNames();
       });
 
-    // Update time every second
     this.timeSubscription = interval(60000).subscribe(() => {
       this.now = new Date();
     });
 
-    // Update prayer names initially
     this.updatePrayerNames();
-
-    // Load initial prayer times with user's current location
     this.loadInitialPrayerTimes();
-
-    this.loadPrayerTimesWithCache();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-
-    if (this.timeSubscription) {
-      this.timeSubscription.unsubscribe();
-    }
+    if (this.timeSubscription) this.timeSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.viewInitialized = true;
-
-    // If there's a pending date update, apply it now
     if (this.pendingDateUpdate) {
-    
       this.selectedGregorianDate = this.pendingDateUpdate;
       this.pendingDateUpdate = null;
       this.cdr.detectChanges();
     }
   }
 
-private updatePrayerNames(): void {
-  this.prayerCardMeta = [
-    { key: 'fajr',    name: 'prayers.fajr',    bg: 'assets/images/fajr-time.png' },
-    { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
-    { key: 'dhuhr',   name: 'prayers.dhuhr',   bg: 'assets/images/dhuhr-time.png' },
-    { key: 'asr',     name: 'prayers.asr',     bg: 'assets/images/asr-time.png' },
-    { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
-    { key: 'isha',    name: 'prayers.isha',    bg: 'assets/images/isha-time.png' },
-  ];
-}
+  private updatePrayerNames(): void {
+    this.prayerCardMeta = [
+      { key: 'fajr',    name: 'prayers.fajr',    bg: 'assets/images/fajr-time.png' },
+      { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
+      { key: 'dhuhr',   name: 'prayers.dhuhr',   bg: 'assets/images/dhuhr-time.png' },
+      { key: 'asr',     name: 'prayers.asr',     bg: 'assets/images/asr-time.png' },
+      { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
+      { key: 'isha',    name: 'prayers.isha',    bg: 'assets/images/isha-time.png' },
+    ];
+  }
 
-
-  /**
-   * Set initial coordinates when loading prayer times for the first time
-   */
-  private setInitialCoordinates(position: {
-    latitude: number;
-    longitude: number;
-  }): void {
-    this.selectedCoords = {
-      lat: position.latitude,
-      lng: position.longitude,
-    };
-    // Ensure city ID is cleared when using coordinates
+  private setInitialCoordinates(position: { latitude: number; longitude: number; }): void {
+    this.selectedCoords = { lat: position.latitude, lng: position.longitude };
     this.selectedCityId = null;
   }
 
-  /**
-   * Set the date picker to show today's date when we load current day's prayer times
-   */
   private setDatePickerToToday(): void {
     const today = new Date();
-
     const todayDate = {
       dayNumber: today.getDate(),
-      month: today.getMonth() + 1, // Month is 1-based in our interface
+      month: today.getMonth() + 1,
       year: today.getFullYear(),
     };
-
-    // Clear Hijri date to maintain exclusivity
     this.selectedHijriDate = null;
-
-    // Flag that we're showing today's data
     this.isShowingTomorrowData = false;
-    this.isShowingCustomDate = false; // Auto-selected date is not custom
-
-  
+    this.isShowingCustomDate = false;
 
     if (this.viewInitialized) {
       this.selectedGregorianDate = todayDate;
@@ -477,27 +444,17 @@ private updatePrayerNames(): void {
     }
   }
 
-  /**
-   * Set the date picker to show tomorrow's date when we automatically load next day's prayer times
-   */
   private setDatePickerToTomorrow(): void {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-
     const tomorrowDate = {
       dayNumber: tomorrow.getDate(),
-      month: tomorrow.getMonth() + 1, // Month is 1-based in our interface
+      month: tomorrow.getMonth() + 1,
       year: tomorrow.getFullYear(),
     };
-
-    // Clear Hijri date to maintain exclusivity
     this.selectedHijriDate = null;
-
-    // Flag that we're showing tomorrow's data
     this.isShowingTomorrowData = true;
-    this.isShowingCustomDate = false; // Auto-selected date is not custom
-
-    console.log('Set date picker to tomorrow:', tomorrowDate);
+    this.isShowingCustomDate = false;
 
     if (this.viewInitialized) {
       this.selectedGregorianDate = tomorrowDate;
@@ -507,116 +464,69 @@ private updatePrayerNames(): void {
     }
   }
 
-  /**
-   * Check if current time is past Isha and load appropriate prayer times
-   */
   private handleInitialPrayerTimes(
     todayResult: PrayerTimeWithDateResult,
     position?: { latitude: number; longitude: number }
   ): void {
-    const ishaTime = this.parsePrayerTimeToDate(
-      todayResult.prayer_times?.isha || ''
-    );
+    const ishaTime = this.parsePrayerTimeToDate(todayResult.prayer_times?.isha || '');
     const currentTime = new Date();
 
-    console.log('Checking Isha time:', {
-      ishaTime: ishaTime?.toLocaleString(),
-      currentTime: currentTime.toLocaleString(),
-      isPastIsha: ishaTime && currentTime.getTime() > ishaTime.getTime(),
-    });
-
     if (ishaTime && currentTime.getTime() > ishaTime.getTime()) {
-      // Current time is past Isha, get tomorrow's prayer times
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       const prayerObservable = position
         ? this.prayerService.getPrayerTimesForGregorianDate(
-            tomorrow,
-            position.longitude,
-            position.latitude,
-            
-          )
+            tomorrow, position.longitude, position.latitude)
         : this.prayerService.getPrayerTimesForGregorianDate(tomorrow);
 
       prayerObservable.subscribe({
         next: (tomorrowResult) => {
           this.prayerTime = tomorrowResult;
-          if (position) {
-            this.setInitialCoordinates(position);
-          }
-          // Set the Gregorian date picker to show tomorrow's date
+          if (position) this.setInitialCoordinates(position);
           this.setDatePickerToTomorrow();
           this.loading = false;
         },
-        error: (e) => {
-          // If tomorrow's data fails, use today's data
+        error: () => {
           this.prayerTime = todayResult;
-          if (position) {
-            this.setInitialCoordinates(position);
-          }
+          if (position) this.setInitialCoordinates(position);
           this.loading = false;
         },
       });
     } else {
-      // Current time is before or during today's prayers
       this.prayerTime = todayResult;
-      if (position) {
-        this.setInitialCoordinates(position);
-      }
-      // Set the Gregorian date picker to show today's date
+      if (position) this.setInitialCoordinates(position);
       this.setDatePickerToToday();
       this.loading = false;
     }
   }
 
-  /**
-   * Load initial prayer times with user's current location and current date
-   */
   private loadInitialPrayerTimes(): void {
     this.loading = true;
     this.error = null;
 
-    // Try to get user's current location
     this.geolocationService.getCurrentPosition().subscribe({
       next: (position) => {
-        // Load prayer times with current location and current date
         this.prayerService
           .getTodayPrayerTimes(position.longitude, position.latitude)
           .subscribe({
             next: (result) => {
-              if (result) {
-                this.handleInitialPrayerTimes(result, position);
-              } else {
-                this.loading = false;
-              }
+              if (result) this.handleInitialPrayerTimes(result, position);
+              else this.loading = false;
             },
-            error: (e) => {
-              this.error =
-                this.translate.instant('prayTimeSection.error') ||
-                'Error fetching prayer times';
+            error: () => {
+              this.error = this.translate.instant('prayTimeSection.error') || 'Error fetching prayer times';
               this.loading = false;
             },
           });
       },
-      error: (e) => {
-        // If location access is denied or not available, try to load default prayer times
-        // This helps with the Isha scenario even without location
-        console.warn('Could not get user location:', e.message);
-
-        // Try to load prayer times without location (will use server default or fail gracefully)
+      error: () => {
         this.prayerService.getTodayPrayerTimes().subscribe({
           next: (result) => {
-            if (result) {
-              this.handleInitialPrayerTimes(result); // No position parameter
-            } else {
-              this.loading = false;
-            }
+            if (result) this.handleInitialPrayerTimes(result);
+            else this.loading = false;
           },
-          error: (e) => {
-            // Complete fallback - just stop loading
-            this.loading = false;
-          },
+          error: () => { this.loading = false; },
         });
       },
     });
@@ -624,63 +534,71 @@ private updatePrayerNames(): void {
 
   onHijriDateChange(date: DatePickerValue | null): void {
     this.selectedHijriDate = date;
-    // Reset Gregorian date when Hijri is selected
-    if (date) {
-      this.selectedGregorianDate = null;
-    }
-    // Update custom date flag
+    if (date) this.selectedGregorianDate = null;
     this.updateCustomDateFlag();
   }
 
   onGregorianDateChange(date: DatePickerValue | null): void {
     this.selectedGregorianDate = date;
-    // Reset Hijri date when Gregorian is selected
-    if (date) {
-      this.selectedHijriDate = null;
-    }
-    // Update custom date flag
+    if (date) this.selectedHijriDate = null;
     this.updateCustomDateFlag();
   }
 
+  onCitySelect(city: City): void {
+    this.selectedCityId = city.id;
 
-onCitySelect(city: City): void {
-  this.selectedCityId = city.id;
-  this.selectedCoords = null;
+    // جرّب تقرأ الإحداثيات من الكائن نفسه أولاً (يدعم lat/lng أو latitude/longitude)
+    const inlineLat = (city as any)?.lat ?? (city as any)?.latitude;
+    const inlineLng = (city as any)?.lng ?? (city as any)?.longitude;
+    if (typeof inlineLat === 'number' && typeof inlineLng === 'number') {
+      this.selectedCoords = { lat: inlineLat, lng: inlineLng };
+      this.isShowingTomorrowData = false;
+      this.updateCustomDateFlag();
+      this.cdr.markForCheck?.();
+      return;
+    }
 
-  // نعمل reset للـ citySelector ونحدث الاسم
-  if (this.citySelector) {
-    this.citySelector.reset();
-    this.citySelector['selectedCityName'] = city.cityName ?? '';
+    // لو مش موجودة، هاتها من ReferenceDataService عبر getCityById
+    this.referenceDataService.getCityById(city.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(fullCity => {
+        const lat = (fullCity as any)?.lat ?? (fullCity as any)?.latitude;
+        const lng = (fullCity as any)?.lng ?? (fullCity as any)?.longitude;
+
+        if (typeof lat === 'number' && typeof lng === 'number') {
+          this.selectedCoords = { lat, lng };
+          this.isShowingTomorrowData = false;
+          this.updateCustomDateFlag();
+        } else {
+          this.selectedCoords = null;
+          this.error = this.translate.instant('prayTimeSection.selectCityOrLocation')
+                 || 'Please select a city or location';
+        }
+        this.cdr.markForCheck?.();
+      });
+
+    if (this.citySelector) {
+      this.citySelector['selectedCityName'] = (city as any).cityName ?? '';
+    }
   }
-}
 
-onLocationSelect(location: LocationData): void {
-  this.selectedCoords = location;
-  this.selectedCityId = null;
+  onLocationSelect(location: LocationData): void {
+    this.selectedCoords = location;
+    this.selectedCityId = null;
 
-  if (this.citySelector) {
-    this.citySelector.reset();
-    this.citySelector['selectedCityName'] = ''; // نفرغ الاسم لأن المستخدم اختار Location
+    if (this.citySelector) {
+      this.citySelector.reset();
+      this.citySelector['selectedCityName'] = '';
+    }
   }
-}
-
-
-
-  
-
-
-  
 
   handleSearch(): void {
     this.loading = true;
     this.error = null;
-    // Reset the tomorrow flag since user is manually searching
     this.isShowingTomorrowData = false;
-    // Update custom date flag based on current selections
     this.updateCustomDateFlag();
 
-    // Validate that we have either city or coordinates, but not both
-    if (!this.selectedCityId && !this.selectedCoords) {
+    if (!this.selectedCoords) {
       this.error =
         this.translate.instant('prayTimeSection.selectCityOrLocation') ||
         'Please select a city or location';
@@ -688,151 +606,69 @@ onLocationSelect(location: LocationData): void {
       return;
     }
 
-    // Scenario 1 & 2: Hijri date selected
     if (this.selectedHijriDate) {
       this.handleHijriDateSearch();
-    }
-    // Scenario 3 & 4: Gregorian date selected
-    else if (this.selectedGregorianDate) {
+    } else if (this.selectedGregorianDate) {
       this.handleGregorianDateSearch();
-    }
-    // Default: Use current date with Gregorian API
-    else {
+    } else {
       this.handleCurrentDateSearch();
     }
   }
 
-  /**
-   * Handle search with Hijri date (Scenarios 1 & 2)
-   */
-private handleHijriDateSearch(): void {
-  if (!this.selectedHijriDate) {
-    return;
-  }
+  private handleHijriDateSearch(): void {
+    if (!this.selectedHijriDate) return;
+    if (!this.selectedCoords) { this.handleNoCoordsError(); return; }
 
-  this.loading = true;
-
-  const { year, month, dayNumber } = this.selectedHijriDate;
-
-  if (this.selectedCityId) {
-    // Scenario 1: Hijri date + City ID
-    this.prayerService
-      .getPrayerTimesForHijriDate(year, month, dayNumber, undefined, undefined)
-      .subscribe({
-        next: (result) => {
-          this.prayerTime = result;
-          this.loading = false;
-        },
-        error: () => {
-          this.handleSearchError();
-        },
-      });
-  } else if (this.selectedCoords) {
-    // Scenario 2: Hijri date + Coordinates
+    const { year, month, dayNumber } = this.selectedHijriDate;
     this.prayerService
       .getPrayerTimesForHijriDate(
-        year,
-        month,
-        dayNumber,
-        this.selectedCoords.lng,
-        this.selectedCoords.lat
+        year, month, dayNumber,
+          this.selectedCoords?.lng ?? undefined, this.selectedCoords.lat?? undefined
       )
       .subscribe({
-        next: (result) => {
-          this.prayerTime = result;
-          this.loading = false;
-        },
-        error: () => {
-          this.handleSearchError();
-        },
+        next: (result) => { this.prayerTime = result; this.loading = false; this.cdr.markForCheck?.(); },
+        error: () => { this.handleSearchError(); },
       });
   }
-}
-  /**
-   * Handle search with Gregorian date (Scenarios 3 & 4)
-   */
+
   private handleGregorianDateSearch(): void {
-    const gregorianDate = new Date(
-      this.selectedGregorianDate!.year,
-      this.selectedGregorianDate!.month - 1, // Month is 0-based in Date constructor
-      this.selectedGregorianDate!.dayNumber
-    );
+    if (!this.selectedGregorianDate) return;
+    if (!this.selectedCoords) { this.handleNoCoordsError(); return; }
 
-    if (this.selectedCityId) {
-      // Scenario 3: Gregorian date + City ID
-      this.prayerService
-        .getPrayerTimesForGregorianDate(
-          gregorianDate,
-          undefined,
-          undefined,
-         
-        )
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    } else if (this.selectedCoords) {
-      // Scenario 4: Gregorian date + Coordinates (auto-detect)
-      this.prayerService
-        .getPrayerTimesForGregorianDate(
-          gregorianDate,
-          this.selectedCoords.lng,
-          this.selectedCoords.lat,
-          
-        )
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    }
+    const d = this.selectedGregorianDate;
+    const gregorianDate = new Date(d.year, d.month - 1, d.dayNumber);
+
+ this.prayerService.getTodayPrayerTimes(
+  this.selectedCoords?.lng ?? undefined,
+  this.selectedCoords?.lat ?? undefined
+)
+
+      .subscribe({
+        next: (result) => { this.prayerTime = result; this.loading = false; this.cdr.markForCheck?.(); },
+        error: () => { this.handleSearchError(); },
+      });
   }
 
-  /**
-   * Handle search with current date (default behavior)
-   */
   private handleCurrentDateSearch(): void {
-    if (this.selectedCityId) {
-      // Current date + City ID
-      this.prayerService
-        .getTodayPrayerTimes(undefined, undefined)
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    } else if (this.selectedCoords) {
-      // Current date + Coordinates
-      this.prayerService
-        .getTodayPrayerTimes(this.selectedCoords.lng, this.selectedCoords.lat)
-        .subscribe({
-          next: (result) => {
-            this.prayerTime = result;
-            this.loading = false;
-          },
-          error: (e) => {
-            this.handleSearchError();
-          },
-        });
-    }
+    if (!this.selectedCoords) { this.handleNoCoordsError(); return; }
+this.prayerService.getTodayPrayerTimes(
+  this.selectedCoords?.lng ?? undefined,
+  this.selectedCoords?.lat ?? undefined
+)
+
+      .subscribe({
+        next: (result) => { this.prayerTime = result; this.loading = false; this.cdr.markForCheck?.(); },
+        error: () => { this.handleSearchError(); },
+      });
   }
 
-  /**
-   * Handle search errors consistently
-   */
+  private handleNoCoordsError(): void {
+    this.error =
+      this.translate.instant('prayTimeSection.selectCityOrLocation') ||
+      'Please select a city or location';
+    this.loading = false;
+  }
+
   private handleSearchError(): void {
     this.error =
       this.translate.instant('prayTimeSection.error') ||
@@ -842,7 +678,6 @@ private handleHijriDateSearch(): void {
 
   formatTo12Hour(time: string): string {
     if (!time || time === '--') return '--';
-
     const [h, m] = time.split(':');
     if (h === undefined || m === undefined) return time;
 
@@ -855,28 +690,26 @@ private handleHijriDateSearch(): void {
     return `${hour}:${minute} ${ampm}`;
   }
 
-  // caching prayertimes 
+  // --- caching (اختياري) ---
   loadPrayerTimesWithCache() {
     const now = new Date();
     const todayKey = now.toISOString().split('T')[0];
 
     const cached = localStorage.getItem(`prayerTimesCache`);
     if (cached) {
-      console.log('Cache used');
       this.prayerTime = JSON.parse(cached).data;
       this.setDatePickerToToday();
       this.loading = false;
       return;
     }
 
-    console.log('Api used');
     navigator.geolocation.getCurrentPosition(
-    (position) => this.loadTodayPrayerTimes({ 
-        latitude: position.coords.latitude, 
-        longitude: position.coords.longitude 
-    }),
-    () => this.loadTodayPrayerTimes()
-  );
+      (position) => this.loadTodayPrayerTimes({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }),
+      () => this.loadTodayPrayerTimes()
+    );
   }
 
   loadTodayPrayerTimes(position?: { latitude: number; longitude: number }) {
@@ -903,20 +736,14 @@ private handleHijriDateSearch(): void {
           tomorrowObservable.subscribe({
             next: (tomorrowResult: any) => {
               this.prayerTime = tomorrowResult;
-              localStorage.setItem(
-                `prayerTimesCache`,
-                JSON.stringify({ data: tomorrowResult })
-              );
+              localStorage.setItem(`prayerTimesCache`, JSON.stringify({ data: tomorrowResult }));
               if (position) this.setInitialCoordinates(position);
               this.setDatePickerToTomorrow();
               this.loading = false;
             },
             error: () => {
               this.prayerTime = todayResult;
-              localStorage.setItem(
-                `prayerTimesCache_${todayKey}`,
-                JSON.stringify({ data: todayResult })
-              );
+              localStorage.setItem(`prayerTimesCache_${todayKey}`, JSON.stringify({ data: todayResult }));
               if (position) this.setInitialCoordinates(position);
               this.setDatePickerToToday();
               this.loading = false;
@@ -924,18 +751,13 @@ private handleHijriDateSearch(): void {
           });
         } else {
           this.prayerTime = todayResult;
-          localStorage.setItem(
-            `prayerTimesCache_${todayKey}`,
-            JSON.stringify({ data: todayResult })
-          );
+          localStorage.setItem(`prayerTimesCache_${todayKey}`, JSON.stringify({ data: todayResult }));
           if (position) this.setInitialCoordinates(position);
           this.setDatePickerToToday();
           this.loading = false;
         }
       },
-      error: () => {
-        this.loading = false;
-      },
+      error: () => { this.loading = false; },
     });
   }
 
@@ -945,20 +767,13 @@ private handleHijriDateSearch(): void {
   }
 
   getTimeRemaining(key: string, index: number): string {
-    // Don't calculate remaining time for custom dates
-    if (this.isShowingCustomDate) {
-      return '--';
-    }
+    if (this.isShowingCustomDate) return '--';
 
     const timeStr = this.getPrayerTime(key);
     const prayerTime = this.parsePrayerTimeToDate(timeStr);
-
     if (!prayerTime) return '--';
 
     let diff = Math.floor((prayerTime.getTime() - this.now.getTime()) / 1000);
-
-  
-
     if (diff < 0) return '--';
 
     const h = Math.floor(diff / 3600);
@@ -972,39 +787,27 @@ private handleHijriDateSearch(): void {
   }
 
   getProgressPercent(key: string, index: number): number {
-    // Don't calculate progress for custom dates
-    if (this.isShowingCustomDate) {
-      return 0;
-    }
+    if (this.isShowingCustomDate) return 0;
 
     const currentTimeStr = this.getPrayerTime(key);
     const currentTime = this.parsePrayerTimeToDate(currentTimeStr);
 
-    // Get previous prayer time
-    const prevIndex =
-      (index - 1 + this.prayerCardMeta.length) % this.prayerCardMeta.length;
+    const prevIndex = (index - 1 + this.prayerCardMeta.length) % this.prayerCardMeta.length;
     const prevKey = this.prayerCardMeta[prevIndex].key;
     const prevTimeStr = this.getPrayerTime(prevKey);
     let prevTime = this.parsePrayerTimeToDate(prevTimeStr);
 
     if (!prevTime || !currentTime) return 0;
 
-    // Handle day boundary
     if (prevTime > currentTime) {
       prevTime = new Date(prevTime.getTime() - 24 * 60 * 60 * 1000);
     }
 
-    // Special handling when showing tomorrow's data
     if (this.isShowingTomorrowData) {
-      // When we're showing tomorrow's prayer times, and the current time is still today,
-      // we need to adjust the progress calculation to show meaningful progress
       const daysDifference = Math.floor(
         (currentTime.getTime() - this.now.getTime()) / (24 * 60 * 60 * 1000)
       );
-      if (daysDifference > 0) {
-        // The prayer time is tomorrow, so show minimal progress (since we haven't reached tomorrow yet)
-        return 0;
-      }
+      if (daysDifference > 0) return 0;
     }
 
     const total = currentTime.getTime() - prevTime.getTime();
@@ -1023,30 +826,19 @@ private handleHijriDateSearch(): void {
     const [h, m, s] = time.split(':');
     if (h === undefined || m === undefined) return null;
 
-    // Use the correct date context based on whether we're showing tomorrow's data
-    const baseDate = this.isShowingTomorrowData
-      ? this.getTomorrowDate()
-      : new Date(this.now);
-
+    const baseDate = this.isShowingTomorrowData ? this.getTomorrowDate() : new Date(this.now);
     const date = new Date(baseDate);
     date.setHours(Number(h), Number(m), s ? Number(s) : 0, 0);
     return date;
   }
 
-  /**
-   * Get tomorrow's date for prayer time calculations
-   */
   private getTomorrowDate(): Date {
     const tomorrow = new Date(this.now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow;
   }
 
-  /**
-   * Check if the selected date is a custom date (not today or auto-selected tomorrow)
-   */
   private updateCustomDateFlag(): void {
-    // If no date is selected (initial load), it's not custom
     if (!this.selectedGregorianDate && !this.selectedHijriDate) {
       this.isShowingCustomDate = false;
       return;
@@ -1055,30 +847,20 @@ private handleHijriDateSearch(): void {
     const today = new Date();
     const tomorrow = this.getTomorrowDate();
 
-    // Check if the selected Gregorian date is today or tomorrow
     if (this.selectedGregorianDate) {
       const selectedDate = new Date(
         this.selectedGregorianDate.year,
         this.selectedGregorianDate.month - 1,
         this.selectedGregorianDate.dayNumber
       );
-
       const isToday = this.isSameDate(selectedDate, today);
       const isTomorrow = this.isSameDate(selectedDate, tomorrow);
-
       this.isShowingCustomDate = !isToday && !isTomorrow;
-
-      
-    }
-    // For Hijri dates, consider them custom for now (unless you want to implement Hijri comparison)
-    else if (this.selectedHijriDate) {
+    } else if (this.selectedHijriDate) {
       this.isShowingCustomDate = true;
     }
   }
 
-  /**
-   * Check if two dates are the same day
-   */
   private isSameDate(date1: Date, date2: Date): boolean {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -1087,23 +869,14 @@ private handleHijriDateSearch(): void {
     );
   }
 
-  /**
-   * Check if we should show time-related features (remaining time, progress bars)
-   * Only show for today's or auto-selected tomorrow's prayer times, not custom dates
-   */
   shouldShowTimeFeatures(): boolean {
     return !this.isShowingCustomDate;
   }
 
   getCurrentPrayerIndex(): number {
     if (!this.prayerTime?.prayer_times) return -1;
+    if (this.isShowingCustomDate) return -1;
 
-    // Don't calculate current prayer for custom dates
-    if (this.isShowingCustomDate) {
-      return -1;
-    }
-
-    // Find the next prayer time after current time
     for (let i = 0; i < this.prayerCardMeta.length; i++) {
       const prayerTime = this.parsePrayerTimeToDate(
         this.getPrayerTime(this.prayerCardMeta[i].key)
@@ -1112,8 +885,6 @@ private handleHijriDateSearch(): void {
         return i;
       }
     }
-
-    // If no prayer found after current time, next prayer is Fajr (index 0)
     return 0;
   }
 
@@ -1124,11 +895,7 @@ private handleHijriDateSearch(): void {
   scrollToQiblaCompass(): void {
     const element = document.getElementById('qibla-compass-section');
     if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
   }
 }

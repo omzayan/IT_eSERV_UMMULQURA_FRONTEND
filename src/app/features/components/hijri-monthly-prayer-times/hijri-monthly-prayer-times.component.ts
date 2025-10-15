@@ -239,14 +239,14 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-handleLocationSelect(location: { lat?: number; lng?: number }): void {
+handleLocationSelect(location: { lat?: number | null; lng?: number | null }): void {
   this.selectedLocation = {
     lat: location.lat ?? undefined,
     lng: location.lng ?? undefined,
     cityId: undefined,
   };
 
-  if (this.error) this.error = null;
+  this.error = null;
 }
 
 

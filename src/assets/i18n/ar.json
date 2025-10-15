@@ -213,8 +213,12 @@
   "latitude": "خط العرض",
   "longitude": "خط الطول",
   "citiesLoadError": "خطأ في تحميل المدن",
-  "loadingCities": "جاري تحميل المدن..."
+  "loadingCities": "جاري تحميل المدن...",
+  "latitudePlaceholder": "خط العرض (Latitude) — مثال: 24.7136",
+  "longitudePlaceholder": "خط الطول (Longitude) — مثال: 46.6753",
+  "showPrayerTimes": "عرض مواقيت الصلاة"
 }
+
 ,
   "prayTimeTable": {
     "tabs": {

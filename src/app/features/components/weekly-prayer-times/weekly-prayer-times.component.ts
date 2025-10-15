@@ -260,13 +260,14 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
     this.hijriDateRange.endDate = date;
   }
 
-  handleLocationSelect(location: { lat?: number; lng?: number }): void {
-    this.selectedLocation = {
-      lat: location.lat ?? undefined,
-      lng: location.lng ?? undefined,
-      cityId: undefined,
-    };
-  }
+  handleLocationSelect(location: { lat?: number | null; lng?: number | null }): void {
+  this.selectedLocation = {
+    lat: location.lat ?? undefined,
+    lng: location.lng ?? undefined,
+    cityId: undefined,
+  };
+
+}
 
   handleCitySelect(city: City): void {
     this.selectedLocation = {

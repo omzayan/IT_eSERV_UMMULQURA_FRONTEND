@@ -71,21 +71,25 @@ getWeekDays(): Observable<WeekDayDto[]> {
       map((cities) => (cities && cities.length > 0 ? cities : null))
     );
   }
-  /**
-   * Get application settings
-   */
-  // getAppSettings(): Observable<AppSettingResult | null> {
-  //   return this.apiService
-  //     .getAppSettings()
-  //     .pipe(map((response) => (response.success ? response.data : null)));
-  // }
 
-  /**
-   * Get static page content
-   */
-  // getStaticPage(pageLink: string): Observable<StaticPageResult | null> {
-  //   return this.apiService
-  //     .getStaticPage(pageLink)
-  //     .pipe(map((response) => (response.success ? response.data : null)));
-  // }
+ // core/services/reference-data.service.ts
+getCityById(id: number): Observable<City | null> {
+  return this.getCities().pipe(
+    map(list => list?.find(c => c.id === id) ?? null)
+  );
+}
+
+getCityCoords(id: number): Observable<{ lat: number; lng: number } | null> {
+  return this.getCityById(id).pipe(
+    map(city => {
+      const lat = (city as any)?.lat;
+      const lng = (city as any)?.lng;
+      return (typeof lat === 'number' && typeof lng === 'number')
+        ? { lat, lng }
+        : null;
+    })
+  );
+}
+
+
 }

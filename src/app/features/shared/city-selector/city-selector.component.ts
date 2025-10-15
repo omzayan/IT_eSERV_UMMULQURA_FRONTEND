@@ -14,10 +14,11 @@ import { ReferenceDataService } from '../../../core/services';
 import { City } from '../../../core/types/api.types';
 
 export interface LocationData {
-  lat?: number;
-  lng?: number;
+  lat?: number | null;
+  lng?: number | null;
   city?: string;
 }
+
 
 @Component({
   selector: 'app-city-selector',
@@ -45,8 +46,8 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   citiesError: string | null = null;
   selectedCityName: string = ''; // اسم المدينة المختارة
 
-  // coords state
-  coords = { lat: 0, lng: 0 };
+coords: LocationData = { lat: undefined, lng: undefined };
+
 
   constructor(
     private referenceDataService: ReferenceDataService,
@@ -66,11 +67,7 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
 
   keysToCheck.forEach(key => {
     this.translate.get(key).subscribe(val => {
-      if (val === key) {
-        console.error(`❌ Translation missing for key: ${key}`);
-      } else {
-        console.log(`✅ ${key} => ${val}`);
-      }
+   
     });
   });
   }
@@ -115,12 +112,13 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   this.isOpen = false;
 }
 
-  onCoordsSelect() {
-    if (this.coords.lat && this.coords.lng) {
-      this.locationSelect.emit(this.coords);
-      this.isOpen = false;
-    }
+onCoordsSelect() {
+  if (this.coords.lat !== undefined && this.coords.lng !== undefined) {
+    this.locationSelect.emit(this.coords);
+    this.isOpen = false;
   }
+}
+
 
   selectCurrentLocation() {
     if (!navigator.geolocation) {

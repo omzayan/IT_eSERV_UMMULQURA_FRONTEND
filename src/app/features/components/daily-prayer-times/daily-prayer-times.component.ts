@@ -450,8 +450,8 @@ private handleHijriDateSearch(): void {
           year,
           month,
           dayNumber,
-          this.selectedCoords.lng,
-          this.selectedCoords.lat
+           this.selectedCoords?.lng ?? undefined,
+  this.selectedCoords?.lat ?? undefined
         )
         .subscribe({
           next: (result) => {
@@ -487,8 +487,8 @@ private handleGregorianDateSearch(): void {
       this.prayerService
         .getPrayerTimesForGregorianDate(
           gregorianDate,
-          this.selectedCoords.lng,
-          this.selectedCoords.lat
+            this.selectedCoords?.lng ?? undefined,
+  this.selectedCoords?.lat ?? undefined
         )
         .subscribe({
           next: (result) => {
@@ -522,7 +522,8 @@ private handleGregorianDateSearch(): void {
     } else if (this.selectedCoords) {
       // Current date + Coordinates
       this.prayerService
-        .getTodayPrayerTimes(this.selectedCoords.lng, this.selectedCoords.lat)
+        .getTodayPrayerTimes(this.selectedCoords?.lng ?? undefined,
+  this.selectedCoords?.lat ?? undefined)
         .subscribe({
           next: (result) => {
             this.prayerTime = result;
