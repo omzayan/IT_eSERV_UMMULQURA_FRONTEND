@@ -329,7 +329,10 @@ export interface QiblaResult {
 }
 export interface City {
   id: number;        // رقم المدينة
-  name: string;      // اسم المدينة
+  name: {
+    en: string;
+    ar: string;
+  };     // اسم المدينة
   latitude?: number; // خط العرض
   longitude?: number;// خط الطول
   cityName?: string;

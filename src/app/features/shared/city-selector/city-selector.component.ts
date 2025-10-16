@@ -106,9 +106,14 @@ coords: LocationData = { lat: undefined, lng: undefined };
     );
   }
 
+  getCityName(city: City): string {
+  const lang = this.translate.currentLang as keyof typeof city.name; 
+  return city.name[lang] ?? city.name.en;
+  }
+
  onCitySelect(city: City) {
   this.citySelect.emit(city);
-  this.selectedCityName = city.cityName ?? ''; // يظهر مكان "اختر المدينة"
+  this.selectedCityName = this.getCityName(city); // يظهر مكان "اختر المدينة"
   this.isOpen = false;
 }
 
