@@ -18,6 +18,7 @@ import {
 import {
   PrayerTimeWithDateResult,
   City,
+  PrayerTimes,
 } from '../../../core/types/api.types';
 import {
   CitySelectorComponent,
@@ -29,7 +30,7 @@ import {
 } from '../../shared/unified-date-picker/unified-date-picker.component';
 
 interface PrayerCardMeta {
-  key: string;
+  key: keyof PrayerTimes;   // 👈 كده مربوط بالـ PrayerTimes
   name: string;
   bg: string;
 }
@@ -116,28 +117,68 @@ interface PrayerCardMeta {
         </div>
       </div>
 
-      <!-- Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <div *ngFor="let meta of prayerCardMeta"
-          class="prayer-card relative rounded-lg overflow-hidden h-[308px]"
-          [style.background-image]="'url(' + meta.bg + ')'"
-          [style.background-size]="'cover'"
-          [style.background-position]="'center'">
+      <!-- Prayer Cards Grid -->
+  
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+  <div *ngFor="let meta of prayerCardMeta; let i = index"
+       class="prayer-card relative rounded-lg overflow-hidden h-[308px] cursor-pointer transform hover:scale-105 transition-transform duration-300"
+       [style.background-image]="'url(' + meta.bg + ')'"
+       [style.background-size]="'cover'"
+       [style.background-position]="'center'">
 
-          <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
 
-          <div class="relative z-10 h-full flex flex-col justify-between px-4 pt-[40px] pb-6 text-white">
-            <div>
-              <h3 class="text-2xl font-bold mb-1 font-ibm-plex-arabic">{{ meta.name | translate }}</h3>
-              <p class="text-base font-bold text-black bg-white w-fit rounded px-2 font-ibm-plex-arabic">
-                {{ formatTo12Hour(getPrayerTime(meta.key)) }}
-              </p>
+    <div class="relative z-10 h-full flex flex-col justify-between px-4 pt-[40px] pb-6 text-white">
+      <div class="flex flex-col">
+        <h3 class="text-2xl font-bold font-ibm-plex-arabic mb-1">{{ meta.name | translate }}</h3>
+        <p class="text-base font-bold font-ibm-plex-arabic text-black bg-white w-fit rounded px-2">
+          {{ formatTo12Hour(getPrayerTime(meta.key)) }}
+        </p>
+      </div>
+
+      <!-- ⏳ باقي الصلوات → وقت متبقي + progress -->
+      <div *ngIf="!isCurrentPrayer(i)" class="flex flex-col gap-2 mt-2">
+        <div class="flex justify-between items-center">
+          <p class="text-sm font-ibm-plex-arabic">{{ 'prayTimeSection.remaining' | translate }}</p>
+          <p class="text-sm font-bold font-ibm-plex-arabic">{{ getTimeRemaining(meta.key, i) }}</p>
+        </div>
+        <div class="w-full bg-white rounded-full h-2">
+          <div class="bg-[#1B8354] rounded-full h-2 transition-all duration-300"
+               [style.width]="getProgressPercent(meta.key, i) + '%'"></div>
+        </div>
+      </div>
+
+      <!-- ⏳ الصلاة الحالية → الدايرة -->
+      <div *ngIf="isCurrentPrayer(i)" class="flex flex-col items-center justify-center flex-1">
+        <div class="circular-countdown relative">
+          <svg class="countdown-circle" width="180" height="180" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="80" fill="transparent" stroke="#1B8354" stroke-width="5"
+                    stroke-dasharray="3 8"></circle>
+            <circle cx="90" cy="90" r="80" fill="transparent" stroke="white" stroke-width="5"
+                    stroke-dasharray="3 8"
+                    [style.stroke-dashoffset]="(getProgressPercent(meta.key, i) / 100) * 502.4"
+                    class="countdown-progress"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <div class="text-3xl font-bold font-ibm-plex-arabic text-white mb-2">
+              {{ getTimeRemaining(meta.key, i) }}
+            </div>
+            <div class="text-sm font-ibm-plex-arabic text-white opacity-80">
+              {{ 'prayTimeSection.remaining' | translate }}
             </div>
           </div>
         </div>
       </div>
     </div>
-  `
+  </div>
+</div>
+  `,
+  styles: [`
+    .prayer-card { background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .circular-countdown { position: relative; display: flex; align-items: center; justify-content: center; }
+    .countdown-circle { transform: rotate(-90deg); }
+    .countdown-progress { transition: stroke-dashoffset 1s ease-in-out; }
+  `]
 })
 export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   @ViewChild('citySelector') citySelector!: CitySelectorComponent;
@@ -145,7 +186,6 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   @ViewChild('gregorianDatePicker') gregorianDatePicker!: UnifiedDatePickerComponent;
 
   isAr = false;
-  selectedCityId: number | null = null;
   selectedCoords: LocationData | null = null;
   selectedHijriDate: DatePickerValue | null = null;
   selectedGregorianDate: DatePickerValue | null = null;
@@ -154,18 +194,18 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   error: string | null = null;
   private destroy$ = new Subject<void>();
 
-  // ✅ Validation flags
   showDateError = false;
   showCityError = false;
 
-  prayerCardMeta: PrayerCardMeta[] = [
-    { key: 'fajr', name: 'prayers.fajr', bg: 'assets/images/fajr-time.png' },
-    { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
-    { key: 'dhuhr', name: 'prayers.dhuhr', bg: 'assets/images/dhuhr-time.png' },
-    { key: 'asr', name: 'prayers.asr', bg: 'assets/images/asr-time.png' },
-    { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
-    { key: 'isha', name: 'prayers.isha', bg: 'assets/images/isha-time.png' },
-  ];
+ prayerCardMeta: PrayerCardMeta[] = [
+  { key: 'fajr', name: 'prayers.fajr', bg: 'assets/images/fajr-time.png' },
+  { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
+  { key: 'dhuhr', name: 'prayers.dhuhr', bg: 'assets/images/dhuhr-time.png' },
+  { key: 'asr', name: 'prayers.asr', bg: 'assets/images/asr-time.png' },
+  { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
+  { key: 'isha', name: 'prayers.isha', bg: 'assets/images/isha-time.png' },
+];
+
 
   constructor(
     private translate: TranslateService,
@@ -176,71 +216,33 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // اللغة
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe(lang => this.isAr = lang === 'ar');
-
-    // ✅ Default city = الرياض + Default date = اليوم
-    this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
-    this.selectedCityId = null;
+  }
+ngAfterViewInit(): void {
+  setTimeout(() => {
     const today = new Date();
     this.selectedGregorianDate = {
       year: today.getFullYear(),
       month: today.getMonth() + 1,
       dayNumber: today.getDate()
     };
-
-    // ✅ أول ما يفتح يعرض مواقيت اليوم للرياض
+    this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
     this.handleSearch();
-  }
+  });
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  onHijriDateChange(date: DatePickerValue | null): void {
-    this.selectedHijriDate = date;
-    if (date) this.selectedGregorianDate = null;
-
-    if (!this.selectedCoords) this.showCityError = true;
-  }
-
-  onGregorianDateChange(date: DatePickerValue | null): void {
-    this.selectedGregorianDate = date;
-    if (date) this.selectedHijriDate = null;
-
-    if (!this.selectedCoords) this.showCityError = true;
-  }
-
-  onCitySelect(city: City): void {
-    const lat = (city as any).lat ?? (city as any).latitude;
-    const lng = (city as any).lng ?? (city as any).longitude;
-    if (lat && lng) {
-      this.selectedCoords = { lat, lng };
-      this.selectedCityId = city.id;
-
-      if (!this.selectedHijriDate && !this.selectedGregorianDate) {
-        this.showDateError = true;
-      }
-    }
-  }
-
-  onLocationSelect(location: LocationData): void {
-    this.selectedCoords = location;
-    this.selectedCityId = null;
-
-    if (!this.selectedHijriDate && !this.selectedGregorianDate) {
-      this.showDateError = true;
-    }
-  }
-
+  // ✅ Validation and Search
   handleSearch(): void {
     this.loading = true;
     this.error = null;
 
-    // ✅ Validate
     if (!this.selectedCoords) {
       this.showCityError = true;
       this.loading = false;
@@ -257,10 +259,11 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
       this.showDateError = false;
     }
 
-    // ✅ Call API
+    this.prayerTime = null;
+
     if (this.selectedHijriDate) {
       this.handleHijriDateSearch();
-    } else if (this.selectedGregorianDate) {
+    } else {
       this.handleGregorianDateSearch();
     }
   }
@@ -268,12 +271,10 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   private handleHijriDateSearch(): void {
     if (!this.selectedHijriDate || !this.selectedCoords) return;
     const { year, month, dayNumber } = this.selectedHijriDate;
-
     this.prayerService.getPrayerTimesForHijriDate(
-      year, month, dayNumber,
-      this.selectedCoords.lng ?? undefined, this.selectedCoords.lat ?? undefined
+      year, month, dayNumber, this.selectedCoords.lng??undefined, this.selectedCoords.lat??undefined
     ).subscribe({
-      next: (res) => { this.prayerTime = res; this.loading = false; },
+      next: (res) => { this.prayerTime = res; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.error = 'خطأ في جلب البيانات'; this.loading = false; }
     });
   }
@@ -284,13 +285,14 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
     const gregorianDate = new Date(d.year, d.month - 1, d.dayNumber);
 
     this.prayerService.getPrayerTimesForGregorianDate(
-      gregorianDate, this.selectedCoords.lng ?? undefined, this.selectedCoords.lat ?? undefined
+      gregorianDate, this.selectedCoords.lng??undefined, this.selectedCoords.lat??undefined
     ).subscribe({
-      next: (res) => { this.prayerTime = res; this.loading = false; },
+      next: (res) => { this.prayerTime = res; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.error = 'خطأ في جلب البيانات'; this.loading = false; }
     });
   }
 
+  // ✅ Helpers
   getPrayerTime(key: string): string {
     if (!this.prayerTime?.prayer_times) return '--';
     return (this.prayerTime.prayer_times as any)[key] || '--';
@@ -304,4 +306,145 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
     hour = hour % 12 || 12;
     return `${hour}:${m} ${ampm}`;
   }
+
+ 
+  shouldShowTimeFeatures(): boolean {
+    return true;
+  }
+
+
+  scrollToQiblaCompass(): void {
+    document.getElementById('qibla-compass')?.scrollIntoView({ behavior: 'smooth' });
+  }
+  onHijriDateChange(date: DatePickerValue | null): void {
+  this.selectedHijriDate = date;
+  if (date) this.selectedGregorianDate = null; // لما يختار هجري يفضي الميلادي
+
+  // ✅ لو التاريخ اتغير والمدينة لسه مش مختارة
+  if (!this.selectedCoords) {
+    this.showCityError = true;
+  } else {
+    this.showCityError = false;
+  }
+}
+
+onGregorianDateChange(date: DatePickerValue | null): void {
+  this.selectedGregorianDate = date;
+  if (date) this.selectedHijriDate = null; // لما يختار ميلادي يفضي الهجري
+
+  // ✅ لو التاريخ اتغير والمدينة لسه مش مختارة
+  if (!this.selectedCoords) {
+    this.showCityError = true;
+  } else {
+    this.showCityError = false;
+  }
+}
+
+onCitySelect(city: City): void {
+  const lat = (city as any).lat ?? (city as any).latitude;
+  const lng = (city as any).lng ?? (city as any).longitude;
+  if (lat && lng) {
+    this.selectedCoords = { lat, lng };
+  }
+
+  // ✅ لو اختار مدينة بس من غير تاريخ
+  if (!this.selectedHijriDate && !this.selectedGregorianDate) {
+    this.showDateError = true;
+  } else {
+    this.showDateError = false;
+  }
+}
+
+onLocationSelect(location: LocationData): void {
+  this.selectedCoords = location;
+
+  // ✅ نفس التحقق زي اختيار المدينة
+  if (!this.selectedHijriDate && !this.selectedGregorianDate) {
+    this.showDateError = true;
+  } else {
+    this.showDateError = false;
+  }
+}
+
+// 🟢 بناء Date من وقت الصلاة
+private buildDateFromTime(time: string): Date {
+  const [h, m] = time.split(':').map(Number);
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+// 🟢 الصلاة الجاية
+private getNextPrayer(): { key: keyof PrayerTimes, date: Date } | null {
+  if (!this.prayerTime?.prayer_times) return null;
+  const now = new Date();
+
+  const times = (Object.keys(this.prayerTime.prayer_times) as (keyof PrayerTimes)[])
+    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!) }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  return times.find(t => t.date > now) || null;
+}
+
+// 🟢 الصلاة الحالية
+private getCurrentPrayer(): { key: keyof PrayerTimes, date: Date } | null {
+  if (!this.prayerTime?.prayer_times) return null;
+  const now = new Date();
+
+  const times = (Object.keys(this.prayerTime.prayer_times) as (keyof PrayerTimes)[])
+    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!) }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  for (let i = 0; i < times.length; i++) {
+    const current = times[i];
+    const next = times[i + 1];
+    if (next) {
+      if (now >= current.date && now < next.date) return current;
+    } else {
+      // آخر صلاة (العشاء)
+      if (now >= current.date) return current;
+    }
+  }
+  return null;
+}
+
+// 🟢 هل الكارت ده الصلاة الحالية؟
+isCurrentPrayer(index: number): boolean {
+  const current = this.getCurrentPrayer();
+  return current ? this.prayerCardMeta[index].key === current.key : false;
+}
+
+// 🟢 الوقت المتبقي للصلاة الجاية فقط
+getTimeRemaining(key: keyof PrayerTimes, index: number): string {
+  const next = this.getNextPrayer();
+  if (!next || this.prayerCardMeta[index].key !== next.key) return '00:00';
+
+  const now = new Date();
+  let diff = Math.floor((next.date.getTime() - now.getTime()) / 1000);
+  if (diff <= 0) return '00:00';
+
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+}
+
+// 🟢 نسبة التقدم (progress) من وقت الصلاة الحالية للي بعدها
+getProgressPercent(key: keyof PrayerTimes, index: number): number {
+  const current = this.getCurrentPrayer();
+  const next = this.getNextPrayer();
+  if (!current || !next) return 0;
+
+  if (this.prayerCardMeta[index].key !== current.key) return 0;
+
+  const now = new Date();
+  const total = (next.date.getTime() - current.date.getTime()) / 1000;
+  const elapsed = (now.getTime() - current.date.getTime()) / 1000;
+
+  if (elapsed < 0) return 0;
+  if (elapsed > total) return 100;
+
+  return Math.round((elapsed / total) * 100);
+}
+
+
 }
