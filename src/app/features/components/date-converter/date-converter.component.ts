@@ -8,7 +8,12 @@ import {
   DatePickerType,
 } from '../../shared/unified-date-picker/unified-date-picker.component';
 import { ApiService } from '../../../core/services/api.service';
-import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput, Result } from '../../../core/types/api.types';
+import {
+  BaseResponse,
+  GregorianDateInput,
+  HijriDateInput,
+  Result,
+} from '../../../core/types/api.types';
 
 @Component({
   selector: 'app-date-converter',
@@ -38,20 +43,29 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
             </select>
           </div>
         </div>
-        <div class="w-1/2">
-          <app-unified-date-picker
-            [type]="getSourceDateType()"
-            [value]="sourceDate"
-            (valueChange)="onSourceDateChange($event)"
-            [placeholder]="'dateConverter.selectDate' | translate"
-            [label]="'dateConverter.selectDate' | translate"
-          ></app-unified-date-picker>
-        </div>
+      <div class="w-1/2">
+  <app-unified-date-picker
+    [type]="getSourceDateType()"
+    [value]="sourceDate"
+    (valueChange)="onSourceDateChange($event)"
+    [placeholder]="'dateConverter.selectDate' | translate"
+    [label]="'dateConverter.selectDate' | translate"
+  ></app-unified-date-picker>
+
+  <!-- ✅ رسالة فاليديشن -->
+  <div *ngIf="showDateError" 
+     class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
+  ⚠️
+  برجاء اختيار التاريخ لتظهر أوقات الصلاة
+</div>
+
+</div>
+
       </div>
 
       <button
         (click)="convertDate()"
-        [disabled]="!sourceDate || isConverting"
+        [disabled]="isConverting"
         class="bg-[#1B8354] hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-medium font-ibm-plex-arabic"
       >
         <span *ngIf="!isConverting">{{
@@ -62,14 +76,18 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
           {{ 'common.converting' | translate }}
         </span>
       </button>
+
+      <!-- Validation Error -->
+      <div *ngIf="conversionError" class="text-red-600 text-sm mt-2 font-ibm-plex-arabic">
+        {{ conversionError }}
+      </div>
+
       <!-- Conversion Result Display -->
       <div
-        *ngIf="conversionResult || conversionError"
+        *ngIf="conversionResult && !conversionError"
         class="mt-6 transition-all duration-300 ease-in-out"
       >
-        <!-- Success Result -->
         <div
-          *ngIf="conversionResult && !conversionError"
           class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 shadow-sm"
         >
           <div class="flex items-center gap-3 mb-4">
@@ -79,9 +97,7 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
               <i class="fas fa-check text-green-600 text-lg"></i>
             </div>
             <div>
-              <h3
-                class="text-lg font-semibold text-green-800 font-ibm-plex-arabic"
-              >
+              <h3 class="text-lg font-semibold text-green-800 font-ibm-plex-arabic">
                 {{ 'dateConverter.conversionResult' | translate }}
               </h3>
               <p class="text-sm text-green-600">
@@ -121,12 +137,9 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
                 {{ getSourceLabel() | translate }}
               </h4>
               <div class="space-y-1">
-             <div
-  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
->
-  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
-</div>
-
+                <div class="text-lg font-medium text-gray-800 font-ibm-plex-arabic">
+                  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
+                </div>
                 <div class="text-sm text-gray-600 font-ibm-plex-arabic">
                   {{
                     conversionType === 'hijri-to-gregorian'
@@ -146,11 +159,9 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
                 {{ getTargetLabel() | translate }}
               </h4>
               <div class="space-y-1">
-                      <div
-  class="text-lg font-medium text-gray-800 font-ibm-plex-arabic"
->
-  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
-</div>
+                <div class="text-lg font-medium text-gray-800 font-ibm-plex-arabic">
+                  {{ conversionResult.day }} {{ conversionResult.month_name }} {{ conversionResult.year }}
+                </div>
                 <div class="text-sm text-gray-600 font-ibm-plex-arabic">
                   {{
                     conversionType === 'hijri-to-gregorian'
@@ -159,36 +170,6 @@ import { BaseResponse, DateConversionResult, GregorianDateInput, HijriDateInput,
                   }}
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Error State -->
-        <div
-          *ngIf="conversionError"
-          class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-6 shadow-sm"
-        >
-          <div class="flex items-center gap-3 mb-4">
-            <div
-              class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center"
-            >
-              <i class="fas fa-exclamation-triangle text-red-600 text-lg"></i>
-            </div>
-            <div>
-              <h3
-                class="text-lg font-semibold text-red-800 font-ibm-plex-arabic"
-              >
-                {{ 'dateConverter.conversionError' | translate }}
-              </h3>
-              <p class="text-sm text-red-600">
-                {{ 'dateConverter.tryAgain' | translate }}
-              </p>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-lg p-4 border border-red-100">
-            <div class="text-red-700 font-ibm-plex-arabic">
-              {{ conversionError }}
             </div>
           </div>
         </div>
@@ -202,10 +183,10 @@ export class DateConverterComponent implements OnDestroy {
   conversionType: 'hijri-to-gregorian' | 'gregorian-to-hijri' =
     'hijri-to-gregorian';
   sourceDate: DatePickerValue | null = null;
-conversionResult: Result | null = null;
+  conversionResult: Result | null = null;
   isConverting: boolean = false;
   conversionError: string | null = null;
-
+showDateError: boolean = false;
   constructor(private apiService: ApiService) {}
 
   ngOnDestroy() {
@@ -244,14 +225,18 @@ conversionResult: Result | null = null;
     this.conversionError = null;
   }
 
+  convertDate() {
+  // ✅ Validation: لازم المستخدم يختار تاريخ
+  if (!this.sourceDate) {
+    this.showDateError = true;
+    this.conversionError = null; // نخلي الخطأ الأساسي فاضي علشان الرسالة تكون تحت الانبوت
+    return;
+  }
 
-
-
-convertDate() {
-  if (!this.sourceDate) return;
-
+  this.showDateError = false;
   this.isConverting = true;
   this.conversionError = null;
+  this.conversionResult = null;
 
   let conversionObservable: Observable<BaseResponse<Result>>;
 
@@ -275,49 +260,35 @@ convertDate() {
     next: (response) => {
       this.isConverting = false;
       if (response.success && response.result) {
-        this.conversionResult = response.result; // ✅ هنا Result
+        this.conversionResult = response.result;
       } else {
-        this.conversionError = 'Conversion failed';
+        this.conversionError = 'فشل التحويل، حاول مرة أخرى';
       }
     },
     error: (error) => {
       this.isConverting = false;
-      this.conversionError = error.message || 'Network error occurred';
-      console.error('Date conversion error:', error);
+      this.conversionError = error.message || 'حدث خطأ في الاتصال بالشبكة';
     },
   });
 }
 
+  getFormattedResult(): string {
+    if (!this.conversionResult) return '';
+    return this.conversionResult.iso;
+  }
 
+  getDetailedResult(): string {
+    if (!this.conversionResult) return '';
+    return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+  }
 
+  getHijriDetails(): string {
+    if (!this.conversionResult) return '';
+    return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+  }
 
-
-getFormattedResult(): string {
-  if (!this.conversionResult) return '';
-
-  // عندنا بس iso كـ formatted date
-  return this.conversionResult.iso;
-}
-
-getDetailedResult(): string {
-  if (!this.conversionResult) return '';
-
-  // نفس الشكل التفصيلي: 5 Safar 1500
-  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
-}
-
-getHijriDetails(): string {
-  if (!this.conversionResult) return '';
-
-  // الريسبونس الحالي بيرجع يا Hijri يا Gregorian حسب التحويل
-  // فممكن نسميه HijriDetails بس يرجع نفس الـ result
-  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
-}
-
-getGregorianDetails(): string {
-  if (!this.conversionResult) return '';
-
-  return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
-}
-
+  getGregorianDetails(): string {
+    if (!this.conversionResult) return '';
+    return `${this.conversionResult.day} ${this.conversionResult.month_name} ${this.conversionResult.year}`;
+  }
 }

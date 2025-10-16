@@ -221,6 +221,41 @@ private fetchData(): void {
   this.loading = true;
   this.error = null;
 
+  const today = new Date();
+const gregorianInfo: GregorianDateInfo = {
+  day: today.getDate(),
+  month: today.getMonth() + 1,
+  year: today.getFullYear(),
+  month_name: today.toLocaleString('ar-EG', { month: 'long' }),
+  day_name: today.toLocaleString('ar-EG', { weekday: 'long' }),
+  formatted: today.toLocaleDateString('ar-EG'), // أو بأي فورمات يناسبك
+  iso: today.toISOString().split('T')[0], // YYYY-MM-DD
+};
+
+  this.gregorianDateInfo = gregorianInfo;
+
+  // لو عندك خدمة تحويل للتاريخ الهجري
+ this.prayerService.convertGregorianToHijri({
+  day: gregorianInfo.day,
+  month: gregorianInfo.month,
+  year: gregorianInfo.year,
+}).subscribe({
+  next: (res) => {
+    if (res.success && res.result) {
+      this.hijriInfo = {
+        ...res.result,
+        formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`, // أي صياغة تعرضها
+        iso: res.result.iso ?? '', // لو iso مش راجع من الـ API
+      } as HijriDateInfo;
+    }
+  },
+  error: () => {
+    this.hijriInfo = null;
+  }
+});
+
+
+  // دلوقتي هات المدن
   this.prayerService.getPrayerTimesForAllCities().subscribe({
     next: (res) => {
       if (!res?.result || res.result.length === 0) {
@@ -229,9 +264,8 @@ private fetchData(): void {
         return;
       }
 
-      // نحول الريسبونس إلى الـ format اللي محتاجينه
       this.data = res.result.map((city: any) => {
-        const pt = city.prayerTimes[0]; // كل مدينة فيها prayerTimes array فيه عنصر واحد
+        const pt = city.prayerTimes[0];
         return {
           cityName: city.cityName ?? '-',
           fajr: pt?.fajr ?? '--',
@@ -240,14 +274,8 @@ private fetchData(): void {
           asr: pt?.asr ?? '--',
           maghrib: pt?.maghrib ?? '--',
           isha: pt?.isha ?? '--',
-          hijri: pt?.hijri_date ?? null,
-          gregorian: pt?.gregorian_date ?? null,
         };
       });
-
-      // ناخد التاريخ من أول مدينة
-    //  this.hijriInfo = this.data[0]?.hijri ?? null;
-    //  this.gregorianDateInfo = this.data[0]?.gregorian ?? null;
 
       this.loading = false;
     },
@@ -257,6 +285,7 @@ private fetchData(): void {
     }
   });
 }
+
 
   formatTime12(time: string): string {
     if (!time) return '-';
