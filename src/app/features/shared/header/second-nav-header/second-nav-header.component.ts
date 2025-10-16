@@ -93,7 +93,7 @@ interface WeatherInfo {
 
         <div class="flex items-center gap-1 sm:gap-2">
           <app-microphone-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
           ></app-microphone-icon>
           <app-search-icon
             class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
@@ -102,7 +102,7 @@ interface WeatherInfo {
             class="hidden sm:block w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
           ></app-search-icon>
           <app-eye-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
           ></app-eye-icon>
         </div>
       </div>
