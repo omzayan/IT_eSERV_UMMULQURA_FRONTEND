@@ -74,6 +74,7 @@ interface NavigationItem {
       </div>
 
       <div class="flex justify-end items-center gap-1 sm:gap-2">
+      <!--
         <button
           class="hidden lg:flex h-[60px] lg:h-[72px] px-2 lg:px-4 justify-center items-center gap-1 rounded transition-colors text-gray-900 hover:bg-gray-50"
         >
@@ -82,6 +83,7 @@ interface NavigationItem {
             {{ 'header.login' | translate }}
           </span>
         </button>
+      -->
 
        <div class="relative" (clickOutside)="closeDropdown()">
   <button
