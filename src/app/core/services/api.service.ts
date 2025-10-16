@@ -268,7 +268,7 @@ getMonthlyPrayerTimesByGregorian(
 
           // ننده نفس الـ endpoint بتاع الهجري
           this.http.get<BaseResponse<DurationPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDates`,
+            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDate`,
             { params }
           ).subscribe({
             next: res => {
@@ -302,7 +302,7 @@ getMonthlyPrayerTimesByGregorian(
       .set('latitude', input.latitude.toString());
 
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDates`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDate`,
       { params }
     );
   }

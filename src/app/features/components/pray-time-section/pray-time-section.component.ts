@@ -178,10 +178,27 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.languageService.currentLanguage$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(lang => this.isAr = lang === 'ar');
-  }
+  // اللغة
+  this.languageService.currentLanguage$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(lang => this.isAr = lang === 'ar');
+
+  // ✅ set default city Riyadh
+  this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
+  this.selectedCityId = null; // أو ID الرياض لو متوفر عندك من الـ backend
+
+  // ✅ set default Gregorian date = today
+  const today = new Date();
+  this.selectedGregorianDate = {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    dayNumber: today.getDate()
+  };
+
+  // ✅ call API مباشرة
+  this.handleSearch();
+}
+
 
   ngOnDestroy(): void {
     this.destroy$.next();
