@@ -140,7 +140,13 @@ interface PrayerCardMeta {
       <div *ngIf="!isCurrentPrayer(i)" class="flex flex-col gap-2 mt-2">
         <div class="flex justify-between items-center">
           <p class="text-sm font-ibm-plex-arabic">{{ 'prayTimeSection.remaining' | translate }}</p>
-          <p class="text-sm font-bold font-ibm-plex-arabic">{{ getTimeRemaining(meta.key, i) }}</p>
+          <p class="text-sm font-bold font-ibm-plex-arabic" *ngIf="isNextPrayer(i)">
+  {{ getTimeRemaining(meta.key, i) }}
+</p>
+<p class="text-sm font-bold font-ibm-plex-arabic" *ngIf="!isNextPrayer(i)">
+  00:00
+</p>
+
         </div>
         <div class="w-full bg-white rounded-full h-2">
           <div class="bg-[#1B8354] rounded-full h-2 transition-all duration-300"
@@ -414,10 +420,18 @@ isCurrentPrayer(index: number): boolean {
   return current ? this.prayerCardMeta[index].key === current.key : false;
 }
 
-// 🟢 الوقت المتبقي للصلاة الجاية فقط
-getTimeRemaining(key: keyof PrayerTimes, index: number): string {
+// 🟢 هل الكارت ده هو الصلاة الجاية؟
+ isNextPrayer(index: number): boolean {
   const next = this.getNextPrayer();
-  if (!next || this.prayerCardMeta[index].key !== next.key) return '00:00';
+  return next ? this.prayerCardMeta[index].key === next.key : false;
+}
+
+// 🟢 الوقت المتبقي يظهر فقط في الكارت اللي هو الصلاة الجاية
+getTimeRemaining(key: keyof PrayerTimes, index: number): string {
+  if (!this.isNextPrayer(index)) return '00:00';
+
+  const next = this.getNextPrayer();
+  if (!next) return '00:00';
 
   const now = new Date();
   let diff = Math.floor((next.date.getTime() - now.getTime()) / 1000);
@@ -427,6 +441,7 @@ getTimeRemaining(key: keyof PrayerTimes, index: number): string {
   const m = Math.floor((diff % 3600) / 60);
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
+
 
 // 🟢 نسبة التقدم (progress) من وقت الصلاة الحالية للي بعدها
 getProgressPercent(key: keyof PrayerTimes, index: number): number {
