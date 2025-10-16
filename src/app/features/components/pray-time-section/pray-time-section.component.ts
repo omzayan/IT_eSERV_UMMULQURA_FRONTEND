@@ -4,12 +4,11 @@ import {
   OnDestroy,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { interval, Subscription, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import {
   PrayerService,
   ReferenceDataService,
@@ -18,7 +17,6 @@ import {
 } from '../../../core/services';
 import {
   PrayerTimeWithDateResult,
-  CityResult,
   City,
 } from '../../../core/types/api.types';
 import {
@@ -120,7 +118,7 @@ interface PrayerCardMeta {
 
       <!-- Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <div *ngFor="let meta of prayerCardMeta; let i = index"
+        <div *ngFor="let meta of prayerCardMeta"
           class="prayer-card relative rounded-lg overflow-hidden h-[308px]"
           [style.background-image]="'url(' + meta.bg + ')'"
           [style.background-size]="'cover'"
@@ -178,27 +176,24 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-  // اللغة
-  this.languageService.currentLanguage$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(lang => this.isAr = lang === 'ar');
+    // اللغة
+    this.languageService.currentLanguage$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(lang => this.isAr = lang === 'ar');
 
-  // ✅ set default city Riyadh
-  this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
-  this.selectedCityId = null; // أو ID الرياض لو متوفر عندك من الـ backend
+    // ✅ Default city = الرياض + Default date = اليوم
+    this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
+    this.selectedCityId = null;
+    const today = new Date();
+    this.selectedGregorianDate = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      dayNumber: today.getDate()
+    };
 
-  // ✅ set default Gregorian date = today
-  const today = new Date();
-  this.selectedGregorianDate = {
-    year: today.getFullYear(),
-    month: today.getMonth() + 1,
-    dayNumber: today.getDate()
-  };
-
-  // ✅ call API مباشرة
-  this.handleSearch();
-}
-
+    // ✅ أول ما يفتح يعرض مواقيت اليوم للرياض
+    this.handleSearch();
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -208,11 +203,15 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   onHijriDateChange(date: DatePickerValue | null): void {
     this.selectedHijriDate = date;
     if (date) this.selectedGregorianDate = null;
+
+    if (!this.selectedCoords) this.showCityError = true;
   }
 
   onGregorianDateChange(date: DatePickerValue | null): void {
     this.selectedGregorianDate = date;
     if (date) this.selectedHijriDate = null;
+
+    if (!this.selectedCoords) this.showCityError = true;
   }
 
   onCitySelect(city: City): void {
@@ -221,19 +220,27 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
     if (lat && lng) {
       this.selectedCoords = { lat, lng };
       this.selectedCityId = city.id;
+
+      if (!this.selectedHijriDate && !this.selectedGregorianDate) {
+        this.showDateError = true;
+      }
     }
   }
 
   onLocationSelect(location: LocationData): void {
     this.selectedCoords = location;
     this.selectedCityId = null;
+
+    if (!this.selectedHijriDate && !this.selectedGregorianDate) {
+      this.showDateError = true;
+    }
   }
 
   handleSearch(): void {
     this.loading = true;
     this.error = null;
 
-    // ✅ Validate city
+    // ✅ Validate
     if (!this.selectedCoords) {
       this.showCityError = true;
       this.loading = false;
@@ -242,7 +249,6 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
       this.showCityError = false;
     }
 
-    // ✅ Validate date
     if (!this.selectedHijriDate && !this.selectedGregorianDate) {
       this.showDateError = true;
       this.loading = false;
@@ -251,7 +257,7 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
       this.showDateError = false;
     }
 
-    // ✅ Decide which API to call
+    // ✅ Call API
     if (this.selectedHijriDate) {
       this.handleHijriDateSearch();
     } else if (this.selectedGregorianDate) {
@@ -265,7 +271,7 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
 
     this.prayerService.getPrayerTimesForHijriDate(
       year, month, dayNumber,
-      this.selectedCoords.lng?? undefined, this.selectedCoords.lat??undefined
+      this.selectedCoords.lng ?? undefined, this.selectedCoords.lat ?? undefined
     ).subscribe({
       next: (res) => { this.prayerTime = res; this.loading = false; },
       error: () => { this.error = 'خطأ في جلب البيانات'; this.loading = false; }
@@ -278,7 +284,7 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
     const gregorianDate = new Date(d.year, d.month - 1, d.dayNumber);
 
     this.prayerService.getPrayerTimesForGregorianDate(
-      gregorianDate, this.selectedCoords.lng??undefined, this.selectedCoords.lat??undefined
+      gregorianDate, this.selectedCoords.lng ?? undefined, this.selectedCoords.lat ?? undefined
     ).subscribe({
       next: (res) => { this.prayerTime = res; this.loading = false; },
       error: () => { this.error = 'خطأ في جلب البيانات'; this.loading = false; }

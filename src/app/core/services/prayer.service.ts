@@ -1,21 +1,13 @@
+import { BaseResponse } from './../types/api.types';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, map } from 'rxjs';
 import { ApiService } from './api.service';
 import {
-  CommonResponse,
   PrayerTimeWithDateResult,
-  MonthlyPrayerTimesResult,
-  PrayerTimesByCitiesResult,
-  QiblaResult,
-  BaseResponse,
   MonthPrayerTimes,
-  PrayerTime,
+  QiblaResult,
 } from '../types/api.types';
 
-/**
- * Prayer service - convenience wrapper for prayer-related API calls
- */
 @Injectable({
   providedIn: 'root',
 })
@@ -23,219 +15,149 @@ export class PrayerService {
   constructor(private apiService: ApiService) {}
 
   /**
-   * Get today's prayer times using current date
+   * Get today's prayer times (Gregorian)
    */
-getTodayPrayerTimes(
-  longitude?: number,
-  latitude?: number
-): Observable<PrayerTimeWithDateResult | null> {
-  const today = new Date();
-  return this.apiService
-    .getDateWithPrayerTimesGregorian(today, longitude ?? 46.69, latitude ?? 24.67)
-    .pipe(
-      map((response) => {
-        if (response.success && response.result && response.result.prayerTimes.length > 0) {
-          const first = response.result.prayerTimes[0];
-
-          // نبني PrayerTimeWithDateResult من PrayerTime
-          const result: PrayerTimeWithDateResult = {
-            day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
-            hijri_date: first.hijri_date,
-            gregorian_date: first.gregorian_date,
-            prayer_times: {
-              fajr: first.fajr,
-              sunrise: first.sunrise,
-              dhuhr: first.dhuhr,
-              asr: first.asr,
-              maghrib: first.maghrib,
-              isha: first.isha,
-              sunset: first.sunset,
-            },
-            location: {
-              latitude: latitude ?? 24.67,
-              longitude: longitude ?? 46.69,
-            },
-          };
-
-          return result;
-        }
-        return null;
-      })
-    );
-}
-
+  getTodayPrayerTimes(
+    longitude: number = 46.69,
+    latitude: number = 24.67
+  ): Observable<PrayerTimeWithDateResult | null> {
+    const today = new Date();
+    return this.apiService
+      .getDateWithPrayerTimesGregorian(today, longitude, latitude)
+      .pipe(
+        map((response) => {
+          if (response.success && response.result && response.result.prayerTimes.length > 0) {
+            const first = response.result.prayerTimes[0];
+            return {
+              day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
+              hijri_date: first.hijri_date,
+              gregorian_date: first.gregorian_date,
+              prayer_times: {
+                fajr: first.fajr,
+                sunrise: first.sunrise,
+                dhuhr: first.dhuhr,
+                asr: first.asr,
+                maghrib: first.maghrib,
+                isha: first.isha,
+                sunset: first.sunset,
+              },
+              location: { latitude, longitude },
+            } as PrayerTimeWithDateResult;
+          }
+          return null;
+        })
+      );
+  }
 
   /**
    * Get prayer times for a specific Gregorian date
    */
-getPrayerTimesForGregorianDate(
-  date: Date,
-  longitude?: number,
-  latitude?: number,
-): Observable<PrayerTimeWithDateResult | null> {
-  return this.apiService
-    .getDateWithPrayerTimesGregorian(date, longitude ?? 46.69, latitude ?? 24.67)
-    .pipe(
-      map((response) => {
-        if (response.success && response.result && response.result.prayerTimes.length > 0) {
-          const first = response.result.prayerTimes[0];
-          return {
-            day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
-            hijri_date: first.hijri_date,
-            gregorian_date: first.gregorian_date,
-            prayer_times: {
-              fajr: first.fajr,
-              sunrise: first.sunrise,
-              dhuhr: first.dhuhr,
-              asr: first.asr,
-              maghrib: first.maghrib,
-              isha: first.isha,
-              sunset: first.sunset,
-            },
-            location: {
-              latitude: latitude ?? 24.67,
-              longitude: longitude ?? 46.69,
-            },
-          } as PrayerTimeWithDateResult;
-        }
-        return null;
-      })
-    );
-}
-
-
+  getPrayerTimesForGregorianDate(
+    date: Date,
+    longitude: number = 46.69,
+    latitude: number = 24.67
+  ): Observable<PrayerTimeWithDateResult | null> {
+    return this.apiService
+      .getDateWithPrayerTimesGregorian(date, longitude, latitude)
+      .pipe(
+        map((response) => {
+          if (response.success && response.result && response.result.prayerTimes.length > 0) {
+            const first = response.result.prayerTimes[0];
+            return {
+              day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
+              hijri_date: first.hijri_date,
+              gregorian_date: first.gregorian_date,
+              prayer_times: {
+                fajr: first.fajr,
+                sunrise: first.sunrise,
+                dhuhr: first.dhuhr,
+                asr: first.asr,
+                maghrib: first.maghrib,
+                isha: first.isha,
+                sunset: first.sunset,
+              },
+              location: { latitude, longitude },
+            } as PrayerTimeWithDateResult;
+          }
+          return null;
+        })
+      );
+  }
 
   /**
    * Get prayer times for a specific Hijri date
    */
-getPrayerTimesForHijriDate(
-  hijriYear: number,
-  hijriMonth: number,
-  hijriDay: number,
-  longitude?: number,
-  latitude?: number,
-): Observable<PrayerTimeWithDateResult | null> {
-  return this.apiService
-    .getDateWithPrayerTimesHijri(hijriYear, hijriMonth, hijriDay, latitude ?? 24.67, longitude ?? 46.69)
-    .pipe(
-      map((response) => {
-        if (response.success && response.result && response.result.prayerTimes.length > 0) {
-          const first = response.result.prayerTimes[0];
-          return {
-            day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
-            hijri_date: first.hijri_date,
-            gregorian_date: first.gregorian_date,
-            prayer_times: {
-              fajr: first.fajr,
-              sunrise: first.sunrise,
-              dhuhr: first.dhuhr,
-              asr: first.asr,
-              maghrib: first.maghrib,
-              isha: first.isha,
-              sunset: first.sunset,
-            },
-            location: { latitude: latitude ?? 24.67, longitude: longitude ?? 46.69 },
-          } as PrayerTimeWithDateResult;
-        }
-        return null;
-      })
-    );
-}
-
-
+  getPrayerTimesForHijriDate(
+    year: number,
+    month: number,
+    day: number,
+    longitude: number = 46.69,
+    latitude: number = 24.67
+  ): Observable<PrayerTimeWithDateResult | null> {
+    return this.apiService
+      .getDateWithPrayerTimesHijri(year, month, day, latitude, longitude)
+      .pipe(
+        map((response) => {
+          if (response.success && response.result && response.result.prayerTimes.length > 0) {
+            const first = response.result.prayerTimes[0];
+            return {
+              day_name: first.gregorian_date.day_name || first.hijri_date.day_name,
+              hijri_date: first.hijri_date,
+              gregorian_date: first.gregorian_date,
+              prayer_times: {
+                fajr: first.fajr,
+                sunrise: first.sunrise,
+                dhuhr: first.dhuhr,
+                asr: first.asr,
+                maghrib: first.maghrib,
+                isha: first.isha,
+                sunset: first.sunset,
+              },
+              location: { latitude, longitude },
+            } as PrayerTimeWithDateResult;
+          }
+          return null;
+        })
+      );
+  }
 
   /**
-   * Get prayer times for a specific date (legacy method - kept for backward compatibility)
-   */
-  // getPrayerTimesForDate(
-  //   date: Date,
-  //   longitude?: number,
-  //   latitude?: number,
-  //   cityId?: number
-  // ): Observable<PrayerTimeWithDateResult | null> {
-  //   return this.getPrayerTimesForGregorianDate(
-  //     date,
-  //     longitude,
-  //     latitude,
-  //     cityId
-  //   );
-  // }
-
-  /**
-   * Get monthly prayer times for current month
-   */
-getCurrentMonthPrayerTimes(
-  longitude: number = 46.69,
-  latitude: number = 24.67
-): Observable<MonthPrayerTimes | null> {
-  const now = new Date();
-  return this.apiService.getMonthlyPrayerTimesByGregorian(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    latitude,
-    longitude
-  ).pipe(
-    map((response) => (response.success ? response.result : null))
-  );
-}
-
-  /**
-   * Get monthly prayer times by Gregorian calendar
+   * Get monthly prayer times by Gregorian
    */
 getMonthlyPrayerTimesByGregorian(
   year: number,
   month: number,
-  longitude?: number,
-  latitude?: number
+  longitude: number = 46.69,
+  latitude: number = 24.67
 ): Observable<BaseResponse<MonthPrayerTimes>> {
-  return this.apiService.getMonthlyPrayerTimesByGregorian(
-    year,
-    month,
-    longitude ?? 46.69,
-    latitude ?? 24.67
-  );
+  return this.apiService.getMonthlyPrayerTimesByGregorian(year, month, latitude, longitude);
 }
 
-getMonthlyPrayerTimesByHijri(
-  year: number,
-  month: number,
-  longitude?: number,
-  latitude?: number
-): Observable<BaseResponse<MonthPrayerTimes>> {
-  return this.apiService.getMonthlyPrayerTimesByHijri(
-    year,
-    month,
-    longitude ?? 46.69,
-    latitude ?? 24.67
-  );
-}
+
 
   /**
-   * Get prayer times for all cities
+   * Get monthly prayer times by Hijri
    */
-  // getAllCitiesPrayerTimes(): Observable<PrayerTimesByCitiesResult | null> {
-  //   return this.apiService
-  //     .getCitiesPrayerTimes()
-  //     .pipe(map((response) => (response.success ? response.data : null)));
-  // }
+  getMonthlyPrayerTimesByHijri(
+    year: number,
+    month: number,
+    longitude: number = 46.69,
+    latitude: number = 24.67
+  ): Observable<BaseResponse<MonthPrayerTimes>> {
+    return this.apiService
+      .getMonthlyPrayerTimesByHijri(year, month, latitude, longitude);
+      
+  }
 
   /**
    * Get Qibla direction
    */
- getQiblaDirection(
-  longitude: number,
-  latitude: number
-): Observable<QiblaResult | null> {
-  return this.apiService
-    .getQibla(longitude, latitude)
-    .pipe(
-      map((response) => {
-        if (response.success && response.result) {
-          return response.result; 
-        }
-        return null;
-      })
+  getQiblaDirection(
+    longitude: number,
+    latitude: number
+  ): Observable<QiblaResult | null> {
+    return this.apiService.getQibla(longitude, latitude).pipe(
+      map((response) => (response.success && response.result ? response.result : null))
     );
-}
-
+  }
 }
