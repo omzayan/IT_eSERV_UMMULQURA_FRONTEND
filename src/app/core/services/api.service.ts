@@ -60,7 +60,7 @@ convertHijriToGregorian(
     latitude: number
   ): Observable<BaseResponse<DurationPrayerTimes>> {
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDurationByGregorianDate`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetForDurationByGregorianDate`,
       {
         params: {
           StartDate: gregorianDate.toISOString(),
@@ -83,7 +83,7 @@ convertHijriToGregorian(
     longitude: number
   ): Observable<BaseResponse<DurationPrayerTimes>> {
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForDurationByHijriDate`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetForDurationByHijriDate`,
       {
         params: {
           Year: year.toString(),
@@ -107,7 +107,7 @@ convertHijriToGregorian(
     longitude: number = 46.69
   ): Observable<BaseResponse<MonthPrayerTimes>> {
     return this.http.get<BaseResponse<MonthPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByHijriDate`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetMonthByHijriDate`,
       {
         params: {
           Year: hijriYear.toString(),
@@ -129,7 +129,7 @@ convertHijriToGregorian(
   longitude: number = 46.69
 ): Observable<BaseResponse<MonthPrayerTimes>> {
   return this.http.get<BaseResponse<MonthPrayerTimes>>(
-    `${this.baseUrl}api/services/app/PrayerTimes/GetMonthPrayerTimesByGregorianDate`,
+    `${this.baseUrl}api/services/app/PrayerTimes/GetMonthlyByGregorianDate`,
     {
       params: {
         Year: gregorianYear.toString(),
@@ -194,7 +194,7 @@ getCalendar(
   }
 
   return this.http.get<BaseResponse<PrayerTimesResult>>(
-    `${this.baseUrl}api/services/app/PrayerTimes/GetYearPrayerTimesByHijriDate`,
+    `${this.baseUrl}api/services/app/PrayerTimes/GetYearlyByHijriYear`,
     { params }
   );
 }
@@ -242,7 +242,7 @@ getBannerAttachment(id: number) {
       .set('latitude', input.latitude.toString());
 
     return this.http.get<BaseResponse<DurationPrayerTimes>>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDate`,
+      `${this.baseUrl}api/services/app/PrayerTimes/GetDateRangeByHijriDate`,
       { params }
     );
   }
@@ -299,7 +299,7 @@ getBannerAttachment(id: number) {
         // ✅ ننده API
         this.http
           .get<BaseResponse<DurationPrayerTimes>>(
-            `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesDateRangeByHijriDate`,
+            `${this.baseUrl}api/services/app/PrayerTimes/GetDateRangeByHijriDate`,
             { params }
           )
           .subscribe({
@@ -333,7 +333,7 @@ getBannerAttachment(id: number) {
 
   getPrayerTimesForAllCities(): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}api/services/app/PrayerTimes/GetPrayerTimesForAllCities`
+      `${this.baseUrl}api/services/app/PrayerTimes/GetCountryCities`
     );
   }
 
