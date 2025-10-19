@@ -678,7 +678,13 @@
       "maghrib": "المغرب",
       "isha": "العشاء"
     }
+  },
+  "datePickers": {
+  "gregorian": {
+    "selectDate": "اختر التاريخ"
   }
+}
+
 
 
 }

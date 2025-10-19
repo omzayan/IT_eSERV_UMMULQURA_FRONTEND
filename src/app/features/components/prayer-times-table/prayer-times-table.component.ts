@@ -150,6 +150,20 @@ export class PrayerTimesTableComponent implements OnInit {
       this.translate.instant('prayers.isha'),
     ];
   }
+
+private getCityName(city: any): string {
+  const lang = this.translate.currentLang || 'en';
+
+  if (city && city.name) {
+    return city.name[lang] ?? city.name['en'] ?? city.cityName ?? '-';
+  }
+
+  // fallback لو مفيش name
+  return city.cityName ?? '-';
+}
+
+
+
 private fetchData(): void {
   this.loading = true;
   this.error = null;
@@ -200,7 +214,7 @@ const gregorianInfo: GregorianDateInfo = {
       this.data = res.result.map((city: any) => {
         const pt = city.prayerTimes[0];
         return {
-          cityName: city.cityName ?? '-',
+          cityName: this.getCityName(city),
           fajr: pt?.fajr ?? '--',
           sunrise: pt?.sunrise ?? '--',
           dhuhr: pt?.dhuhr ?? '--',
@@ -219,18 +233,42 @@ const gregorianInfo: GregorianDateInfo = {
   });
 }
 
+formatTime12(time: string): string {
+  if (!time) return '-';
 
-  formatTime12(time: string): string {
-    if (!time) return '-';
+  const [h, m] = time.split(':');
+  let hour = parseInt(h, 10);
+  const minute = m ? m.padStart(2, '0') : '00';
 
-    // Handles HH:mm or HH:mm:ss
-    const [h, m] = time.split(':');
-    let hour = parseInt(h, 10);
-    const minute = m ? m.padStart(2, '0') : '00';
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    if (hour === 0) hour = 12;
+  // تحديد اللغة الحالية
+  const currentLang = this.translate.currentLang || 'en';
 
-    return `${hour}:${minute} ${ampm}`;
+  // تحويل للـ 12 ساعة
+  const isPM = hour >= 12;
+  const ampm = isPM ? 'PM' : 'AM';
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  // النصوص حسب اللغة
+  let suffix = '';
+  switch (currentLang) {
+    case 'ar':
+      suffix = isPM ? 'م' : 'ص';
+      break;
+    case 'fr':
+      suffix = isPM ? 'PM' : 'AM'; // أو تكتب 'soir/matin'
+      break;
+    case 'ch':
+      suffix = isPM ? '下午' : '上午';
+      break;
+    case 'BN':
+      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+      break;
+    default:
+      suffix = ampm; // الإنجليزية أو أي لغة مش معرفة
   }
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
 }

@@ -353,14 +353,45 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatTime12(time: string | undefined): string {
-    if (!time) return '--';
-    const [h, m] = time.split(':');
-    let hour = parseInt(h, 10);
-    const minute = m ? m.padStart(2, '0') : '00';
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    if (hour === 0) hour = 12;
-    return `${hour}:${minute} ${ampm}`;
+formatTime12(time: string | undefined): string {
+  if (!time || time === '--') return '--';
+
+  const [h, m] = time.split(':');
+  if (h === undefined || m === undefined) return time;
+
+  let hour = parseInt(h, 10);
+  const minute = m.padStart(2, '0');
+  const isPM = hour >= 12;
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  // اللغة الحالية
+  const currentLang = this.translate.currentLang || 'en';
+
+  // النص حسب اللغة
+  let suffix = '';
+  switch (currentLang) {
+    case 'ar':
+      suffix = isPM ? 'م' : 'ص';
+      break;
+    case 'fr':
+      suffix = isPM ? 'PM' : 'AM'; // أو Soir/Matin لو تحب
+      break;
+    case 'ch':
+      suffix = isPM ? '下午' : '上午';
+      break;
+    case 'BN':
+      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+      break;
+    case 'tu':
+      suffix = isPM ? 'ÖS' : 'ÖÖ';
+      break;
+    default:
+      suffix = isPM ? 'PM' : 'AM'; // الافتراضي
   }
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
 }

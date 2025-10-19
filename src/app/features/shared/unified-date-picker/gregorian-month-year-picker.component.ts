@@ -223,15 +223,13 @@ export class GregorianMonthYearPickerComponent
     if (this.placeholder) {
       return this.placeholder;
     }
-    return 'mm-yyyy';
+    return 'اختر التاريخ';
   }
 
-  getLabelText(): string {
-    if (this.label) {
-      return this.label;
-    }
-    return 'datePickers.gregorian.selectDate';
-  }
+ getLabelText(): string {
+  return this.label ?? '';
+}
+
 
   private emitChange() {
     if (this.selectedMonth && this.selectedYear) {

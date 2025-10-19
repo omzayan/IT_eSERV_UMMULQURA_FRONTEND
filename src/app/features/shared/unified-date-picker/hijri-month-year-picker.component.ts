@@ -222,15 +222,13 @@ export class HijriMonthYearPickerComponent
     if (this.placeholder) {
       return this.placeholder;
     }
-    return 'mm-yyyy H';
+    return 'اختر التاريخ';
   }
 
-  getLabelText(): string {
-    if (this.label) {
-      return this.label;
-    }
-    return 'datePickers.hijri.selectDate';
-  }
+getLabelText(): string {
+  return this.label ?? '';
+}
+
 
   private emitChange() {
     if (this.selectedMonth && this.selectedYear) {

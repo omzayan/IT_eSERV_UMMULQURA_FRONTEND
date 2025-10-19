@@ -122,9 +122,7 @@ interface PrayerCardMeta {
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
   <div *ngFor="let meta of prayerCardMeta; let i = index"
        class="prayer-card relative rounded-lg overflow-hidden h-[308px] cursor-pointer transform hover:scale-105 transition-transform duration-300"
-       [style.background-image]="'url(' + meta.bg + ')'"
-       [style.background-size]="'cover'"
-       [style.background-position]="'center'">
+       [style.background-image]="'url(' + meta.bg + ')'">
 
     <div class="absolute inset-0 bg-black bg-opacity-40"></div>
 
@@ -136,26 +134,18 @@ interface PrayerCardMeta {
         </p>
       </div>
 
-      <!-- ⏳ باقي الصلوات → وقت متبقي + progress -->
-      <div *ngIf="!isCurrentPrayer(i)" class="flex flex-col gap-2 mt-2">
+      <!-- باقي الصلوات -->
+      <div *ngIf="!isNextPrayer(i)" class="flex flex-col gap-2 mt-2">
         <div class="flex justify-between items-center">
           <p class="text-sm font-ibm-plex-arabic">{{ 'prayTimeSection.remaining' | translate }}</p>
-          <p class="text-sm font-bold font-ibm-plex-arabic" *ngIf="isNextPrayer(i)">
-  {{ getTimeRemaining(meta.key, i) }}
-</p>
-<p class="text-sm font-bold font-ibm-plex-arabic" *ngIf="!isNextPrayer(i)">
-  00:00
-</p>
-
-        </div>
-        <div class="w-full bg-white rounded-full h-2">
-          <div class="bg-[#1B8354] rounded-full h-2 transition-all duration-300"
-               [style.width]="getProgressPercent(meta.key, i) + '%'"></div>
+          <p class="text-sm font-bold font-ibm-plex-arabic">
+            {{ getTimeRemaining(meta.key, i) }}
+          </p>
         </div>
       </div>
 
-      <!-- ⏳ الصلاة الحالية → الدايرة -->
-      <div *ngIf="isCurrentPrayer(i)" class="flex flex-col items-center justify-center flex-1">
+      <!-- الصلاة الجاية → الدايرة -->
+      <div *ngIf="isNextPrayer(i)" class="flex flex-col items-center justify-center flex-1">
         <div class="circular-countdown relative">
           <svg class="countdown-circle" width="180" height="180" viewBox="0 0 180 180">
             <circle cx="90" cy="90" r="80" fill="transparent" stroke="#1B8354" stroke-width="5"
@@ -175,9 +165,11 @@ interface PrayerCardMeta {
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
+
   `,
   styles: [`
     .prayer-card { background-size: cover; background-position: center; background-repeat: no-repeat; }
@@ -226,53 +218,61 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(lang => this.isAr = lang === 'ar');
   }
-ngAfterViewInit(): void {
-  setTimeout(() => {
-    const today = new Date();
-    this.selectedGregorianDate = {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      dayNumber: today.getDate()
-    };
-    this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
-    this.handleSearch();
-  });
-}
+
+
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  ngAfterViewInit(): void {
+  setTimeout(() => {
+    const today = new Date();
+this.selectedGregorianDate = {
+  year: today.getFullYear(),
+  month: today.getMonth() + 1,
+  dayNumber: today.getDate()
+};
+this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
+this.prayerTime = null;
+this.handleGregorianDateSearch();
 
-  // ✅ Validation and Search
-  handleSearch(): void {
-    this.loading = true;
-    this.error = null;
 
-    if (!this.selectedCoords) {
-      this.showCityError = true;
-      this.loading = false;
-      return;
-    } else {
-      this.showCityError = false;
-    }
+  });
+}
 
-    if (!this.selectedHijriDate && !this.selectedGregorianDate) {
-      this.showDateError = true;
-      this.loading = false;
-      return;
-    } else {
-      this.showDateError = false;
-    }
 
-    this.prayerTime = null;
+handleSearch(): void {
+  this.loading = true;
+  this.error = null;
 
-    if (this.selectedHijriDate) {
-      this.handleHijriDateSearch();
-    } else {
-      this.handleGregorianDateSearch();
-    }
+  // ✅ لازم مدينة
+  if (!this.selectedCoords) {
+    this.showCityError = true;
+    this.showDateError = false;
+    this.loading = false;
+    return;
   }
+
+  // ✅ لازم تاريخ (هجري أو ميلادي)
+  if (!this.selectedHijriDate && !this.selectedGregorianDate) {
+    this.showDateError = true;
+    this.loading = false;
+    return;
+  }
+
+  // ✅ الاتنين موجودين → نفذ البحث
+  this.showCityError = false;
+  this.showDateError = false;
+  this.prayerTime = null;
+
+  if (this.selectedHijriDate) {
+    this.handleHijriDateSearch();
+  } else {
+    this.handleGregorianDateSearch();
+  }
+}
+
 
   private handleHijriDateSearch(): void {
     if (!this.selectedHijriDate || !this.selectedCoords) return;
@@ -372,46 +372,53 @@ onLocationSelect(location: LocationData): void {
   }
 }
 
-// 🟢 بناء Date من وقت الصلاة
-private buildDateFromTime(time: string): Date {
+private buildDateFromTime(time: string, baseDate: Date): Date {
   const [h, m] = time.split(':').map(Number);
-  const d = new Date();
+  const d = new Date(baseDate);
   d.setHours(h, m, 0, 0);
   return d;
 }
 
-// 🟢 الصلاة الجاية
+
 private getNextPrayer(): { key: keyof PrayerTimes, date: Date } | null {
   if (!this.prayerTime?.prayer_times) return null;
   const now = new Date();
+  const today = new Date();
 
-  const times = (Object.keys(this.prayerTime.prayer_times) as (keyof PrayerTimes)[])
-    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!) }))
+  let times = (Object.keys(this.prayerTime.prayer_times) as (keyof PrayerTimes)[])
+    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!, today) }))
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
-  return times.find(t => t.date > now) || null;
+  // لو مفيش أي صلاة فاضلة النهارده → نضيف فجر اليوم التالي
+  let next = times.find(t => t.date > now);
+  if (!next) {
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const fajr = this.buildDateFromTime(this.prayerTime!.prayer_times['fajr']!, tomorrow);
+    next = { key: 'fajr', date: fajr };
+  }
+
+  return next;
 }
 
-// 🟢 الصلاة الحالية
 private getCurrentPrayer(): { key: keyof PrayerTimes, date: Date } | null {
   if (!this.prayerTime?.prayer_times) return null;
   const now = new Date();
+  const today = new Date();
 
   const times = (Object.keys(this.prayerTime.prayer_times) as (keyof PrayerTimes)[])
-    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!) }))
+    .map(k => ({ key: k, date: this.buildDateFromTime(this.prayerTime!.prayer_times[k]!, today) }))
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
   for (let i = 0; i < times.length; i++) {
     const current = times[i];
     const next = times[i + 1];
-    if (next) {
-      if (now >= current.date && now < next.date) return current;
-    } else {
-      // آخر صلاة (العشاء)
-      if (now >= current.date) return current;
-    }
+    if (next && now >= current.date && now < next.date) return current;
   }
-  return null;
+
+  // لو عدينا كل الصلوات → الصلاة الحالية تفضل العشاء
+  const isha = times.find(t => t.key === 'isha');
+  return isha || null;
 }
 
 // 🟢 هل الكارت ده الصلاة الحالية؟
@@ -426,21 +433,29 @@ isCurrentPrayer(index: number): boolean {
   return next ? this.prayerCardMeta[index].key === next.key : false;
 }
 
-// 🟢 الوقت المتبقي يظهر فقط في الكارت اللي هو الصلاة الجاية
 getTimeRemaining(key: keyof PrayerTimes, index: number): string {
-  if (!this.isNextPrayer(index)) return '00:00';
-
-  const next = this.getNextPrayer();
-  if (!next) return '00:00';
+  if (!this.prayerTime?.prayer_times) return '00:00';
 
   const now = new Date();
-  let diff = Math.floor((next.date.getTime() - now.getTime()) / 1000);
-  if (diff <= 0) return '00:00';
+  const today = new Date();
 
+  const prayerTimeStr = this.prayerTime.prayer_times[key];
+  if (!prayerTimeStr) return '00:00';
+
+  const prayerDate = this.buildDateFromTime(prayerTimeStr, today);
+
+  // لو الصلاة عدّت خلاص → صفر
+  if (prayerDate <= now) return '00:00';
+
+  // لسه جاية → احسب الفرق
+  let diff = Math.floor((prayerDate.getTime() - now.getTime()) / 1000);
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
+
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
+
+
 
 
 // 🟢 نسبة التقدم (progress) من وقت الصلاة الحالية للي بعدها

@@ -334,14 +334,44 @@ export class DailyPrayerTimesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   formatTime12(time: string | undefined): string {
-    if (!time || time === '--') return '--';
-    const [h, m] = time.split(':');
-    if (h === undefined || m === undefined) return time;
-    let hour = parseInt(h, 10);
-    const minute = m;
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    if (hour === 0) hour = 12;
-    return `${hour}:${minute} ${ampm}`;
+  if (!time || time === '--') return '--';
+
+  const [h, m] = time.split(':');
+  if (h === undefined || m === undefined) return time;
+
+  let hour = parseInt(h, 10);
+  const minute = m.padStart(2, '0');
+  const isPM = hour >= 12;
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  // اللغة الحالية
+  const currentLang = this.translate.currentLang || 'en';
+
+  // النصوص حسب اللغة
+  let suffix = '';
+  switch (currentLang) {
+    case 'ar':
+      suffix = isPM ? 'م' : 'ص';
+      break;
+    case 'fr':
+      suffix = isPM ? 'PM' : 'AM'; // ممكن تعمل 'soir/matin'
+      break;
+    case 'ch':
+      suffix = isPM ? '下午' : '上午';
+      break;
+    case 'BN':
+      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+      break;
+    case 'tu':
+      suffix = isPM ? 'ÖS' : 'ÖÖ'; // مثال للتركية
+      break;
+    default:
+      suffix = isPM ? 'PM' : 'AM'; // الإنجليزية أو الافتراضي
   }
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
 }

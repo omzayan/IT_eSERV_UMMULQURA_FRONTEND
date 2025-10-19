@@ -36,19 +36,21 @@ interface LocationState {
     >
       <!-- Month/Year & City -->
       <div class="flex gap-3 w-full">
-        <div class="w-1/2">
-          <app-gregorian-month-year-picker
-            [value]="selectedMonthYear"
-            (valueChange)="handleMonthYearSelect($event)"
-          ></app-gregorian-month-year-picker>
-        </div>
-        <div class="w-1/2">
-          <app-city-selector
-            [label]="'citySelect.selectCity'"
-            (citySelect)="handleCitySelect($event)"
-            (locationSelect)="handleLocationSelect($event)"
-          ></app-city-selector>
-        </div>
+     <div class="w-1/2">
+  <app-gregorian-month-year-picker
+    [value]="selectedMonthYear"
+    (valueChange)="handleMonthYearSelect($event)"
+    
+  ></app-gregorian-month-year-picker>
+</div>
+<div class="w-1/2">
+  <app-city-selector
+    [label]="'citySelect.selectCity' | translate"
+    (citySelect)="handleCitySelect($event)"
+    (locationSelect)="handleLocationSelect($event)"
+  ></app-city-selector>
+</div>
+
       </div>
 
       <!-- Error Message -->
@@ -277,15 +279,46 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatTime12(time: string | undefined): string {
-    if (!time || time === '--') return '--';
-    const [h, m] = time.split(':');
-    if (h === undefined || m === undefined) return time;
-    let hour = parseInt(h, 10);
-    const minute = m;
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    if (hour === 0) hour = 12;
-    return `${hour}:${minute} ${ampm}`;
+ formatTime12(time: string | undefined): string {
+  if (!time || time === '--') return '--';
+
+  const [h, m] = time.split(':');
+  if (h === undefined || m === undefined) return time;
+
+  let hour = parseInt(h, 10);
+  const minute = m.padStart(2, '0');
+  const isPM = hour >= 12;
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  // اللغة الحالية
+  const currentLang = this.translate.currentLang || 'en';
+
+  // تحديد النص حسب اللغة
+  let suffix = '';
+  switch (currentLang) {
+    case 'ar':
+      suffix = isPM ? 'م' : 'ص';
+      break;
+    case 'fr':
+      suffix = isPM ? 'PM' : 'AM'; // ممكن تعمل Matin/Soir
+      break;
+    case 'ch':
+      suffix = isPM ? '下午' : '上午';
+      break;
+    case 'BN':
+      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+      break;
+    case 'tu':
+      suffix = isPM ? 'ÖS' : 'ÖÖ';
+      break;
+    default:
+      suffix = isPM ? 'PM' : 'AM'; // الافتراضي
   }
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
+
 }
