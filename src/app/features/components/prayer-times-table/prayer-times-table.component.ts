@@ -118,6 +118,7 @@ interface PrayerTableData {
 })
 export class PrayerTimesTableComponent implements OnInit {
   data: PrayerTableData[] = [];
+  citiesRaw: any[] = [];
   loading = true;
   error: string | null = null;
   hijriInfo: HijriDateInfo | null = null;
@@ -127,13 +128,14 @@ export class PrayerTimesTableComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private prayerService: ApiService,
-    private referenceDataService :ReferenceDataService
-  ) {}
+    private referenceDataService: ReferenceDataService
+  ) { }
 
   ngOnInit(): void {
     this.updateHeaders();
     this.translate.onLangChange.subscribe(() => {
       this.updateHeaders();
+      this.updateCityNames();
     });
 
     this.fetchData();
@@ -151,124 +153,137 @@ export class PrayerTimesTableComponent implements OnInit {
     ];
   }
 
-private getCityName(city: any): string {
-  const lang = this.translate.currentLang || 'en';
-
-  if (city && city.name) {
-    return city.name[lang] ?? city.name['en'] ?? city.cityName ?? '-';
-  }
-
-  // fallback لو مفيش name
-  return city.cityName ?? '-';
-}
-
-
-
-private fetchData(): void {
-  this.loading = true;
-  this.error = null;
-
-  const today = new Date();
-const gregorianInfo: GregorianDateInfo = {
-  day: today.getDate(),
-  month: today.getMonth() + 1,
-  year: today.getFullYear(),
-  month_name: today.toLocaleString('ar-EG', { month: 'long' }),
-  day_name: today.toLocaleString('ar-EG', { weekday: 'long' }),
-  formatted: today.toLocaleDateString('ar-EG'), // أو بأي فورمات يناسبك
-  iso: today.toISOString().split('T')[0], // YYYY-MM-DD
-};
-
-  this.gregorianDateInfo = gregorianInfo;
-
-  // لو عندك خدمة تحويل للتاريخ الهجري
- this.prayerService.convertGregorianToHijri({
-  day: gregorianInfo.day,
-  month: gregorianInfo.month,
-  year: gregorianInfo.year,
-}).subscribe({
-  next: (res) => {
-    if (res.success && res.result) {
-      this.hijriInfo = {
-        ...res.result,
-        formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`, // أي صياغة تعرضها
-        iso: res.result.iso ?? '', // لو iso مش راجع من الـ API
-      } as HijriDateInfo;
-    }
-  },
-  error: () => {
-    this.hijriInfo = null;
-  }
-});
-
-
-  // دلوقتي هات المدن
-  this.prayerService.getPrayerTimesForAllCities().subscribe({
-    next: (res) => {
-      if (!res?.result || res.result.length === 0) {
-        this.error = this.translate.instant('table.noData') || 'No data available';
-        this.loading = false;
-        return;
-      }
-
-      this.data = res.result.map((city: any) => {
-        const pt = city.prayerTimes[0];
+  private updateCityNames(): void {
+    if (this.data && this.data.length > 0) {
+      this.data = this.data.map((city, index) => {
+        const originalCity = this.citiesRaw[index];
         return {
-          cityName: this.getCityName(city),
-          fajr: pt?.fajr ?? '--',
-          sunrise: pt?.sunrise ?? '--',
-          dhuhr: pt?.dhuhr ?? '--',
-          asr: pt?.asr ?? '--',
-          maghrib: pt?.maghrib ?? '--',
-          isha: pt?.isha ?? '--',
+          ...city,
+          cityName: this.getCityName(originalCity)
         };
       });
-
-      this.loading = false;
-    },
-    error: () => {
-      this.error = this.translate.instant('table.error') || 'Failed to fetch prayer times';
-      this.loading = false;
     }
-  });
-}
-
-formatTime12(time: string): string {
-  if (!time) return '-';
-
-  const [h, m] = time.split(':');
-  let hour = parseInt(h, 10);
-  const minute = m ? m.padStart(2, '0') : '00';
-
-  // تحديد اللغة الحالية
-  const currentLang = this.translate.currentLang || 'en';
-
-  // تحويل للـ 12 ساعة
-  const isPM = hour >= 12;
-  const ampm = isPM ? 'PM' : 'AM';
-  hour = hour % 12;
-  if (hour === 0) hour = 12;
-
-  // النصوص حسب اللغة
-  let suffix = '';
-  switch (currentLang) {
-    case 'ar':
-      suffix = isPM ? 'م' : 'ص';
-      break;
-    case 'fr':
-      suffix = isPM ? 'PM' : 'AM'; // أو تكتب 'soir/matin'
-      break;
-    case 'ch':
-      suffix = isPM ? '下午' : '上午';
-      break;
-    case 'BN':
-      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
-      break;
-    default:
-      suffix = ampm; // الإنجليزية أو أي لغة مش معرفة
   }
 
-  return `${hour}:${minute} ${suffix}`;
-}
+  private getCityName(city: any): string {
+    const lang = this.translate.currentLang || 'en';
+
+    if (city && city.cityName) {
+      const nameObj = city.cityName;
+      return nameObj[lang] ?? nameObj['en'] ?? '-';
+    }
+
+    return '-';
+  }
+
+
+
+  private fetchData(): void {
+    this.loading = true;
+    this.error = null;
+
+    const today = new Date();
+    const gregorianInfo: GregorianDateInfo = {
+      day: today.getDate(),
+      month: today.getMonth() + 1,
+      year: today.getFullYear(),
+      month_name: today.toLocaleString('ar-EG', { month: 'long' }),
+      day_name: today.toLocaleString('ar-EG', { weekday: 'long' }),
+      formatted: today.toLocaleDateString('ar-EG'), // أو بأي فورمات يناسبك
+      iso: today.toISOString().split('T')[0], // YYYY-MM-DD
+    };
+
+    this.gregorianDateInfo = gregorianInfo;
+
+    // لو عندك خدمة تحويل للتاريخ الهجري
+    this.prayerService.convertGregorianToHijri({
+      day: gregorianInfo.day,
+      month: gregorianInfo.month,
+      year: gregorianInfo.year,
+    }).subscribe({
+      next: (res) => {
+        if (res.success && res.result) {
+          this.hijriInfo = {
+            ...res.result,
+            formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`, // أي صياغة تعرضها
+            iso: res.result.iso ?? '', // لو iso مش راجع من الـ API
+          } as HijriDateInfo;
+        }
+      },
+      error: () => {
+        this.hijriInfo = null;
+      }
+    });
+
+
+    // دلوقتي هات المدن
+    this.prayerService.getPrayerTimesForAllCities().subscribe({
+      next: (res) => {
+        if (!res?.result || res.result.length === 0) {
+          this.error = this.translate.instant('table.noData') || 'No data available';
+          this.loading = false;
+          return;
+        }
+
+        this.citiesRaw = res.result;
+        this.data = res.result.map((city: any) => {
+          const pt = city.prayerTimes[0];
+          return {
+            cityName: this.getCityName(city),
+            fajr: pt?.fajr ?? '--',
+            sunrise: pt?.sunrise ?? '--',
+            dhuhr: pt?.dhuhr ?? '--',
+            asr: pt?.asr ?? '--',
+            maghrib: pt?.maghrib ?? '--',
+            isha: pt?.isha ?? '--',
+          };
+        });
+
+        this.loading = false;
+      },
+      error: () => {
+        this.error = this.translate.instant('table.error') || 'Failed to fetch prayer times';
+        this.loading = false;
+      }
+    });
+  }
+
+  formatTime12(time: string): string {
+    if (!time) return '-';
+
+    const [h, m] = time.split(':');
+    let hour = parseInt(h, 10);
+    const minute = m ? m.padStart(2, '0') : '00';
+
+    // تحديد اللغة الحالية
+    const currentLang = this.translate.currentLang || 'en';
+
+    // تحويل للـ 12 ساعة
+    const isPM = hour >= 12;
+    const ampm = isPM ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    // النصوص حسب اللغة
+    let suffix = '';
+    switch (currentLang) {
+      case 'ar':
+        suffix = isPM ? 'م' : 'ص';
+        break;
+      case 'fr':
+        suffix = isPM ? 'PM' : 'AM'; // أو تكتب 'soir/matin'
+        break;
+      case 'ch':
+        suffix = isPM ? '下午' : '上午';
+        break;
+      case 'BN':
+        suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+        break;
+      default:
+        suffix = ampm; // الإنجليزية أو أي لغة مش معرفة
+    }
+
+    return `${hour}:${minute} ${suffix}`;
+  }
 
 }
