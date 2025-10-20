@@ -12,36 +12,120 @@ import {
   imports: [
     CommonModule,
     TranslateModule,
-    SaudiFlagIconComponent,
-    DropdownArrowIconComponent,
   ],
   template: `
     <div
-      class="flex h-6 sm:h-8 px-4 sm:px-6 lg:px-8 items-center gap-1.5 sm:gap-2.5 bg-gray-100"
+      class="digital-stamp-card w-full bg-[#F3F4F6]  border border-gray-100    transition-all duration-300"
     >
-      <div class="flex items-center gap-1.5 sm:gap-2.5">
+      <div class="container mx-auto px-4 py-3">
+        <!-- Header -->
         <div
-          class="flex w-4 h-3 sm:w-5 sm:h-3.5 justify-center items-center bg-white"
+          class="digital-stamp-header flex justify-start items-center cursor-pointer select-none"
+          (click)="toggleOpen()"
         >
-          <app-saudi-flag-icon></app-saudi-flag-icon>
-        </div>
-        <span
-          class="text-gray-900 text-xs sm:text-sm font-medium font-ibm-plex-arabic"
-        >
-          {{ 'stamp.govSite' | translate }}
-        </span>
-        <div class="hidden sm:flex px-0 items-center gap-1">
-          <span
-            class="text-green-700 text-xs sm:text-sm font-normal font-ibm-plex-arabic"
+          <!-- Left side: Flag + Text -->
+          <div class="flex items-center gap-2">
+            <img
+              src="assets/images/CountryFlags.svg"
+              alt="Saudi Arabia Flag"
+              class="w-6 h-auto"
+            />
+            <h6 class="text-gray-900 text-sm sm:text-base font-medium">
+              موقع حكومي رسمي تابع لحكومة المملكة العربية السعودية
+            </h6>
+          </div>
+
+          <!-- Right side: Button -->
+          <div
+            class="btn-digital-stamp-card flex items-center gap-1 text-green-700 text-sm sm:text-base font-medium"
           >
-            {{ 'stamp.howToVerify' | translate }}
-          </span>
-          <app-dropdown-arrow-icon
-            class="w-3 h-3 sm:w-4 sm:h-4"
-          ></app-dropdown-arrow-icon>
+            <span class="ms-2">كيف تتحقق</span>
+            <img
+              src="assets/images/arrow-down-green.svg"
+              alt="Arrow Down"
+              class="arrow-icon w-4 h-4 transform transition-transform duration-300"
+              [ngClass]="{ 'rotate-180': isOpen }"
+            />
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div
+          class="digital-stamp-body overflow-hidden transition-all duration-500 ease-in-out "
+          [ngClass]="{
+            'max-h-[1000px] py-4 pt-6 opacity-100': isOpen,
+            'max-h-0 py-0 opacity-0': !isOpen
+          }"
+        >
+<div
+  class="digital-stamp-container flex flex-col md:flex-row gap-5 md:gap-8 justify-between"
+>
+            <!-- Box 1 -->
+            <div class="box flex items-start gap-3">
+              <img
+                src="assets/images/link-icon.svg"
+                alt="Link Icon"
+                class="w-6 h-6 flex-shrink-0"
+              />
+              <div>
+                <h6 class="text-gray-900 text-sm font-medium leading-snug">
+                  روابط المواقع الالكترونية الرسمية السعودية تنتهي بـ
+                  <span class="text-green-700 font-semibold">gov.sa</span>
+                </h6>
+                <p class="text-gray-600 text-xs leading-relaxed mt-1">
+                  جميع روابط المواقع الرسمية التابعة للجهات الحكومية في المملكة
+                  العربية السعودية تنتهي بـ .gov.sa
+                </p>
+              </div>
+            </div>
+
+            <!-- Box 2 -->
+            <div class="box flex items-start gap-3">
+              <img
+                src="assets/images/square-lock-password.svg"
+                alt="Password Icon"
+                class="w-6 h-6 flex-shrink-0"
+              />
+              <div>
+                <h6 class="text-gray-900 text-sm font-medium leading-snug">
+                  المواقع الالكترونية الحكومية تستخدم بروتوكول
+                  <span class="text-green-700 font-semibold">HTTPS</span>
+                  للتشفير و الأمان.
+                </h6>
+                <p class="text-gray-600 text-xs leading-relaxed mt-1">
+                  المواقع الالكترونية الآمنة في المملكة العربية السعودية تستخدم
+                  بروتوكول HTTPS للتشفير.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div
+            class="stamp-link-box flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-gray-200 text-sm text-gray-700"
+          >
+            <img
+              src="assets/images/DGA-logo-icon.svg"
+              alt="DGA Logo"
+              class="w-6 h-6"
+            />
+            <p class="m-0">مسجل لدى هيئة الحكومة الرقمية برقم :</p>
+            <a
+              href="https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/4990"
+              target="_blank"
+              class="text-green-700 underline hover:text-green-800"
+              >20240520402</a
+            >
+          </div>
         </div>
       </div>
     </div>
   `,
 })
-export class DigitalStampComponent {}
+export class DigitalStampComponent {
+  isOpen = false;
+
+  toggleOpen() {
+    this.isOpen = !this.isOpen;
+  }
+}

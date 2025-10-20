@@ -29,16 +29,20 @@ interface NavigationItem {
     SearchIconComponent,
   ],
   template: `
+      <div class=" ">
     <div
-      class="flex justify-between items-center px-4 sm:px-6 lg:px-8 bg-white shadow-md min-h-[60px] sm:min-h-[72px]"
+      class="flex justify-between items-center px-4 sm:px-6 lg:px-8 bg-white  min-h-[90px] sm:min-h-[90px]"
     >
+
+  <div class="container mx-auto flex justify-between">
+
       <div class="flex gap-2 sm:gap-4 items-center">
         <div class="flex items-center gap-2 sm:gap-4">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/5a51eafd14825dda7964f2551c46bc5ca5c476cd?width=200"
-            alt="Ummulqura logo"
-            class="h-8 sm:h-10 w-auto object-contain"
-          />
+       <img
+    src="/assets/images/logo.svg"
+    alt="Ummulqura logo"
+    class="h-[75px] sm:h-[65px] w-auto object-contain"
+  />
         </div>
 
         <button
@@ -171,18 +175,80 @@ interface NavigationItem {
 </div>
 
 
-        <button
-          class="flex h-[40px] sm:h-[60px] lg:h-[72px] px-2 lg:px-4 justify-center items-center gap-1 rounded transition-colors text-gray-900 hover:bg-gray-50"
+    <!-- Search Button -->
+    <button
+      (click)="toggleSearch()"
+      class="flex h-[40px] sm:h-[60px] lg:h-[72px] px-2 lg:px-4 justify-center items-center gap-1 rounded transition-colors text-gray-900 hover:bg-gray-50"
+    >
+      <app-search-icon
+        class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+      ></app-search-icon>
+      <span
+        class="hidden sm:inline text-sm lg:text-base font-medium font-ibm-plex-arabic"
+      >
+        {{ 'header.search' | translate }}
+      </span>
+    </button>
+
+    <!-- Search Popup -->
+    <div
+      *ngIf="isOpen"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-start pt-20 px-4 transition-opacity duration-300"
+    >
+      <div
+        class="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden animate-fade-in"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center border-b border-gray-200 px-6 py-4"
         >
-          <app-search-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-          ></app-search-icon>
-          <span
-            class="hidden sm:inline text-sm lg:text-base font-medium font-ibm-plex-arabic"
+          <h3
+            class="text-lg sm:text-xl font-bold text-gray-900 font-ibm-plex-arabic"
           >
-            {{ 'header.search' | translate }}
-          </span>
-        </button>
+            عن ماذا تبحث ؟
+          </h3>
+          <button
+            (click)="toggleSearch()"
+            class="text-gray-400 hover:text-gray-600 transition-colors"
+            title="إغلاق"
+          >
+            <img
+              src="assets/images/cancel-circle.svg"
+              alt="Close"
+              class="w-5 h-5 sm:w-6 sm:h-6"
+            />
+          </button>
+        </div>
+
+        <!-- Search Form -->
+        <div class="p-6">
+          <form (submit)="onSearch($event)" class="flex flex-col sm:flex-row gap-3">
+            <input
+             
+              name="term"
+              id="siteSearchInputMegaMenu"
+              type="text"
+              placeholder="كلمات البحث"
+              aria-label="search"
+              class="flex-1 border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none text-gray-800 font-ibm-plex-arabic"
+            />
+            <button
+              type="submit"
+              class="bg-green-700 hover:bg-green-800 text-white font-medium px-6 py-2 rounded font-ibm-plex-arabic transition-colors"
+            >
+              بحث
+            </button>
+          </form>
+
+          <!-- Suggestions -->
+          <ul id="suggestionsList" class="mt-4 text-gray-700 space-y-2 font-ibm-plex-arabic">
+            <li *ngFor="let suggestion of suggestions" class="cursor-pointer hover:text-green-700">
+              {{ suggestion }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
         <!-- Mobile Menu Button -->
         <button
@@ -231,10 +297,23 @@ interface NavigationItem {
           </span>
         </button>
       </div>
-    </div>
+    </div>  </div>
   `,
 })
 export class MainNavHeaderComponent implements OnInit, OnDestroy {
+    isOpen = false;
+  query = '';
+  suggestions: string[] = [];
+
+  toggleSearch() {
+    this.isOpen = !this.isOpen;
+  }
+
+  onSearch(event: Event) {
+    event.preventDefault();
+    // Example: Add your API or search logic here
+    console.log('Searching for:', this.query);
+  }
   currentLanguage: string = 'ar';
   showMobileMenu: boolean = false;
   private destroy$ = new Subject<void>();

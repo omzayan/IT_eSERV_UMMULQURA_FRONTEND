@@ -14,6 +14,7 @@ import { QiblaResult } from '../../../core/types/api.types';
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
+      <div class="container mx-auto">
     <div class="p-4 md:p-[80px] flex flex-col gap-3">
       <div class="flex gap-3 w-full">
         <div class="flex flex-col gap-3">
@@ -175,7 +176,7 @@ import { QiblaResult } from '../../../core/types/api.types';
           </div>
         </div>
       </div>
-    </div>
+    </div>  </div>
   `,
 })
 export class QiblaCompassComponent implements OnInit, OnDestroy {

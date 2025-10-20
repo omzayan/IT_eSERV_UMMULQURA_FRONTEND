@@ -5,23 +5,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-saudi-flag-icon',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <svg
-      [class]="className"
-      width="20"
-      height="14"
-      viewBox="0 0 20 14"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width="20" height="14" fill="#006C35" />
-      <path d="M4 4H16V5H4V4ZM4 6H16V7H4V6ZM4 8H16V9H4V8Z" fill="white" />
-      <path
-        d="M6 4.5C6 4.22386 6.22386 4 6.5 4H7.5C7.77614 4 8 4.22386 8 4.5C8 4.77614 7.77614 5 7.5 5H6.5C6.22386 5 6 4.77614 6 4.5Z"
-        fill="white"
-      />
-    </svg>
-  `,
+template: `
+ <img src="/assets/images/CountryFlags.svg" alt="Saudi Arabia Flag" width="24">
+`,
 })
 export class SaudiFlagIconComponent {
   @Input() className: string = '';

@@ -46,6 +46,7 @@ interface PrayerCardMeta {
     UnifiedDatePickerComponent,
   ],
   template: `
+  <div class="container mx-auto">
     <div class="flex flex-col gap-8 px-4 py-16 md:px-20 md:py-20" [style.direction]="isAr ? 'rtl' : 'ltr'">
 
       <!-- Header -->
@@ -167,6 +168,7 @@ interface PrayerCardMeta {
       </div>
 
     </div>
+      </div>
   </div>
 </div>
 

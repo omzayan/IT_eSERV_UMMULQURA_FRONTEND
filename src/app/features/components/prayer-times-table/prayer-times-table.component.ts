@@ -25,7 +25,8 @@ interface PrayerTableData {
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="px-2 md:px-[80px] flex flex-col gap-3">
+  <div class="container mx-auto">
+    <div class="px-2 md:px-[80px] flex flex-col gap-3 ">
       <div class="flex gap-3 w-full">
         <div class="flex flex-col gap-3">
           <div class="flex gap-4 w-full">
@@ -113,7 +114,7 @@ interface PrayerTableData {
           </div>
         </div>
       </div>
-    </div>
+    </div>    </div>
   `
 })
 export class PrayerTimesTableComponent implements OnInit {

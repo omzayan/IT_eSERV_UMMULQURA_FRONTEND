@@ -21,11 +21,11 @@ interface SlideContent {
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="w-full h-[490px] relative overflow-hidden">
+    <div class="w-full h-[550px] relative overflow-hidden">
       <!-- Slides Container -->
       <div class="relative w-full h-full">
         <div
-          class="flex transition-transform duration-500 ease-in-out h-full"
+          class="flex  transition-transform duration-500 ease-in-out h-full"
         >
           <div
             *ngFor="let slide of slides; let i = index"
@@ -34,18 +34,17 @@ interface SlideContent {
       >
         <img [src]="slide.imageUrl" alt="{{ slide.title }}" class="absolute inset-0 w-full h-full object-cover" />
             
-        <div class="absolute inset-0 bg-black/40"></div>
-            <div class="relative flex flex-col gap-[50px] justify-center h-full z-10 px-[61px] py-6">
+        <div class="absolute inset-0 "></div>
+            <div class="relative flex flex-col gap-[50px] justify-center h-full z-10 px-[61px] container mx-auto">
               <!-- Title & Description -->
-              <div class="flex flex-col gap-6">
-                <span class="text-white text-[60px] font-bold leading-tight font-ibm-plex-arabic">
-                  {{ slide.title }}
-                </span>
-                <span class="text-white text-[20px] leading-relaxed font-ibm-plex-arabic">
-                  {{ slide.description }}
-                </span>
-              </div>
-
+          <div class="flex flex-col gap-6 w-full lg:w-1/2 max-w-[50rem]">
+  <span class="text-white text-[40px] sm:text-[50px] lg:text-[60px] font-bold leading-tight font-ibm-plex-arabic">
+    {{ slide.title }}
+  </span>
+  <span class="text-white text-[16px] sm:text-[18px] lg:text-[20px] leading-relaxed font-ibm-plex-arabic">
+    {{ slide.description }}
+  </span>
+</div>
               <!-- Download Section -->
               <div class="flex flex-col gap-3 mt-6">
              

@@ -9,14 +9,8 @@ module.exports = {
         accent: "#EF4444",
         background: "#F3F4F6",
       },
-      fontFamily: {
-        "ibm-plex-arabic": [
-          "IBM Plex Sans Arabic",
-          "-apple-system",
-          "Roboto",
-          "Helvetica",
-          "sans-serif",
-        ],
+     fontFamily: {
+        ibm: ['"IBM Plex Sans Arabic"', 'sans-serif'],
       },
     },
   },

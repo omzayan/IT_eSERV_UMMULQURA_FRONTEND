@@ -22,6 +22,7 @@ interface Partner {
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
+  <div class="container mx-auto">
     <div class="p-4 md:pb-[80px] md:px-[80px] flex flex-col gap-3 overflow-hidden">
       <h2 class="font-ibm-plex-arabic text-[30px] font-bold">
         {{ 'partners.title' | translate }}
@@ -44,7 +45,7 @@ interface Partner {
                   <img
                     [src]="partner.imageUrl"
                     [alt]="partner.title"
-                    class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    class="max-w-full max-h-full object-contain  hover:grayscale-0 transition-all duration-300"
                   />
                 </a>
               </ng-container>
@@ -56,7 +57,7 @@ interface Partner {
                   <img
                     [src]="partner.imageUrl"
                     [alt]="partner.title"
-                    class="max-w-full max-h-full object-contain filter grayscale transition-all duration-300"
+                    class="max-w-full max-h-full object-contain  transition-all duration-300"
                   />
                 </div>
               </ng-template>
@@ -78,7 +79,7 @@ interface Partner {
                   <img
                     [src]="partner.imageUrl"
                     [alt]="partner.title"
-                    class="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    class="max-w-full max-h-full object-contain  hover:grayscale-0 transition-all duration-300"
                   />
                 </a>
               </ng-container>
@@ -90,7 +91,7 @@ interface Partner {
                   <img
                     [src]="partner.imageUrl"
                     [alt]="partner.title"
-                    class="max-w-full max-h-full object-contain filter grayscale transition-all duration-300"
+                    class="max-w-full max-h-full object-contain  transition-all duration-300"
                   />
                 </div>
               </ng-template>
@@ -98,7 +99,7 @@ interface Partner {
           </ng-container>
         </div>
       </div>
-    </div>
+    </div> </div>
   `,
   styles: [`
       @keyframes partners-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }

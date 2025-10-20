@@ -14,6 +14,7 @@ interface ServiceCard {
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
+     <div class="container mx-auto">
     <div class="p-4  md:p-[80px] flex flex-col gap-3">
       <div class="flex gap-3 w-full">
         <div class="flex flex-col gap-3">
@@ -66,6 +67,7 @@ interface ServiceCard {
         </div>
       </div>
     </div>
+     </div>
   `,
 })
 export class WebServicesComponent {

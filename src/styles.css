@@ -1,12 +1,69 @@
+@font-face {
+  font-family: "IBMArabic-Light";
+  src: local("IBMArabic-Light"),
+       url("/assets/fonts/IBMArabic-Light.woff2") format("woff2"),
+       url("/assets/fonts/IBMArabic-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMArabic-Regular";
+  src: local("IBMArabic-Regular"),
+       url("/assets/fonts/IBMArabic-Regular.woff2") format("woff2"),
+       url("/assets/fonts/IBMArabic-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMArabic-Medium";
+  src: local("IBMArabic-Medium"),
+       url("/assets/fonts/IBMArabic-Medium.woff2") format("woff2"),
+       url("/assets/fonts/IBMArabic-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMArabic-SemiBold";
+  src: local("IBMArabic-SemiBold"),
+       url("/assets/fonts/IBMArabic-SemiBold.woff2") format("woff2"),
+       url("/assets/fonts/IBMArabic-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMArabic-Bold";
+  src: local("IBMArabic-Bold"),
+       url("/assets/fonts/IBMArabic-Bold.woff2") format("woff2"),
+       url("/assets/fonts/IBMArabic-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 html,
 body,
 #root {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-weight: normal;
+    font-family: "IBMArabic-Medium";
   @apply w-full h-full;
 }
+.footercss svg  *
+{
+fill:#fff !important;
+}
+
+

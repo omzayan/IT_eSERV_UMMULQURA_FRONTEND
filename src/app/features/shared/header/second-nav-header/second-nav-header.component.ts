@@ -34,10 +34,12 @@ interface WeatherInfo {
     WeatherIconComponent,
   ],
   template: `
+  <div class="w-100">
     <div
-      class="flex h-8 sm:h-10 px-4 sm:px-6 lg:px-8 flex-col justify-center border-t border-gray-300 bg-gray-100"
+      class="flex  h-8 sm:h-10 px-4 sm:px-6 lg:px-8 flex-col justify-center border-t border-gray-300 bg-gray-100"
     >
-      <div class="flex items-center justify-between">
+    <div class="container mx-auto">
+      <div class=" flex items-center justify-between">
         <div class="flex items-center gap-2 sm:gap-4 flex-1 overflow-x-auto">
           <div
             class="flex items-center gap-1 sm:gap-2 flex-shrink-0"
@@ -106,7 +108,9 @@ interface WeatherInfo {
           ></app-eye-icon>
         </div>
       </div>
+         </div>
     </div>
+      </div>
   `,
 })
 export class SecondNavHeaderComponent implements OnInit, OnDestroy {
