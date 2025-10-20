@@ -308,7 +308,10 @@ handleSearch(): void {
     if (!time || time === '--') return '--';
     const [h, m] = time.split(':');
     let hour = parseInt(h, 10);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const ampm = hour >= 12
+      ? this.translate.instant('prayTimeSection.pm')
+      : this.translate.instant('prayTimeSection.am');
+
     hour = hour % 12 || 12;
     return `${hour}:${m} ${ampm}`;
   }
