@@ -182,61 +182,124 @@ export class PrayTimeImageComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getNextEvent(): NextEvent | null {
-    if (!this.prayerTime?.prayer_times) return null;
+private getNextEvent(): NextEvent | null {
+  if (!this.prayerTime?.prayer_times) return null;
 
-    for (const key of this.prayerOrder) {
-      const timeStr = (this.prayerTime.prayer_times as any)[key];
-      if (!timeStr) continue;
+  const today = new Date();
+  const times = (this.prayerOrder).map(key => {
+    const timeStr = (this.prayerTime!.prayer_times as any)[key];
+    if (!timeStr) return null;
 
-      const [h, m] = timeStr.split(':');
-      const eventDate = new Date(this.now);
-      eventDate.setHours(Number(h), Number(m), 0, 0);
+    const [h, m] = timeStr.split(':');
+    const date = new Date(today);
+    date.setHours(Number(h), Number(m), 0, 0);
 
-      if (eventDate > this.now) {
-        return { key, time: eventDate, timeStr };
-      }
-    }
+    return { key, time: date, timeStr };
+  }).filter(Boolean) as NextEvent[];
 
-    // If all prayers passed for today, return null
-    return null;
+  // ⏳ لسه باقي صلوات النهارده
+  const next = times.find(t => t.time > this.now);
+  if (next) return next;
+
+  // 🌙 لو اليوم خلص → فجر بكرة
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const fajrTimeStr = (this.prayerTime!.prayer_times as any)['fajr'];
+  if (fajrTimeStr) {
+    const [h, m] = fajrTimeStr.split(':');
+    const fajrDate = new Date(tomorrow);
+    fajrDate.setHours(Number(h), Number(m), 0, 0);
+    return { key: 'fajr', time: fajrDate, timeStr: fajrTimeStr };
   }
 
-  private updateCountdown(): void {
-    if (!this.prayerTime) return;
+  return null;
+}
+private buildDateFromTime(time: string, baseDate: Date): Date {
+  const [h, m] = time.split(':').map(Number);
+  const d = new Date(baseDate);
+  d.setHours(h, m, 0, 0);
+  return d;
+}
 
-    const nextEvent = this.getNextEvent();
+private getCurrentPrayer(): { key: EventKey, date: Date } | null {
+  if (!this.prayerTime?.prayer_times) return null;
+  const now = new Date();
+  const today = new Date();
 
-    if (nextEvent) {
-      const diff = Math.floor(
-        (nextEvent.time.getTime() - this.now.getTime()) / 1000
-      );
+  const times = this.prayerOrder.map(key => {
+    const t = (this.prayerTime!.prayer_times as any)[key];
+    return { key, date: this.buildDateFromTime(t, today) };
+  }).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-      if (diff > 0) {
-        const h = Math.floor(diff / 3600)
-          .toString()
-          .padStart(2, '0');
-        const m = Math.floor((diff % 3600) / 60)
-          .toString()
-          .padStart(2, '0');
-        const s = Math.floor(diff % 60)
-          .toString()
-          .padStart(2, '0');
-
-        this.remainingTime = `${h}:${m}:${s}`;
-        this.currentImage =
-          this.prayerImages[nextEvent.key as EventKey] ||
-          this.prayerImages.dhuhr;
-        this.currentEventName = nextEvent.key;
-      } else {
-        this.remainingTime = '--:--:--';
-      }
-    } else {
-      this.remainingTime = '--:--:--';
-      this.currentImage = this.prayerImages.dhuhr;
-      this.currentEventName = '';
+  for (let i = 0; i < times.length - 1; i++) {
+    const current = times[i];
+    const next = times[i + 1];
+    if (now >= current.date && now < next.date) {
+      return current;
     }
   }
+
+  // لو عدينا كل الصلوات → اعتبر آخر صلاة (العشاء) هي الحالية
+  return times.find(t => t.key === 'isha') || null;
+}
+
+private getNextPrayer(): { key: EventKey, date: Date } | null {
+  if (!this.prayerTime?.prayer_times) return null;
+  const now = new Date();
+  const today = new Date();
+
+  const times = this.prayerOrder.map(key => {
+    const t = (this.prayerTime!.prayer_times as any)[key];
+    return { key, date: this.buildDateFromTime(t, today) };
+  }).sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  let next = times.find(t => t.date > now);
+  if (next) return next;
+
+  // لو اليوم خلص → فجر بكرة
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const fajr = this.buildDateFromTime(this.prayerTime!.prayer_times['fajr'], tomorrow);
+  return { key: 'fajr', date: fajr };
+}
+
+
+
+private updateCountdown(): void {
+  if (!this.prayerTime) return;
+
+  const current = this.getCurrentPrayer();
+  const next = this.getNextPrayer();
+
+  if (!next) {
+    this.remainingTime = '--:--:--';
+    this.currentEventName = '';
+    return;
+  }
+
+  const diff = Math.floor((next.date.getTime() - this.now.getTime()) / 1000);
+
+  if (diff <= 0) {
+    this.remainingTime = '00:00:00';
+    this.currentEventName = next.key;
+    this.currentImage = this.prayerImages[next.key];
+    return;
+  }
+
+  const h = Math.floor(diff / 3600).toString().padStart(2, '0');
+  const m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+  const s = Math.floor(diff % 60).toString().padStart(2, '0');
+
+  this.remainingTime = `${h}:${m}:${s}`;
+  this.currentImage = this.prayerImages[next.key];
+  this.currentEventName = next.key;
+
+  // 🟢 لو عايز تعرض الحالية كمان
+  // console.log("Current Prayer:", current?.key, "Next Prayer:", next.key);
+}
+
+
+
 
   formatCoordinates(): string {
     if (!this.prayerTime) return '';
