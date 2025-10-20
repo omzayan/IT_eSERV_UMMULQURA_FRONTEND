@@ -100,21 +100,54 @@ dayHeaders: string[] = [];
     this.initializeYearRanges();
   }
 
-  ngOnInit(): void {
-    this.languageService.currentLanguage$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((language) => {
-        this.isRtl = language === 'ar';
-        // Re-setup day headers when language changes
-        if (this.weekDaysData.length > 0) {
-          this.setupDayHeaders();
-        }
-      });
+ngOnInit(): void {
+  const today = new Date();
 
-    this.loadMonthData();
-    this.generateCalendars();
-    this.setupClickOutsideListener();
-  }
+  // الميلادي
+  this.currentGregorianYear = today.getFullYear();
+  this.currentGregorianMonth = today.getMonth() + 1;
+
+  // استدعاء API للتحويل للهجري
+  this.apiService
+    .convertGregorianToHijri({
+      year: this.currentGregorianYear,
+      month: this.currentGregorianMonth,
+      day: today.getDate(),
+    })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res) => {
+        if (res.success && res.result) {
+          this.currentHijriYear = res.result.year;
+          this.currentHijriMonth = res.result.month;
+        } else {
+          // fallback
+          this.currentHijriYear = 1447;
+          this.currentHijriMonth = 1;
+        }
+        this.loadMonthData();
+        this.generateCalendars();
+      },
+      error: () => {
+        this.currentHijriYear = 1447;
+        this.currentHijriMonth = 1;
+        this.loadMonthData();
+        this.generateCalendars();
+      },
+    });
+
+  this.languageService.currentLanguage$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((language) => {
+      this.isRtl = language === 'ar';
+      if (this.weekDaysData.length > 0) {
+        this.setupDayHeaders();
+      }
+    });
+
+  this.setupClickOutsideListener();
+}
+
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -339,39 +372,53 @@ private generateHijriCalendarFromData(): void {
       return;
     }
 
-    // أول يوم في الشهر (من التاريخ الهجري لأول يوم)
-    const firstDayOfWeek = this.getFirstDayOfWeek(dailyPrayerTimes[0]);
-    const totalCells = 42; // 6 rows × 7 days
+    // 👇 أول يوم للشهر الهجري من الـ API
+    const firstDayHijri = dailyPrayerTimes[0].hijri_date.day; // لازم = 1
+    const firstDayName = dailyPrayerTimes[0].hijri_date.day_name; // "الاثنين" مثلا
 
-    // Previous month days (grayed out)
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      const day = daysInMonth - firstDayOfWeek + i + 1;
+    // حوّل اسم اليوم لرقم index (سبت=0..جمعة=6)
+    const weekMap: { [key: string]: number } = {
+      'السبت': 0,
+      'الأحد': 1,
+      'الاثنين': 2,
+      'الثلاثاء': 3,
+      'الأربعاء': 4,
+      'الخميس': 5,
+      'الجمعة': 6,
+    };
+    const firstDayOfWeek = weekMap[firstDayName] ?? 0;
+
+    const totalCells = 42; // 6 صفوف × 7 أعمدة
+
+  // Previous month padding
+for (let i = 0; i < firstDayOfWeek; i++) {
+  // هات آخر أيام من الشهر السابق
+  const prevDay = this.getPreviousHijriMonthDays() - firstDayOfWeek + i + 1;
+
+  this.hijriCalendarDays.push({
+    day: prevDay,
+    isCurrentMonth: false,
+    isToday: false,
+    isSelected: false,
+    isPrevMonth: true,
+  });
+}
+
+
+    // Current month days من الـ API
+    for (let pt of dailyPrayerTimes) {
+      const isToday = this.isToday(pt);
+
       this.hijriCalendarDays.push({
-        day,
-        isCurrentMonth: false,
-        isToday: false,
-        isSelected: false,
-        isPrevMonth: true,
-      });
-    }
-
-    // Current month days
-    for (let day = 1; day <= daysInMonth; day++) {
-      const prayerData = dailyPrayerTimes.find(
-        (pt) => pt.hijri_date.day === day
-      );
-      const isToday = this.isToday(prayerData);
-
-      this.hijriCalendarDays.push({
-        day,
+        day: pt.hijri_date.day,
         isCurrentMonth: true,
         isToday,
         isSelected: false,
-        prayerData,
+        prayerData: pt,
       });
     }
 
-    // Next month days (grayed out)
+    // Next month padding
     const remainingCells = totalCells - this.hijriCalendarDays.length;
     for (let day = 1; day <= remainingCells; day++) {
       this.hijriCalendarDays.push({
@@ -383,9 +430,16 @@ private generateHijriCalendarFromData(): void {
       });
     }
   } else {
-    // Fallback to static calendar
     this.generateStaticHijriCalendar();
   }
+}
+
+private getPreviousHijriMonthDays(): number {
+  // لو انت جايب بيانات أم القرى بالـ API
+  // ممكن تبعت طلب للشهر السابق وتاخد منه عدد الأيام
+  // أو أسهل حل: استعمل days_in_month من الـ API بتاع الشهر السابق
+  // دلوقتي نحط fallback 30 يوم
+  return 30;
 }
 
   private generateStaticHijriCalendar(): void {
@@ -736,16 +790,18 @@ getGregorianMonthName(month: number): string {
     return new Date(year, month, 0).getDate();
   }
 
-  private isToday(prayerData?: DailyPrayerTime): boolean {
-    if (!prayerData) return false;
-    const today = new Date();
-    const todayHijri = this.getTodayHijriDate(); // You'll need to implement this
-    return (
-      prayerData.hijri_date.day === todayHijri.day &&
-      prayerData.hijri_date.month === todayHijri.month &&
-      prayerData.hijri_date.year === todayHijri.year
-    );
-  }
+private isToday(prayerData?: DailyPrayerTime): boolean {
+  if (!prayerData) return false;
+
+  const today = new Date();
+
+  return (
+    prayerData.gregorian_date.day === today.getDate() &&
+    prayerData.gregorian_date.month === today.getMonth() + 1 &&
+    prayerData.gregorian_date.year === today.getFullYear()
+  );
+}
+
 
   private isTodayGregorian(prayerData?: DailyPrayerTime): boolean {
     if (!prayerData) return false;
@@ -767,18 +823,30 @@ getGregorianMonthName(month: number): string {
     };
   }
 
+
+
 private setupDayHeaders(): void {
   if (!this.weekDaysData?.length) {
-    //Fallback عربي
-    this.dayHeaders = ['سبت','جمعة','خميس','أربعاء','ثلاثاء','إثنين','أحد'];
+    // fallback بالعربي
+    this.dayHeaders = ['جمعة','خميس','أربعاء', 'ثلاثاء','إثنين','أحد','سبت'];
     return;
   }
 
-  // نضمن الترتيب من 0..6 حسب الباك (الأحد..السبت)
-  const ordered = [...this.weekDaysData].sort((a, b) => a.id - b.id).map(d => d.name);
+  // نضمن الترتيب من 0..6 (الأحد..السبت)
+  const ordered = [...this.weekDaysData]
+    .sort((a, b) => a.id - b.id)
+    .map((d) => d.name);
 
-  // للـ RTL نعرضها بالعكس علشان تبدأ بالسبت
-  this.dayHeaders = this.isRtl ? [...ordered].reverse() : ordered;
+  // لو RTL (عربي) نخلي السبت الأول
+  if (this.isRtl) {
+    const saturdayIndex = ordered.findIndex((d) => d.includes('سبت'));
+    this.dayHeaders = [
+      ...ordered.slice(saturdayIndex),
+      ...ordered.slice(0, saturdayIndex),
+    ];
+  } else {
+    this.dayHeaders = ordered;
+  }
 }
 
   // Navigation methods

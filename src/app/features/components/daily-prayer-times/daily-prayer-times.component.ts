@@ -42,57 +42,42 @@ import {
     <div class="p-4 md:p-[80px] flex flex-col gap-6 bg-[#F9FAFB]">
       <!-- Date and Location Selection Section -->
       <div class="flex flex-col gap-4 ">
-        <div class="flex flex-col md:flex-row gap-4">
-          <!-- Hijri Date -->
-          <div class="w-full md:w-1/4">
-            <app-unified-date-picker
-              #hijriDatePicker
-              type="hijri"
-              [label]="'prayTimeSection.hijriDate'"
-              [value]="selectedHijriDate"
-              (valueChange)="onHijriDateChange($event)"
-            ></app-unified-date-picker>
+      <div class="flex flex-col md:flex-row gap-4 items-center">
+  <!-- Hijri Date -->
+  <div class="flex-1">
+    <app-unified-date-picker
+      #hijriDatePicker
+      type="hijri"
+      [label]="'prayTimeSection.hijriDate'"
+      [value]="selectedHijriDate"
+      (valueChange)="onHijriDateChange($event)"
+    ></app-unified-date-picker>
+  </div>
 
-            <!-- رسالة فاليديشن -->
-            <div *ngIf="showDateError" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v2m0 4h.01M12 5a7 7 0 110 14a7 7 0 010-14z"/>
-              </svg>
-              برجاء اختيار التاريخ
-            </div>
-          </div>
+  <!-- Gregorian Date -->
+  <div class="flex-1">
+    <app-unified-date-picker
+      #gregorianDatePicker
+      type="gregorian"
+      [label]="'prayTimeSection.gregorianDate'"
+      [value]="selectedGregorianDate"
+      (valueChange)="onGregorianDateChange($event)"
+    ></app-unified-date-picker>
+  </div>
 
-          <!-- Gregorian Date -->
-          <div class="w-full md:w-1/4">
-            <app-unified-date-picker
-              #gregorianDatePicker
-              type="gregorian"
-              [label]="'prayTimeSection.gregorianDate'"
-              [value]="selectedGregorianDate"
-              (valueChange)="onGregorianDateChange($event)"
-            ></app-unified-date-picker>
-          </div>
+  <!-- City -->
+  <div class="flex-1">
+    <app-city-selector
+      #citySelector
+      [label]="'prayTimeSection.selectCity'"
+      (citySelect)="onCitySelect($event)"
+      (locationSelect)="onLocationSelect($event)"
+    ></app-city-selector>
+  </div>
+</div>
 
-          <!-- City -->
-          <div class="w-full md:w-2/4">
-            <app-city-selector
-              #citySelector
-              [label]="'prayTimeSection.selectCity'"
-              (citySelect)="onCitySelect($event)"
-              (locationSelect)="onLocationSelect($event)"
-            ></app-city-selector>
+ 
 
-            <!-- رسالة فاليديشن -->
-            <div *ngIf="showCityError" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v2m0 4h.01M12 5a7 7 0 110 14a7 7 0 010-14z"/>
-              </svg>
-              برجاء اختيار المدينة أو الموقع
-            </div>
-          </div>
-        </div>
 
         <!-- Search Button -->
         <button
