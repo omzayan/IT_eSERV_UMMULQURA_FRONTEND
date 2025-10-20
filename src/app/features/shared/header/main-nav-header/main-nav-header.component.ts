@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms'; // Add this import
 import { Subject, takeUntil } from 'rxjs';
 import {
   UserIconComponent,
@@ -24,6 +25,7 @@ interface NavigationItem {
     CommonModule,
     RouterModule,
     TranslateModule,
+    FormsModule, // Add FormsModule here
     UserIconComponent,
     LanguageIconComponent,
     SearchIconComponent,
@@ -46,7 +48,8 @@ interface NavigationItem {
         </div>
 
         <button
-          class="flex h-[26px] sm:h-[30px] px-2 sm:px-4 justify-center items-center gap-1 rounded transition-colors bg-green-700 text-white hover:bg-green-800"
+          class="flex h-[60px] sm:h-[30px] px-2 sm:px-4 justify-center items-center gap-1 rounded transition-colors"
+          [class]="currentRoute === '/calender' ? 'bg-green-800 text-white' : 'bg-green-700 text-white hover:bg-green-800'"
           (click)="navigate('/calender')"
         >
           <span class="text-sm sm:text-base font-medium font-ibm-plex-arabic">
@@ -55,11 +58,12 @@ interface NavigationItem {
         </button>
 
         <div class="hidden md:flex items-center">
-          <button
-            *ngFor="let item of navigationItems"
-            class="flex h-[60px] lg:h-[72px] px-2 lg:px-4 justify-center items-center gap-1 rounded transition-colors text-gray-900 hover:bg-gray-200 bg-gray-50"
-            (click)="navigateToItem(item)"
-          >
+      <button
+  *ngFor="let item of navigationItems"
+  class="flex h-[60px] lg:h-[72px] px-2 lg:px-3 justify-center items-center gap-1 rounded transition-colors"
+  [class]="isActive(item) ? 'bg-[#1b8354] text-white px-4 py-2 rounded-md [outline:2px_solid_#fff0!important] hover:bg-[#1b8354] ' : 'text-gray-900 hover:bg-gray-200 bg-gray-50 '"
+  (click)="navigateToItem(item)"
+>
             <svg
               *ngIf="item.hasDropdown"
               class="w-4 h-4 lg:w-5 lg:h-5 mr-1"
@@ -180,9 +184,11 @@ interface NavigationItem {
       (click)="toggleSearch()"
       class="flex h-[40px] sm:h-[60px] lg:h-[72px] px-2 lg:px-4 justify-center items-center gap-1 rounded transition-colors text-gray-900 hover:bg-gray-50"
     >
-      <app-search-icon
-        class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-      ></app-search-icon>
+<span  class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 1.25C5.61522 1.25 1.25 5.61522 1.25 11C1.25 16.3848 5.61522 20.75 11 20.75C13.4224 20.75 15.6385 19.8666 17.3437 18.4043L21.4697 22.5303C21.7626 22.8232 22.2374 22.8232 22.5303 22.5303C22.8232 22.2374 22.8232 21.7626 22.5303 21.4697L18.4043 17.3437C19.8666 15.6385 20.75 13.4224 20.75 11C20.75 5.61522 16.3848 1.25 11 1.25ZM2.75 11C2.75 6.44365 6.44365 2.75 11 2.75C15.5563 2.75 19.25 6.44365 19.25 11C19.25 15.5563 15.5563 19.25 11 19.25C6.44365 19.25 2.75 15.5563 2.75 11Z" fill="#161616"/>
+</svg>
+</span>
       <span
         class="hidden sm:inline text-sm lg:text-base font-medium font-ibm-plex-arabic"
       >
@@ -224,7 +230,7 @@ interface NavigationItem {
         <div class="p-6">
           <form (submit)="onSearch($event)" class="flex flex-col sm:flex-row gap-3">
             <input
-             
+              [(ngModel)]="query"
               name="term"
               id="siteSearchInputMegaMenu"
               type="text"
@@ -280,7 +286,8 @@ interface NavigationItem {
       <div class="flex flex-col py-2">
         <button
           *ngFor="let item of navigationItems"
-          class="flex px-4 py-3 text-left text-gray-900 hover:bg-gray-50 transition-colors"
+          class="flex px-4 py-3 text-left transition-colors"
+          [class]="isActive(item) ? 'bg-green-100 text-green-800' : 'text-gray-900 hover:bg-gray-50'"
           (click)="navigateToItem(item); toggleMobileMenu()"
         >
           <span class="text-base font-medium font-ibm-plex-arabic">
@@ -301,21 +308,14 @@ interface NavigationItem {
   `,
 })
 export class MainNavHeaderComponent implements OnInit, OnDestroy {
-    isOpen = false;
+  isOpen = false;
   query = '';
   suggestions: string[] = [];
-
-  toggleSearch() {
-    this.isOpen = !this.isOpen;
-  }
-
-  onSearch(event: Event) {
-    event.preventDefault();
-    // Example: Add your API or search logic here
-    console.log('Searching for:', this.query);
-  }
   currentLanguage: string = 'ar';
   showMobileMenu: boolean = false;
+  dropdownOpen = false;
+  currentRoute: string = '';
+  
   private destroy$ = new Subject<void>();
 
   navigationItems: NavigationItem[] = [
@@ -358,6 +358,7 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private translate: TranslateService,
     private languageService: LanguageService
   ) {}
@@ -369,11 +370,29 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         this.currentLanguage = language;
       });
+
+    // Subscribe to route changes to track current route
+    this.router.events
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.currentRoute = this.router.url;
+      });
+
+    // Initialize current route
+    this.currentRoute = this.router.url;
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // Add the missing isActive method
+  isActive(item: NavigationItem): boolean {
+    if (item.path === '/') {
+      return this.currentRoute === '/';
+    }
+    return this.currentRoute.startsWith(item.path || '');
   }
 
   navigate(path: string): void {
@@ -386,28 +405,36 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleLanguage(lang:string): void {
+  toggleLanguage(lang: string): void {
     this.languageService.setLanguage(lang);
   }
 
   toggleMobileMenu(): void {
     this.showMobileMenu = !this.showMobileMenu;
   }
-  dropdownOpen = false;
 
-toggleDropdown() {
-  this.dropdownOpen = !this.dropdownOpen;
-}
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
 
-closeDropdown() {
-  this.dropdownOpen = false;
-}
+  closeDropdown() {
+    this.dropdownOpen = false;
+  }
 
-setLanguage(lang: string) {
-  this.currentLanguage = lang;
-  this.translate.use(lang); // assuming you're using ngx-translate
-  this.dropdownOpen = false;
-  const dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.documentElement.dir = dir;
-}
+  setLanguage(lang: string) {
+    this.currentLanguage = lang;
+    this.translate.use(lang);
+    this.dropdownOpen = false;
+    const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+  }
+
+  toggleSearch() {
+    this.isOpen = !this.isOpen;
+  }
+
+  onSearch(event: Event) {
+    event.preventDefault();
+    console.log('Searching for:', this.query);
+  }
 }

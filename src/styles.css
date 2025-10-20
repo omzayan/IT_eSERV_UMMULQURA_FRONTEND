@@ -1,3 +1,9 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: "IBMArabic-Light";
   src: local("IBMArabic-Light"),
@@ -49,9 +55,6 @@
 }
 
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 html,
 body,
 #root {
@@ -66,4 +69,34 @@ body,
 fill:#fff !important;
 }
 
+
+.nav-item {
+  background-color: transparent;
+  color: #1f2937;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-item-active {
+    background-color: #1b8354;
+    color: #fff;
+    -webkit-box-shadow: 0 0 0 5px #fff0 !important;
+    box-shadow: 0 0 0 5px #fff0 !important;
+    outline: 2px solid #fff0 !important;
+    overflow: hidden;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    text-decoration: none;
+}
+
+.nav-item-active-calendar {
+    background-color: #1b8354;
+    color: #fff;
+    -webkit-box-shadow: 0 0 0 5px #fff0 !important;
+    box-shadow: 0 0 0 5px #fff0 !important;
+    outline: 2px solid #fff0 !important;
+    overflow: hidden;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    text-decoration: none;
+}
 

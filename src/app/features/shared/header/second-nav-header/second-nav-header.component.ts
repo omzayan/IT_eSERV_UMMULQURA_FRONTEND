@@ -12,6 +12,7 @@ import {
   LocationIconComponent,
   MicrophoneIconComponent,
   SearchIconComponent,
+  SearchIconComponent2,
   WeatherIconComponent,
 } from '../icons/header-icons.component';
 
@@ -31,6 +32,7 @@ interface WeatherInfo {
     LocationIconComponent,
     MicrophoneIconComponent,
     SearchIconComponent,
+        SearchIconComponent2,
     WeatherIconComponent,
   ],
   template: `
@@ -93,19 +95,24 @@ interface WeatherInfo {
           </div>
         </div>
 
-        <div class="flex items-center gap-1 sm:gap-2">
-          <app-microphone-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
-          ></app-microphone-icon>
+        <div class="flex items-center gap-2 sm:gap-3">
+            <app-eye-icon
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 "
+          ></app-eye-icon>
+
           <app-search-icon
             class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
           ></app-search-icon>
-          <app-search-icon
-            class="hidden sm:block w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-          ></app-search-icon>
-          <app-eye-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
-          ></app-eye-icon>
+
+             <app-search-icon2
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+          ></app-search-icon2>
+        
+          
+     
+   <app-microphone-icon
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 "
+          ></app-microphone-icon>
         </div>
       </div>
          </div>
