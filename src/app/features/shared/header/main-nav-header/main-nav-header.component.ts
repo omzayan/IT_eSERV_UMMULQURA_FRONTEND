@@ -8,6 +8,7 @@ import {
   UserIconComponent,
   LanguageIconComponent,
   SearchIconComponent,
+  SearchIconComponent2,
 } from '../icons/header-icons.component';
 import { LanguageService } from '../../../../core/services/language.service';
 
@@ -28,7 +29,8 @@ interface NavigationItem {
     FormsModule, // Add FormsModule here
     UserIconComponent,
     LanguageIconComponent,
-    SearchIconComponent,
+    
+   
   ],
   template: `
       <div class=" ">

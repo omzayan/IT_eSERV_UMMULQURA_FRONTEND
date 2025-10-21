@@ -100,3 +100,12 @@ fill:#fff !important;
     text-decoration: none;
 }
 
+html.theme-gray {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+/* Optional: Add smooth transition */
+html {
+  transition: filter 0.3s ease;
+}/* Base font size */

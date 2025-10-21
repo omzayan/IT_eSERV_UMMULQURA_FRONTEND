@@ -9,6 +9,7 @@ import {
   CalendarIconComponent,
   ClockIconComponent,
   EyeIconComponent,
+  FontSizeControlComponent,
   LocationIconComponent,
   MicrophoneIconComponent,
   SearchIconComponent,
@@ -34,6 +35,7 @@ interface WeatherInfo {
     SearchIconComponent,
         SearchIconComponent2,
     WeatherIconComponent,
+    FontSizeControlComponent,
   ],
   template: `
   <div class="w-100">
@@ -101,14 +103,14 @@ interface WeatherInfo {
           ></app-eye-icon>
 
           <app-search-icon
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
           ></app-search-icon>
 
              <app-search-icon2
-            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+            class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 hidden"
           ></app-search-icon2>
         
-          
+          <app-font-size-control className="custom-class"></app-font-size-control>
      
    <app-microphone-icon
             class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 "
