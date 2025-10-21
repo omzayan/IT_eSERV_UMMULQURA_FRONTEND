@@ -231,7 +231,7 @@ private getQiblaDirection(longitude: number, latitude: number): void {
         if (response.success && response.result) {
           // ✅ نقرأ القيمة من result.qiblahDegrees
           this.qiblaDirection = response.result.qiblahDegrees;
-          console.log('Qibla direction:', this.qiblaDirection);
+          // console.log('Qibla direction:', this.qiblaDirection);
         } else {
           this.error =
             response.error?.message || 'Unable to get Qibla direction';

@@ -110,6 +110,7 @@ interface NavigationItem {
         currentLanguage
       }}
     </span>
+    <!--
     <svg
       class="w-4 h-4 lg:w-5 lg:h-5 mr-1"
       viewBox="0 0 20 20"
@@ -119,6 +120,7 @@ interface NavigationItem {
         d="M5.5031 7.1294C5.60467 7.26388..."
       />
     </svg>
+     -->
   </button>
 
   <!-- Dropdown menu -->

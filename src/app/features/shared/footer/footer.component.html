@@ -1,144 +1,126 @@
-<div
-  class="footercss flex px-4 sm:px-8 md:px-12 lg:px-[80px] justify-center bg-[#074D31]"
->
-  <div
-    class="flex w-full px-0 py-6 sm:py-8 md:py-10 pb-4 sm:pb-6 flex-col gap-8 sm:gap-10 md:gap-12 items-start"
-  >
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full"
-    >
+<div class="footercss flex px-4 sm:px-8 md:px-12 lg:px-[80px] justify-center bg-[#074D31]">
+  <div class="flex w-full px-0 py-6 sm:py-8 md:py-10 pb-4 sm:pb-6 flex-col gap-8 sm:gap-10 md:gap-12 items-start">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full">
       <!-- Group Title Section - First -->
       <div class="flex flex-col gap-4">
         <div class="flex pb-2 flex-col border-b border-solid border-white/30">
-          <h3
-            class="text-white font-medium text-base leading-6 font-ibm-plex-arabic"
-          >
+          <h3 class="text-white font-medium text-base leading-6 font-ibm-plex-arabic">
             {{ "footer.groupTitle" | translate }}
           </h3>
         </div>
         <div class="flex flex-col gap-3">
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.clients" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.contactUs" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.participate" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.complaint" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.reportCorruption" | translate }}
           </button>
         </div>
+        <div *ngIf="groupTitleLinks.length > 0" class="flex flex-col gap-3">
+          <a *ngFor="let item of groupTitleLinks" [href]="item.link" target="_blank" rel="noopener noreferrer"
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
+            {{ item.title }}
+          </a>
+        </div>
+
+
       </div>
 
       <!-- Important Links Section - Second -->
       <div class="flex flex-col gap-4">
         <div class="flex pb-2 flex-col border-b border-solid border-white/30">
-          <h3
-            class="text-white font-medium text-base leading-6 font-ibm-plex-arabic"
-          >
+          <h3 class="text-white font-medium text-base leading-6 font-ibm-plex-arabic">
             {{ "footer.importantLinks" | translate }}
           </h3>
         </div>
         <div class="flex flex-col gap-3">
-          <a
-            href="https://www.my.gov.sa/"
-            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
-            <app-link-square-icon
-              className="w-4 h-4 flex-shrink-0"
-            ></app-link-square-icon>
+          <!-- الروابط الأساسية -->
+          <a href="https://www.my.gov.sa/"
+            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+            <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
             {{ "footer.link1" | translate }}
           </a>
-          <a
-            href="https://data.gov.sa/"
-            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
-            <app-link-square-icon
-              className="w-4 h-4 flex-shrink-0"
-            ></app-link-square-icon>
+          <a href="https://data.gov.sa/"
+            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+            <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
             {{ "footer.link2" | translate }}
           </a>
-          <a
-            href="https://sdaia.gov.sa/"
-            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
-            <app-link-square-icon
-              className="w-4 h-4 flex-shrink-0"
-            ></app-link-square-icon>
+          <a href="https://sdaia.gov.sa/"
+            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+            <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
             {{ "footer.link3" | translate }}
           </a>
-          <a
-            href="https://od.data.gov.sa/"
-            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
-            <app-link-square-icon
-              className="w-4 h-4 flex-shrink-0"
-            ></app-link-square-icon>
+          <a href="https://od.data.gov.sa/"
+            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+            <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
             {{ "footer.link4" | translate }}
           </a>
-          <a
-            href="https://istitlaa.gov.sa/"
-            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
-            <app-link-square-icon
-              className="w-4 h-4 flex-shrink-0"
-            ></app-link-square-icon>
+          <a href="https://istitlaa.gov.sa/"
+            class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+            <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
             {{ "footer.link5" | translate }}
           </a>
+          <div *ngIf="importantLinks.length > 0" class="flex flex-col gap-3">
+            <a *ngFor="let item of importantLinks" [href]="item.link" target="_blank" rel="noopener noreferrer"
+              class="flex items-center gap-2 text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors">
+              <app-link-square-icon className="w-4 h-4 flex-shrink-0"></app-link-square-icon>
+              {{ item.title }}
+            </a>
+          </div>
+
         </div>
       </div>
 
       <!-- Summary Section - Third -->
       <div class="flex flex-col gap-4">
         <div class="flex pb-2 flex-col border-b border-solid border-white/30">
-          <h3
-            class="text-white font-medium text-base leading-6 font-ibm-plex-arabic"
-          >
+          <h3 class="text-white font-medium text-base leading-6 font-ibm-plex-arabic">
             {{ "footer.summary" | translate }}
           </h3>
         </div>
         <div class="flex flex-col gap-3">
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.aboutUmmAlQura" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.privacy" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.howToUse" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.news" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit"
-          >
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
             {{ "footer.slaStats" | translate }}
           </button>
         </div>
+        <div *ngIf="summaryLinks.length > 0" class="flex flex-col gap-3">
+          <a *ngFor="let item of summaryLinks" [href]="item.link" target="_blank"
+            class="text-white text-sm font-normal leading-5 font-ibm-plex-arabic hover:text-gray-200 transition-colors w-fit">
+            {{ item.title }}
+          </a>
+        </div>
+
       </div>
 
       <!-- Social Media & Accessibility Section - Fourth -->
@@ -146,56 +128,62 @@
         <!-- Social Media -->
         <div class="flex flex-col gap-4">
           <div class="flex pb-2 flex-col border-b border-solid border-white/30">
-            <h3
-              class="text-white font-medium text-base leading-6 font-ibm-plex-arabic"
-            >
+            <h3 class="text-white font-medium text-base leading-6 font-ibm-plex-arabic">
               {{ "footer.followUs" | translate }}
             </h3>
           </div>
           <div class="flex gap-3">
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-twitter-x-icon></app-twitter-x-icon>
             </button>
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-linkedin-icon></app-linkedin-icon>
             </button>
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-instagram-icon></app-instagram-icon>
             </button>
+          </div>
+          <div *ngIf="socialLinks.length > 0" class="flex gap-3">
+            <a *ngFor="let item of socialLinks" [href]="item.link" target="_blank" rel="noopener noreferrer"
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
+              <ng-container [ngSwitch]="item.title">
+                <span *ngSwitchDefault>🔗</span>
+              </ng-container>
+            </a>
           </div>
         </div>
 
         <!-- Accessibility Tools -->
         <div class="flex flex-col gap-4">
           <div class="flex pb-2 flex-col border-b border-solid border-white/30">
-            <h3
-              class="text-white font-medium text-base leading-6 font-ibm-plex-arabic"
-            >
+            <h3 class="text-white font-medium text-base leading-6 font-ibm-plex-arabic">
               {{ "footer.accessibilityTools" | translate }}
             </h3>
           </div>
           <div class="flex gap-3">
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-sign-language-icon></app-sign-language-icon>
             </button>
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-search-add-icon></app-search-add-icon>
             </button>
             <button
-              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors"
-            >
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <app-view-icon></app-view-icon>
             </button>
+          </div>
+          <div *ngIf="contactTools.length > 0" class="flex gap-3">
+            <a *ngFor="let item of contactTools" [href]="item.link" target="_blank" rel="noopener noreferrer"
+              class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
+              <ng-container [ngSwitch]="item.title">
+                <span *ngSwitchDefault>🔧</span>
+              </ng-container>
+            </a>
           </div>
         </div>
       </div>
@@ -203,43 +191,34 @@
 
     <!-- Legal Section -->
     <div
-      class="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-0 lg:justify-between lg:items-end w-full pt-6 sm:pt-8 border-t border-white/20"
-    >
+      class="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-0 lg:justify-between lg:items-end w-full pt-6 sm:pt-8 border-t border-white/20">
       <div class="flex flex-col gap-4 sm:gap-6">
         <!-- Navigation Links -->
         <div class="flex flex-wrap gap-3 sm:gap-4 lg:gap-6">
           <button
-            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
+            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors">
             {{ "footer.mobileApp" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
+            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors">
             {{ "footer.rss" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
+            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors">
             {{ "footer.bottomLink" | translate }}
           </button>
           <button
-            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors"
-          >
+            class="text-white text-sm font-normal leading-5 underline font-ibm-plex-arabic hover:text-gray-200 transition-colors">
             {{ "footer.sitemap" | translate }}
           </button>
         </div>
 
         <!-- Copyright and Info -->
         <div class="flex flex-col gap-2 sm:gap-3">
-          <div
-            class="text-white text-sm font-semibold leading-5 font-ibm-plex-arabic"
-          >
+          <div class="text-white text-sm font-semibold leading-5 font-ibm-plex-arabic">
             {{ "footer.copyright" | translate }}
           </div>
-          <div
-            class="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-white/80"
-          >
+          <div class="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-white/80">
             <span class="text-sm font-normal leading-5 font-ibm-plex-arabic">
               {{ "footer.developedBy" | translate }}
             </span>
@@ -249,14 +228,10 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex items-center justify-center sm:justify-start lg:justify-end"
-      >
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/9e1f9ecae1f8bbd723d39a2fa016dcd5362d5a11?width=158"
+      <div class="flex items-center justify-center sm:justify-start lg:justify-end">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/9e1f9ecae1f8bbd723d39a2fa016dcd5362d5a11?width=158"
           class="w-[60px] h-[32px] sm:w-[70px] sm:h-[38px] lg:w-[79px] lg:h-[42px] object-contain"
-          alt="Ummulqura-logo"
-        />
+          alt="Ummulqura-logo" />
       </div>
     </div>
   </div>
