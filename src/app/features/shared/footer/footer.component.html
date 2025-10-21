@@ -150,9 +150,6 @@
             <a *ngFor="let item of socialLinks" [href]="item.link" target="_blank" rel="noopener noreferrer"
               class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <ng-container [ngSwitch]="item.title">
-                <app-twitter-x-icon *ngSwitchCase="'Twitter'"></app-twitter-x-icon>
-                <app-linkedin-icon *ngSwitchCase="'LinkedIn'"></app-linkedin-icon>
-                <app-instagram-icon *ngSwitchCase="'Instagram'"></app-instagram-icon>
                 <span *ngSwitchDefault>🔗</span>
               </ng-container>
             </a>
@@ -184,9 +181,6 @@
             <a *ngFor="let item of contactTools" [href]="item.link" target="_blank" rel="noopener noreferrer"
               class="flex w-8 h-8 justify-center items-center rounded border border-white/30 hover:bg-white/10 transition-colors">
               <ng-container [ngSwitch]="item.title">
-                <app-sign-language-icon *ngSwitchCase="'SignLanguage'"></app-sign-language-icon>
-                <app-search-add-icon *ngSwitchCase="'SearchAdd'"></app-search-add-icon>
-                <app-view-icon *ngSwitchCase="'View'"></app-view-icon>
                 <span *ngSwitchDefault>🔧</span>
               </ng-container>
             </a>
