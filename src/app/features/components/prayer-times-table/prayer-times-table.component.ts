@@ -52,7 +52,7 @@ interface PrayerTableData {
                 <ng-container *ngIf="hijriInfo; else noHijri">
                   <span>{{ hijriInfo.day_name }}</span>
                   <span>{{ hijriInfo.day }} {{ hijriInfo.month_name }}</span>
-                  <span>{{ hijriInfo.year }} هـ</span>
+                  <span>{{ hijriInfo.year }} </span>
                 </ng-container>
                 <ng-template #noHijri><span>-</span></ng-template>
               </div>
@@ -68,7 +68,7 @@ interface PrayerTableData {
                 <ng-container *ngIf="gregorianDateInfo; else noGreg">
                   <span>{{ gregorianDateInfo.day_name }}</span>
                   <span>{{ gregorianDateInfo.day }} {{ gregorianDateInfo.month_name }}</span>
-                  <span>{{ gregorianDateInfo.year }} م</span>
+                  <span>{{ gregorianDateInfo.year }} </span>
                 </ng-container>
                 <ng-template #noGreg><span>-</span></ng-template>
               </div>
@@ -134,9 +134,32 @@ export class PrayerTimesTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateHeaders();
+
     this.translate.onLangChange.subscribe(() => {
       this.updateHeaders();
       this.updateCityNames();
+
+      this.gregorianDateInfo = this.buildGregorianInfo();
+      if (this.gregorianDateInfo) {
+        this.prayerService.convertGregorianToHijri({
+          day: this.gregorianDateInfo.day,
+          month: this.gregorianDateInfo.month,
+          year: this.gregorianDateInfo.year,
+        }).subscribe({
+          next: (res) => {
+            if (res.success && res.result) {
+              this.hijriInfo = {
+                ...res.result,
+                formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`,
+                iso: res.result.iso ?? '',
+              } as HijriDateInfo;
+            }
+          },
+          error: () => {
+            this.hijriInfo = null;
+          }
+        });
+      }
     });
 
     this.fetchData();
@@ -183,31 +206,19 @@ export class PrayerTimesTableComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    const today = new Date();
-    const gregorianInfo: GregorianDateInfo = {
-      day: today.getDate(),
-      month: today.getMonth() + 1,
-      year: today.getFullYear(),
-      month_name: today.toLocaleString('ar-EG', { month: 'long' }),
-      day_name: today.toLocaleString('ar-EG', { weekday: 'long' }),
-      formatted: today.toLocaleDateString('ar-EG'), // أو بأي فورمات يناسبك
-      iso: today.toISOString().split('T')[0], // YYYY-MM-DD
-    };
+    this.gregorianDateInfo = this.buildGregorianInfo();
 
-    this.gregorianDateInfo = gregorianInfo;
-
-    // لو عندك خدمة تحويل للتاريخ الهجري
     this.prayerService.convertGregorianToHijri({
-      day: gregorianInfo.day,
-      month: gregorianInfo.month,
-      year: gregorianInfo.year,
+      day: this.gregorianDateInfo.day,
+      month: this.gregorianDateInfo.month,
+      year: this.gregorianDateInfo.year,
     }).subscribe({
       next: (res) => {
         if (res.success && res.result) {
           this.hijriInfo = {
             ...res.result,
-            formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`, // أي صياغة تعرضها
-            iso: res.result.iso ?? '', // لو iso مش راجع من الـ API
+            formatted: `${res.result.day} ${res.result.month_name} ${res.result.year}`,
+            iso: res.result.iso ?? '',
           } as HijriDateInfo;
         }
       },
@@ -216,8 +227,6 @@ export class PrayerTimesTableComponent implements OnInit {
       }
     });
 
-
-    // دلوقتي هات المدن
     this.prayerService.getPrayerTimesForAllCities().subscribe({
       next: (res) => {
         if (!res?.result || res.result.length === 0) {
@@ -247,6 +256,22 @@ export class PrayerTimesTableComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+
+  private buildGregorianInfo(): GregorianDateInfo {
+    const today = new Date();
+    const lang = this.translate.currentLang || 'en';
+
+    return {
+      day: today.getDate(),
+      month: today.getMonth() + 1,
+      year: today.getFullYear(),
+      month_name: today.toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US', { month: 'long' }),
+      day_name: today.toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long' }),
+      formatted: today.toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US'),
+      iso: today.toISOString().split('T')[0],
+    };
   }
 
   formatTime12(time: string): string {
