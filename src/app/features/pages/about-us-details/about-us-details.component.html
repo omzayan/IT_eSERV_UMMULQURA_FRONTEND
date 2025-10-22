@@ -31,20 +31,7 @@
 
             <!-- Mission and Vision Cards -->
             <div class="flex flex-col md:flex-row gap-6">
-                <!-- Mission Card -->
-                <div class="flex flex-col p-4 gap-6 flex-1 rounded-2xl border border-[#D2D6DB] bg-white">
-                    <app-mission-icon></app-mission-icon>
-                    <div class="flex flex-col justify-center gap-2">
-                        <h3 class="text-[#1F2A37] text-lg font-bold leading-7 font-ibm-plex-arabic">
-                            {{ 'aboutUsDetails.mission.title' | translate }}
-                        </h3>
-                        <p class="text-[#1F2A37] text-base font-normal leading-6 font-ibm-plex-arabic">
-                            {{ 'aboutUsDetails.mission.description' | translate }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Vision Card -->
+                         <!-- Vision Card -->
                 <div class="flex flex-col p-4 gap-6 flex-1 rounded-2xl border border-[#D2D6DB] bg-white">
                     <app-vision-icon></app-vision-icon>
                     <div class="flex flex-col justify-center gap-2">
@@ -56,16 +43,31 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Mission Card -->
+                <div class="flex flex-row-reverse flex-col p-4 gap-6 flex-1 rounded-2xl border border-[#D2D6DB] bg-white">
+                    <app-mission-icon></app-mission-icon>
+                    <div class="flex flex-col justify-center gap-2">
+                        <h3 class="text-[#1F2A37] text-lg font-bold leading-7 font-ibm-plex-arabic">
+                            {{ 'aboutUsDetails.mission.title' | translate }}
+                        </h3>
+                        <p class="text-[#1F2A37] text-base font-normal leading-6 font-ibm-plex-arabic">
+                            {{ 'aboutUsDetails.mission.description' | translate }}
+                        </p>
+                    </div>
+                </div>
+
+       
             </div>
 
             <!-- Features Section -->
-            <div class="flex flex-col w-full gap-8">
+            <div class="flex flex-row-reverse flex-col w-full gap-8">
                 <div class="flex flex-col gap-2">
                     <h2 class="text-[#161616] text-2xl md:text-[30px] font-bold leading-[38px] font-ibm-plex-arabic">
                         {{ 'aboutUsDetails.features.title' | translate }}
                     </h2>
-                    <div class="flex flex-col lg:flex-row gap-6 w-full">
-                        <!-- Smart Devices Card -->
+<div class="flex flex-row-reverse gap-6 w-full">
+                                <!-- Smart Devices Card -->
                         <div class="flex flex-col p-4 gap-6 flex-1 rounded-2xl border border-[#D2D6DB] bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200 feature-card"
                             (click)="onFeatureClick()">
                             <div class="flex w-12 h-12 p-3 justify-center items-center rounded-full bg-[#F3FCF6]">

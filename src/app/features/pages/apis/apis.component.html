@@ -1,5 +1,5 @@
 <div class="min-h-screen w-full px-2 md:px-8 py-8 font-ibm-plex-arabic">
-    <div class="flex flex-col md:flex-row gap-6 md:gap-8 max-w-[1280px] mx-auto">
+    <div class="flex flex-col md:flex-row gap-6 md:gap-8 container mx-auto">
         <!-- Main Content Section -->
         <div class="flex-1 flex flex-col gap-6">
             <!-- Header Section -->
@@ -72,12 +72,17 @@
         </div>
     </div>
 
-    <!-- Feedback Card Section -->
+    <div class="container mx-auto">
+
+
+
+            <!-- Feedback Card Section -->
     <app-feedback-card [title]="'apiPage.feedbackTitle' | translate" [description]="'apiPage.feedbackDesc' | translate"
         [buttonText]="'apiPage.feedbackButton' | translate" (buttonClick)="onFeedbackClick()"></app-feedback-card>
 
     <!-- Prayer Times Section -->
     <section class="w-full mt-12">
+        
         <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-2xl text-[#161616]">{{ 'prayerTimes.title' | translate }}</h2>
             <button (click)="onShowAllPrayers()"
@@ -86,7 +91,7 @@
             </button>
         </div>
         <p class="text-[#384250] text-sm mb-6">{{ 'prayerTimes.description' | translate }}</p>
-        <div class="flex gap-4 overflow-x-auto pb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
             <app-prayer-time-card *ngFor="let prayer of prayers" [title]="prayer.title"
                 [description]="prayer.description" [times]="prayer.times" [isActive]="prayer.isActive || false"
                 [statusLabel]="prayer.statusLabel || 'قادمة'"
@@ -95,7 +100,7 @@
     </section>
 
     <!-- Slider Component -->
-    <div class="flex items-center justify-between w-full max-w-4xl mx-auto p-4" [class.flex-row-reverse]="isRTL">
+    <div class="flex items-center justify-between w-full max-w-4xl mx-auto p-4 hidden" [class.flex-row-reverse]="isRTL">
         <!-- نقاط المؤشر -->
         <div class="flex items-center gap-2">
             <span *ngFor="let dot of [].constructor(totalSlides); let i = index" class="w-6 h-6 rounded-full"
@@ -103,7 +108,7 @@
         </div>
 
         <!-- أزرار التنقل -->
-        <div class="flex items-center gap-2" [class.flex-row-reverse]="isRTL">
+        <div class="flex items-center gap-2 d-none" [class.flex-row-reverse]="isRTL">
             <button (click)="isRTL ? goNext() : goPrev()"
                 class="w-10 h-10 flex items-center justify-center rounded-full bg-white border hover:bg-gray-100">
                 <!-- السهم الخلفي -->
@@ -127,17 +132,17 @@
     <div class="flex flex-col items-start self-stretch relative">
         <div class="flex flex-col items-start self-stretch relative">
             <!-- Last Modified Section -->
-            <div class="flex items-center gap-2 self-stretch relative px-4 py-4 sm:px-8 lg:px-20 bg-white">
-                <div class="flex-1 relative max-w-screen-xl text-sm leading-5" style="color: #161616">
+            <div class="flex items-center gap-2 self-stretch relative px-0 py-4 sm:px-8 lg:px-0 bg-white">
+                <div class="flex-1 relative  text-sm leading-5" style="color: #161616">
                     <span>{{ 'aboutUs.feedback.lastModified' | translate }}</span>
                 </div>
             </div>
 
             <!-- review Section -->
-            <div class="flex w-full justify-center items-center relative px-4 py-6 sm:px-8 lg:px-20 bg-white border-t-2"
+            <div class="flex w-full justify-between items-center relative  py-3 bg-white border-t-2"
                 style="border-top-color: #1B8354">
                 <div
-                    class="flex flex-col sm:flex-row max-w-screen-xl justify-between items-center gap-4 sm:gap-6 flex-1 w-full">
+                    class="flex flex-col sm:flex-row  justify-between items-center gap-4 sm:gap-2 flex-1 w-full">
                     <!-- Stats text - hidden on mobile, shown on larger screens -->
                     <div class="hidden sm:flex items-center flex-1">
                         <div class="text-sm leading-5" style="color: #161616">
@@ -147,7 +152,7 @@
 
                     <!-- Main feedback content -->
                     <div
-                        class="flex flex-col sm:flex-row justify-start items-center gap-4 sm:gap-6 flex-1 w-full sm:w-auto flex-row">
+                        class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-2 flex-1 w-full sm:w-auto flex-row">
                     </div>
                     <!-- Actions -->
                     <div class="flex items-center gap-3 sm:gap-4">
@@ -159,22 +164,24 @@
                 </div>
             </div>
             <!-- Feedback Section -->
-            <div class="flex w-full justify-center items-center relative px-4 py-6 sm:px-8 lg:px-20 bg-white border-t-2"
-                style="border-top-color: #1B8354">
-                <div
-                    class="flex flex-col sm:flex-row max-w-screen-xl justify-between items-center gap-4 sm:gap-6 flex-1 w-full">
-                    <!-- Stats text - hidden on mobile, shown on larger screens -->
-                    <div class="hidden sm:flex items-center flex-1">
-                        <div class="text-sm leading-5" style="color: #161616">
-                            <span>{{ 'aboutUs.feedback.stats' | translate }}</span>
-                        </div>
-                    </div>
+<div
+  class="flex flex-row-reverse w-full justify-between items-center relative px-0 py-1 sm:px-2 lg:px-0 bg-white border-t-2"
+  style="border-top-color: #1B8354"
+>               <div
+                    class="flex flex-col sm:flex-row  flex-row-reverse justify-between items-center gap-4 sm:gap-6 flex-1 w-full">
 
-                    <!-- Main feedback content -->
+
+                    <!-- Stats text - hidden on mobile, shown on larger screens -->
+
+                      <!-- Main feedback content -->
                     <div
-                        class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 flex-1 w-full sm:w-auto">
+                        class="flex flex-row-reverse  sm:flex-row justify-start items-end gap-4 sm:gap-6 flex-1 w-full sm:w-auto">
                         <!-- Actions -->
-                        <div class="flex items-center gap-3 sm:gap-4">
+                                 <!-- Question Text -->
+                        <div class="  text-base leading-6" style="color: #161616">
+                            <span>{{ 'aboutUs.feedback.question' | translate }}</span>
+                        </div> 
+                        <div class="flex items-center flex-row-reverse gap-3 sm:gap-4">
                             <!-- No Button -->
                             <button
                                 class="flex h-10 min-h-10 max-h-10 justify-center items-center px-4 rounded cursor-pointer"
@@ -192,13 +199,20 @@
                             </button>
                         </div>
 
-                        <!-- Question Text -->
-                        <div class="text-center sm:text-left text-base leading-6" style="color: #161616">
-                            <span>{{ 'aboutUs.feedback.question' | translate }}</span>
+                
+                        
+                    </div>
+<div class="hidden sm:flex items-center justify-end text-end flex-1">
+                            <div class="text-sm leading-5" style="color: #161616">
+                            <span>{{ 'aboutUs.feedback.stats' | translate }}</span>
                         </div>
                     </div>
+
+                  
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
 </div>

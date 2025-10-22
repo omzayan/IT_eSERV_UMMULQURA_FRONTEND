@@ -1,4 +1,9 @@
+  <div class="container mx-auto">
+
 <nav class="flex gap-2 text-sm items-center" [ngClass]="className">
+
+
+
   <ng-container *ngFor="let item of items; let i = index">
     <!-- Breadcrumb item -->
     <ng-container *ngIf="item.isActive; else linkTemplate">
@@ -21,4 +26,6 @@
       <span class="mx-1">{{ separator }}</span>
     </ng-container>
   </ng-container>
+
 </nav>
+    </div>
