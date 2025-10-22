@@ -426,12 +426,10 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
   }
 
   setLanguage(lang: string) {
-    this.currentLanguage = lang;
-    this.translate.use(lang);
-    this.dropdownOpen = false;
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-  }
+  this.languageService.setLanguage(lang);
+  this.dropdownOpen = false;
+}
+
 
   toggleSearch() {
     this.isOpen = !this.isOpen;
