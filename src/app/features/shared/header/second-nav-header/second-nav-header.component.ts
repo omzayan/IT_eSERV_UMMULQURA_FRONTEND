@@ -16,6 +16,7 @@ import {
   SearchIconComponent2,
   WeatherIconComponent,
 } from '../icons/header-icons.component';
+import { TranslateService } from '@ngx-translate/core';
 
 interface WeatherInfo {
   location: string;
@@ -33,7 +34,7 @@ interface WeatherInfo {
     LocationIconComponent,
     MicrophoneIconComponent,
     SearchIconComponent,
-        SearchIconComponent2,
+    SearchIconComponent2,
     WeatherIconComponent,
     FontSizeControlComponent,
   ],
@@ -125,13 +126,15 @@ interface WeatherInfo {
 export class SecondNavHeaderComponent implements OnInit, OnDestroy {
   dateTime: DateTimeInfo = { time: '', date: '' };
   weatherInfo: WeatherInfo = {
-    location: 'Riyadh',
+    location: '',
     weather: '', // This could be fetched from an API
   };
 
   private subscription: Subscription = new Subscription();
-
-  constructor(private dateTimeService: DateTimeService) {}
+  currentLang: string = 'ar';
+  constructor(private dateTimeService: DateTimeService, private translate: TranslateService) {
+    this.currentLang = this.translate.currentLang || 'ar';
+  }
 
   ngOnInit(): void {
     this.subscription.add(
@@ -139,9 +142,43 @@ export class SecondNavHeaderComponent implements OnInit, OnDestroy {
         this.dateTime = dateTime;
       })
     );
+    this.translate.onLangChange.subscribe((event) => {
+      this.currentLang = event.lang;
+      this.getLocation();
+    });
+    this.getLocation();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const country = await this.getCountryName(lat, lon);
+          this.weatherInfo.location = country;
+
+        },
+      );
+    } else {
+      this.weatherInfo.location = 'Geolocation Not Supported';
+    }
+  }
+
+  private async getCountryName(lat: number, lon: number): Promise<string> {
+    const lang = this.currentLang === 'ar' ? 'ar' : 'en';
+
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    const response = await fetch(url, {
+      headers: { 'Accept-Language': lang }
+    });
+    const data = await response.json();
+
+    return data.address.country || 'Not Available';
+  }
+
 }

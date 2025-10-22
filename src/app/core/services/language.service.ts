@@ -114,7 +114,7 @@ export class LanguageService {
    * Validate if language is supported
    */
   private isValidLanguage(language: string): boolean {
-    return ['ar', 'en'].includes(language);
+    return ['ar', 'en', 'fr', 'ch', 'Tu', 'Ad', 'BN', 'IN'].includes(language);
   }
 
   /**

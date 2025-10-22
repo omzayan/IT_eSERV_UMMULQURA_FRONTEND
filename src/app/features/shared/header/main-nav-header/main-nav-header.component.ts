@@ -132,52 +132,52 @@ interface NavigationItem {
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('en')"
     >
-      English
+      {{ 'languages.english' | translate }}
     </button>
     <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('ar')"
     >
-      العربية
+      {{ 'languages.arabic' | translate }}
     </button>
 
       <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('ch')"
     >
-      الصينية
+      {{ 'languages.chinese' | translate }}
     </button>
 
      <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('Tu')"
     >
-      التركية
+      {{ 'languages.turkish' | translate }}
     </button>
       <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('fr')"
     >
-الفرنسية    </button>
+{{ 'languages.french' | translate }}    </button>
 
      <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('Ad')"
     >
-اردو    </button>
+{{ 'languages.urdu' | translate }}    </button>
 
    <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('BN')"
     >
-البنغالية   
+ {{ 'languages.bengali' | translate }}   
  </button>
 
    <button
       class="block w-full text-left px-4 py-2 hover:bg-gray-100"
       (click)="setLanguage('IN')"
     >
-الاندونيسية   
+{{ 'languages.indonesian' | translate }}   
  </button>
   </div>
 </div>
@@ -426,12 +426,10 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
   }
 
   setLanguage(lang: string) {
-    this.currentLanguage = lang;
-    this.translate.use(lang);
-    this.dropdownOpen = false;
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-  }
+  this.languageService.setLanguage(lang);
+  this.dropdownOpen = false;
+}
+
 
   toggleSearch() {
     this.isOpen = !this.isOpen;

@@ -82,11 +82,11 @@ export class FooterComponent implements OnInit, OnDestroy {
     ar: ['ArabicTitle', 'arabicTitle'],
     en: ['EnglishTitle', 'englishTitle'], 
     fr: ['FrenchTitle', 'frenchTitle'],
-    zh: ['ChineseTitle', 'chineseTitle'],
-    ur: ['UrduTitle', 'urduTitle'],
-    id: ['IndonesianTitle', 'indonesianTitle'],
-    bn: ['BengaliTitle', 'bengaliTitle'],
-    tr: ['TurkishTitle', 'turkishTitle']
+    ch: ['ChineseTitle', 'chineseTitle'],
+    Ad: ['UrduTitle', 'urduTitle'],
+    IN: ['IndonesianTitle', 'indonesianTitle'],
+    BN: ['BengaliTitle', 'bengaliTitle'],
+    Tu: ['TurkishTitle', 'turkishTitle']
   };
 
   const keys = langKeyMap[this.currentLanguage] || ['ArabicTitle', 'arabicTitle'];
