@@ -15,7 +15,7 @@ import {
   ],
   template: `
     <div
-      class="digital-stamp-card w-full bg-[#F3F4F6]  border border-gray-100    transition-all duration-300"
+      class="digital-stamp-card w-full bg-[#F3F4F6] border border-gray-100 transition-all duration-300"
     >
       <div class="container mx-auto px-4 py-3">
         <!-- Header -->
@@ -31,7 +31,7 @@ import {
               class="w-6 h-auto"
             />
             <h6 class="text-gray-900 text-sm sm:text-base font-medium">
-              موقع حكومي رسمي تابع لحكومة المملكة العربية السعودية
+              {{ 'digitalStamp.officialGovernmentSite' | translate }}
             </h6>
           </div>
 
@@ -39,7 +39,7 @@ import {
           <div
             class="btn-digital-stamp-card flex items-center gap-1 text-green-700 text-sm sm:text-base font-medium"
           >
-            <span class="ms-2">كيف تتحقق</span>
+            <span class="ms-2">{{ 'digitalStamp.howToVerify' | translate }}</span>
             <img
               src="assets/images/arrow-down-green.svg"
               alt="Arrow Down"
@@ -57,9 +57,9 @@ import {
             'max-h-0 py-0 opacity-0': !isOpen
           }"
         >
-<div
-  class="digital-stamp-container flex flex-col md:flex-row gap-5 md:gap-8 justify-between"
->
+          <div
+            class="digital-stamp-container flex flex-col md:flex-row gap-5 md:gap-8 justify-between"
+          >
             <!-- Box 1 -->
             <div class="box flex items-start gap-3">
               <img
@@ -69,12 +69,11 @@ import {
               />
               <div>
                 <h6 class="text-gray-900 text-sm font-medium leading-snug">
-                  روابط المواقع الالكترونية الرسمية السعودية تنتهي بـ
-                  <span class="text-green-700 font-semibold">gov.sa</span>
+                  {{ 'digitalStamp.box1Title' | translate }}
+                  <span class="text-green-700 font-semibold">{{ 'digitalStamp.govSa' | translate }}</span>
                 </h6>
                 <p class="text-gray-600 text-xs leading-relaxed mt-1">
-                  جميع روابط المواقع الرسمية التابعة للجهات الحكومية في المملكة
-                  العربية السعودية تنتهي بـ .gov.sa
+                  {{ 'digitalStamp.box1Desc' | translate }}
                 </p>
               </div>
             </div>
@@ -88,13 +87,12 @@ import {
               />
               <div>
                 <h6 class="text-gray-900 text-sm font-medium leading-snug">
-                  المواقع الالكترونية الحكومية تستخدم بروتوكول
-                  <span class="text-green-700 font-semibold">HTTPS</span>
-                  للتشفير و الأمان.
+                  {{ 'digitalStamp.box2Title1' | translate }}
+                  <span class="text-green-700 font-semibold">{{ 'digitalStamp.https' | translate }}</span>
+                  {{ 'digitalStamp.box2Title2' | translate }}
                 </h6>
                 <p class="text-gray-600 text-xs leading-relaxed mt-1">
-                  المواقع الالكترونية الآمنة في المملكة العربية السعودية تستخدم
-                  بروتوكول HTTPS للتشفير.
+                  {{ 'digitalStamp.box2Desc' | translate }}
                 </p>
               </div>
             </div>
@@ -109,13 +107,14 @@ import {
               alt="DGA Logo"
               class="w-6 h-6"
             />
-            <p class="m-0">مسجل لدى هيئة الحكومة الرقمية برقم :</p>
+            <p class="m-0">{{ 'digitalStamp.registeredAtDGA' | translate }}</p>
             <a
               href="https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/4990"
               target="_blank"
               class="text-green-700 underline hover:text-green-800"
-              >20240520402</a
             >
+              20240520402
+            </a>
           </div>
         </div>
       </div>
