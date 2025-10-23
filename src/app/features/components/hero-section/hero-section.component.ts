@@ -120,7 +120,9 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     this.apiService.getBanners().subscribe({
       next: async (res) => {
         if (res && res.result) {
-          this.slides = res.result.map((b: any) => ({
+          this.slides = res.result
+          .filter((p: any) => p.showInWebsite)
+          .map((b: any) => ({
             id: b.id,
             imageId: b.image?.id,
             imageUrl: b.image?.imageUrl ? `https://localhost:44311${b.image.imageUrl}` : 'assets/images/placeholder.png',
