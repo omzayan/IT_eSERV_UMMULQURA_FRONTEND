@@ -30,7 +30,7 @@
                             class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
                             [class.border-red-500]="hasError('firstName', 'required')" />
                         <div *ngIf="hasError('firstName', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.firstName.label' | translate }} is required
+                            {{ 'contactUs.form.firstName.label' | translate }} {{ 'IsRequired' | translate }}
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                             class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
                             [class.border-red-500]="hasError('lastName', 'required')" />
                         <div *ngIf="hasError('lastName', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.lastName.label' | translate }} is required
+                            {{ 'contactUs.form.lastName.label' | translate }} {{ 'IsRequired' | translate }}
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                             class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
                             [class.border-red-500]="hasError('email', 'required') || hasError('email', 'email')" />
                         <div *ngIf="hasError('email', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.email.label' | translate }} is required
+                            {{ 'contactUs.form.email.label' | translate }} {{ 'IsRequired' | translate }}
                         </div>
                         <div *ngIf="hasError('email', 'email')" class="text-red-500 text-sm">
                             Please enter a valid email address
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div *ngIf="hasError('phone', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.phone.label' | translate }} is required
+                            {{ 'contactUs.form.phone.label' | translate }} {{ 'IsRequired' | translate }}
                         </div>
                     </div>
                 </div>
