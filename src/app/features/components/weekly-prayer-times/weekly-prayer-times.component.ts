@@ -312,8 +312,8 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
           .getGregorianDateRangeCalendar(
             start,
             end,
-            this.selectedLocation.lng ?? 46.69,
-            this.selectedLocation.lat ?? 24.67
+            this.selectedLocation.lng ?? 39.83,
+            this.selectedLocation.lat ?? 21.42
           )
           .toPromise();
       } else {
@@ -324,8 +324,8 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
           toHijriYear: this.hijriDateRange.endDate!.year,
           toHijriMonth: this.hijriDateRange.endDate!.month,
           toHijriDay: this.hijriDateRange.endDate!.dayNumber,
-          longitude: this.selectedLocation.lng ?? 46.69,
-          latitude: this.selectedLocation.lat ?? 24.67,
+          longitude: this.selectedLocation.lng ?? 39.83,
+          latitude: this.selectedLocation.lat ?? 21.42,
         };
 
         response = await this.apiService.getHijriDateRangeCalendar(input).toPromise();

@@ -237,8 +237,8 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
       this.error = null;
 
       const { year, month } = this.selectedMonthYear;
-      const latitude = this.selectedLocation.lat ?? 24.67;
-      const longitude = this.selectedLocation.lng ?? 46.69;
+      const latitude = this.selectedLocation.lat ?? 21.42;
+      const longitude = this.selectedLocation.lng ?? 39.83;
       const cityId = this.selectedLocation.cityId;
 
       const response = await this.prayerService

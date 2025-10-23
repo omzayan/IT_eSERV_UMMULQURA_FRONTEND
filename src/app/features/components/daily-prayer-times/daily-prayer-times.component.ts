@@ -361,11 +361,7 @@ export class DailyPrayerTimesComponent implements OnInit, OnDestroy, AfterViewIn
   }
   
   private setDefaultUmmAlQura(): void {
-    const makkahCoords: LocationData = {
-      lat: 21.42,
-      lng: 39.83,
-    };
-    this.selectedCoords = makkahCoords;
+    this.selectedCoords = {lat: 21.42, lng: 39.83,};
 
     const today = new Date();
     const defaultDate = {

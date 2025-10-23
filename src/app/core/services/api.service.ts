@@ -103,8 +103,8 @@ convertHijriToGregorian(
   getMonthlyPrayerTimesByHijri(
     hijriYear: number,
     hijriMonth: number,
-    latitude: number = 24.67,
-    longitude: number = 46.69
+    latitude: number = 21.42,
+    longitude: number = 39.83
   ): Observable<BaseResponse<MonthPrayerTimes>> {
     return this.http.get<BaseResponse<MonthPrayerTimes>>(
       `${this.baseUrl}api/services/app/PrayerTimes/GetMonthByHijriDate`,
@@ -125,8 +125,8 @@ convertHijriToGregorian(
  getMonthlyPrayerTimesByGregorian(
   gregorianYear: number,
   gregorianMonth: number,
-  latitude: number = 24.67,
-  longitude: number = 46.69
+  latitude: number = 21.42,
+  longitude: number = 39.83
 ): Observable<BaseResponse<MonthPrayerTimes>> {
   return this.http.get<BaseResponse<MonthPrayerTimes>>(
     `${this.baseUrl}api/services/app/PrayerTimes/GetMonthlyByGregorianDate`,

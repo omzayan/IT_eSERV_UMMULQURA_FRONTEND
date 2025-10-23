@@ -285,8 +285,8 @@ private loadGregorianCalendar(): void {
     .getMonthlyPrayerTimesByGregorian(
       this.currentGregorianYear,
       this.currentGregorianMonth,
-      24.67, // latitude
-      46.69  // longitude
+      21.42, // latitude
+      39.83  // longitude
     )
     .pipe(takeUntil(this.destroy$))
     .subscribe({
@@ -299,7 +299,7 @@ private loadGregorianCalendar(): void {
           // ✅ نعمل mapping يدوي للتاريخ الميلادي
           this.gregorianMonthlyData = {
             days_in_month: prayerTimes.length,
-            location: { latitude: 24.67, longitude: 46.69 },
+            location: { latitude: 21.42, longitude: 39.83 },
             daily_prayer_times: prayerTimes.map((pt, index) => {
               const day = index + 1;
               return {

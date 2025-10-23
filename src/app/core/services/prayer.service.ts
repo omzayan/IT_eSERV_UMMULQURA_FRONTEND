@@ -18,8 +18,8 @@ export class PrayerService {
    * Get today's prayer times (Gregorian)
    */
   getTodayPrayerTimes(
-    longitude: number = 46.69,
-    latitude: number = 24.67
+    longitude: number = 39.83,
+    latitude: number = 21.42
   ): Observable<PrayerTimeWithDateResult | null> {
     const today = new Date();
     return this.apiService
@@ -54,8 +54,8 @@ export class PrayerService {
    */
   getPrayerTimesForGregorianDate(
     date: Date,
-    longitude: number = 46.69,
-    latitude: number = 24.67
+    longitude: number = 39.83,
+    latitude: number = 21.42
   ): Observable<PrayerTimeWithDateResult | null> {
     return this.apiService
       .getDateWithPrayerTimesGregorian(date, longitude, latitude)
@@ -91,8 +91,8 @@ export class PrayerService {
     year: number,
     month: number,
     day: number,
-    longitude: number = 46.69,
-    latitude: number = 24.67
+    longitude: number = 39.83,
+    latitude: number = 21.42
   ): Observable<PrayerTimeWithDateResult | null> {
     return this.apiService
       .getDateWithPrayerTimesHijri(year, month, day, latitude, longitude)
@@ -127,8 +127,8 @@ export class PrayerService {
 getMonthlyPrayerTimesByGregorian(
   year: number,
   month: number,
-  longitude: number = 46.69,
-  latitude: number = 24.67
+  longitude: number = 39.83,
+  latitude: number = 21.42
 ): Observable<BaseResponse<MonthPrayerTimes>> {
   return this.apiService.getMonthlyPrayerTimesByGregorian(year, month, latitude, longitude);
 }
@@ -141,8 +141,8 @@ getMonthlyPrayerTimesByGregorian(
   getMonthlyPrayerTimesByHijri(
     year: number,
     month: number,
-    longitude: number = 46.69,
-    latitude: number = 24.67
+    longitude: number = 39.83,
+    latitude: number = 21.42
   ): Observable<BaseResponse<MonthPrayerTimes>> {
     return this.apiService
       .getMonthlyPrayerTimesByHijri(year, month, latitude, longitude);
