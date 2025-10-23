@@ -97,7 +97,7 @@ export class HijriMonthYearPickerComponent
     .subscribe({
       next: (months) => {
         this.months = months;
-        console.log('Hijri months:', this.months);
+        // console.log('Hijri months:', this.months);
       },
       error: (error) => {
         console.error('Error loading hijri months:', error);

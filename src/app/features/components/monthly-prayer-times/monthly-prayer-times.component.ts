@@ -174,6 +174,7 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         this.isAr = language === 'ar';
       });
+      this.setDefaultUmmAlQura();
   }
 
   ngOnDestroy(): void {
@@ -243,7 +244,7 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
       const response = await this.prayerService
         .getMonthlyPrayerTimesByGregorian(year, month, longitude, latitude)
         .toPromise();
-        console.log("res",response);
+        // console.log("res",response);
 
       if (response && response.success && response.result) {
         this.prayerTimes = {
@@ -318,6 +319,20 @@ export class MonthlyPrayerTimesComponent implements OnInit, OnDestroy {
   }
 
   return `${hour}:${minute} ${suffix}`;
+}
+
+private setDefaultUmmAlQura(): void {
+  const today = new Date();
+
+  const month = today.getMonth() + 1; 
+  const year = today.getFullYear();
+
+  Promise.resolve().then(() => {
+    this.selectedMonthYear = { year, month };
+    this.selectedLocation = { lat: 21.42, lng: 39.83 };
+
+    this.tryAutoFetch();
+  });
 }
 
 

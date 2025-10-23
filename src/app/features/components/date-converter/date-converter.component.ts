@@ -55,8 +55,7 @@ import {
   <!-- ✅ رسالة فاليديشن -->
   <div *ngIf="showDateError" 
      class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
-  ⚠️
-  برجاء اختيار التاريخ لتظهر أوقات الصلاة
+  ⚠️ {{ 'PleaseSelectDate' | translate }}
 </div>
 
 </div>

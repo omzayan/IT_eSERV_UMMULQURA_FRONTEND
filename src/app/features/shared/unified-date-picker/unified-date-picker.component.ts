@@ -432,7 +432,7 @@ export class UnifiedDatePickerComponent
         month: this.selectedMonth,
         year: this.selectedYear,
       };
-      console.log(dateValue);
+      // console.log(dateValue);
 
       this.valueChange.emit(dateValue);
     } else {

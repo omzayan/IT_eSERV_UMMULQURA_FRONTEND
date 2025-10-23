@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import {  CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
+import { CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
 import {
   UnifiedDatePickerComponent,
   DatePickerValue,
@@ -231,7 +231,7 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private apiService: ApiService,
     private languageService: LanguageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.languageService.currentLanguage$
@@ -239,6 +239,7 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         this.isAr = language === 'ar';
       });
+    this.setDefaultUmmAlQura();
   }
 
   ngOnDestroy(): void {
@@ -261,13 +262,13 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
   }
 
   handleLocationSelect(location: { lat?: number | null; lng?: number | null }): void {
-  this.selectedLocation = {
-    lat: location.lat ?? undefined,
-    lng: location.lng ?? undefined,
-    cityId: undefined,
-  };
+    this.selectedLocation = {
+      lat: location.lat ?? undefined,
+      lng: location.lng ?? undefined,
+      cityId: undefined,
+    };
 
-}
+  }
 
   handleCitySelect(city: City): void {
     this.selectedLocation = {
@@ -353,45 +354,72 @@ export class WeeklyPrayerTimesComponent implements OnInit, OnDestroy {
     }
   }
 
-formatTime12(time: string | undefined): string {
-  if (!time || time === '--') return '--';
+  formatTime12(time: string | undefined): string {
+    if (!time || time === '--') return '--';
 
-  const [h, m] = time.split(':');
-  if (h === undefined || m === undefined) return time;
+    const [h, m] = time.split(':');
+    if (h === undefined || m === undefined) return time;
 
-  let hour = parseInt(h, 10);
-  const minute = m.padStart(2, '0');
-  const isPM = hour >= 12;
+    let hour = parseInt(h, 10);
+    const minute = m.padStart(2, '0');
+    const isPM = hour >= 12;
 
-  hour = hour % 12;
-  if (hour === 0) hour = 12;
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
 
-  // اللغة الحالية
-  const currentLang = this.translate.currentLang || 'en';
+    // اللغة الحالية
+    const currentLang = this.translate.currentLang || 'en';
 
-  // النص حسب اللغة
-  let suffix = '';
-  switch (currentLang) {
-    case 'ar':
-      suffix = isPM ? 'م' : 'ص';
-      break;
-    case 'fr':
-      suffix = isPM ? 'PM' : 'AM'; // أو Soir/Matin لو تحب
-      break;
-    case 'ch':
-      suffix = isPM ? '下午' : '上午';
-      break;
-    case 'BN':
-      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
-      break;
-    case 'tu':
-      suffix = isPM ? 'ÖS' : 'ÖÖ';
-      break;
-    default:
-      suffix = isPM ? 'PM' : 'AM'; // الافتراضي
+    // النص حسب اللغة
+    let suffix = '';
+    switch (currentLang) {
+      case 'ar':
+        suffix = isPM ? 'م' : 'ص';
+        break;
+      case 'fr':
+        suffix = isPM ? 'PM' : 'AM'; // أو Soir/Matin لو تحب
+        break;
+      case 'ch':
+        suffix = isPM ? '下午' : '上午';
+        break;
+      case 'BN':
+        suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+        break;
+      case 'tu':
+        suffix = isPM ? 'ÖS' : 'ÖÖ';
+        break;
+      default:
+        suffix = isPM ? 'PM' : 'AM'; // الافتراضي
+    }
+
+    return `${hour}:${minute} ${suffix}`;
   }
 
-  return `${hour}:${minute} ${suffix}`;
-}
+  private setDefaultUmmAlQura(): void {
+    const today = new Date();
 
+    const startOfWeek = today;
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    Promise.resolve().then(() => {
+      this.selectedDateRangeType = 'gregorian';
+      this.gregorianDateRange = {
+        startDate: {
+          year: startOfWeek.getFullYear(),
+          month: startOfWeek.getMonth() + 1,
+          dayNumber: startOfWeek.getDate(),
+        },
+        endDate: {
+          year: endOfWeek.getFullYear(),
+          month: endOfWeek.getMonth() + 1,
+          dayNumber: endOfWeek.getDate(),
+        },
+      };
+
+      this.selectedLocation = { lat: 21.42, lng: 39.83 };
+
+      this.fetchDateRangeData();
+    });
+  }
 }

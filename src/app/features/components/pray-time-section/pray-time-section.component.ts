@@ -84,7 +84,7 @@ interface PrayerCardMeta {
           </div>
           <!-- Date Validation -->
           <div *ngIf="showDateError" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
-            ⚠️ برجاء اختيار التاريخ
+            ⚠️ {{ 'PleaseSelectDate' | translate }}
           </div>
 
           <div class="flex flex-col md:flex-row gap-4 items-end">
@@ -109,7 +109,7 @@ interface PrayerCardMeta {
           </div>
           <!-- City Validation -->
           <div *ngIf="showCityError" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
-            ⚠️ برجاء اختيار المدينة
+            ⚠️ {{ 'PleaseSelectCity' | translate }}
           </div>
         </div>
 
@@ -235,7 +235,7 @@ this.selectedGregorianDate = {
   month: today.getMonth() + 1,
   dayNumber: today.getDate()
 };
-this.selectedCoords = { lat: 24.7136, lng: 46.6753 };
+this.selectedCoords = { lat: 21.42, lng: 39.83 };
 this.prayerTime = null;
 this.handleGregorianDateSearch();
 

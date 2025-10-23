@@ -199,7 +199,7 @@ export class DailyPrayerTimesComponent implements OnInit, OnDestroy, AfterViewIn
     private languageService: LanguageService,
     private geolocationService: GeolocationService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.languageService.currentLanguage$
@@ -221,6 +221,7 @@ export class DailyPrayerTimesComponent implements OnInit, OnDestroy, AfterViewIn
       this.pendingDateUpdate = null;
       this.cdr.detectChanges();
     }
+    this.setDefaultUmmAlQura();
   }
 
   handleSearch(): void {
@@ -319,44 +320,64 @@ export class DailyPrayerTimesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   formatTime12(time: string | undefined): string {
-  if (!time || time === '--') return '--';
+    if (!time || time === '--') return '--';
 
-  const [h, m] = time.split(':');
-  if (h === undefined || m === undefined) return time;
+    const [h, m] = time.split(':');
+    if (h === undefined || m === undefined) return time;
 
-  let hour = parseInt(h, 10);
-  const minute = m.padStart(2, '0');
-  const isPM = hour >= 12;
+    let hour = parseInt(h, 10);
+    const minute = m.padStart(2, '0');
+    const isPM = hour >= 12;
 
-  hour = hour % 12;
-  if (hour === 0) hour = 12;
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
 
-  // اللغة الحالية
-  const currentLang = this.translate.currentLang || 'en';
+    // اللغة الحالية
+    const currentLang = this.translate.currentLang || 'en';
 
-  // النصوص حسب اللغة
-  let suffix = '';
-  switch (currentLang) {
-    case 'ar':
-      suffix = isPM ? 'م' : 'ص';
-      break;
-    case 'fr':
-      suffix = isPM ? 'PM' : 'AM'; // ممكن تعمل 'soir/matin'
-      break;
-    case 'ch':
-      suffix = isPM ? '下午' : '上午';
-      break;
-    case 'BN':
-      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
-      break;
-    case 'tu':
-      suffix = isPM ? 'ÖS' : 'ÖÖ'; // مثال للتركية
-      break;
-    default:
-      suffix = isPM ? 'PM' : 'AM'; // الإنجليزية أو الافتراضي
+    // النصوص حسب اللغة
+    let suffix = '';
+    switch (currentLang) {
+      case 'ar':
+        suffix = isPM ? 'م' : 'ص';
+        break;
+      case 'fr':
+        suffix = isPM ? 'PM' : 'AM'; // ممكن تعمل 'soir/matin'
+        break;
+      case 'ch':
+        suffix = isPM ? '下午' : '上午';
+        break;
+      case 'BN':
+        suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+        break;
+      case 'tu':
+        suffix = isPM ? 'ÖS' : 'ÖÖ'; // مثال للتركية
+        break;
+      default:
+        suffix = isPM ? 'PM' : 'AM'; // الإنجليزية أو الافتراضي
+    }
+
+    return `${hour}:${minute} ${suffix}`;
   }
+  
+  private setDefaultUmmAlQura(): void {
+    const makkahCoords: LocationData = {
+      lat: 21.42,
+      lng: 39.83,
+    };
+    this.selectedCoords = makkahCoords;
 
-  return `${hour}:${minute} ${suffix}`;
-}
+    const today = new Date();
+    const defaultDate = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      dayNumber: today.getDate(),
+    };
+
+    Promise.resolve().then(() => {
+      this.selectedGregorianDate = defaultDate;
+      this.handleSearch();
+    });
+  }
 
 }

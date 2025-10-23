@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import {  CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
+import { CitySelectorComponent } from '../../shared/city-selector/city-selector.component';
 import {
   HijriMonthYearPickerComponent,
   HijriMonthYearValue,
@@ -16,6 +16,7 @@ import {
   MonthlyPrayerTimesResult,
   MonthPrayerTimes,
 } from '../../../core/types/api.types';
+import { ApiService } from '../../../core/services/api.service';
 
 interface LocationState {
   cityId?: number;
@@ -222,8 +223,9 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
   constructor(
     private translate: TranslateService,
     private prayerService: PrayerService,
-    private languageService: LanguageService
-  ) {}
+    private languageService: LanguageService,
+    private apiService: ApiService
+  ) { }
 
   ngOnInit(): void {
     // Subscribe to language changes
@@ -232,6 +234,7 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         this.isAr = language === 'ar';
       });
+    this.setDefaultUmmAlQura();
   }
 
   ngOnDestroy(): void {
@@ -239,25 +242,25 @@ export class HijriMonthlyPrayerTimesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-handleLocationSelect(location: { lat?: number | null; lng?: number | null }): void {
-  this.selectedLocation = {
-    lat: location.lat ?? undefined,
-    lng: location.lng ?? undefined,
-    cityId: undefined,
-  };
+  handleLocationSelect(location: { lat?: number | null; lng?: number | null }): void {
+    this.selectedLocation = {
+      lat: location.lat ?? undefined,
+      lng: location.lng ?? undefined,
+      cityId: undefined,
+    };
 
-  this.error = null;
-}
+    this.error = null;
+  }
 
 
-handleCitySelect(city: City): void {
-  this.selectedLocation = {
-    lat: city.latitude,
-    lng: city.longitude,
-    cityId: city.id,
-    
-  };
-}
+  handleCitySelect(city: City): void {
+    this.selectedLocation = {
+      lat: city.latitude,
+      lng: city.longitude,
+      cityId: city.id,
+
+    };
+  }
 
 
 
@@ -267,99 +270,119 @@ handleCitySelect(city: City): void {
     if (this.error) this.error = null;
   }
 
- async fetchHijriMonthlyData(): Promise<void> {
-  if (
-    this.selectedMonthYear === null ||
-    (!this.selectedLocation.cityId &&
-      !(this.selectedLocation.lat && this.selectedLocation.lng))
-  ) {
-    this.error = this.translate.instant('errors.missingRequiredFields');
-    return;
-  }
-
-  try {
-    this.loading = true;
-    this.error = null;
-
-    const { year, month } = this.selectedMonthYear;
-    const latitude = this.selectedLocation.lat;
-    const longitude = this.selectedLocation.lng;
-
-    const response = await this.prayerService
-      .getMonthlyPrayerTimesByHijri(year, month, longitude, latitude)
-      .toPromise();
-
-  if (response && response.success && response.result) {
-  this.prayerTimes = {
-    days_in_month: response.result.prayerTimes.length,
-    location: { /* حط بيانات الموقع هنا */ },
-    daily_prayer_times: response.result.prayerTimes.map(pt => ({
-      hijri_date: pt.hijri_date,
-      gregorian_date: pt.gregorian_date,
-      day_name: '', // لو API بيرجعها ضيفها
-      prayer_times: {
-        fajr: pt.fajr,
-        sunrise: pt.sunrise,
-        dhuhr: pt.dhuhr,
-        asr: pt.asr,
-        maghrib: pt.maghrib,
-        isha: pt.isha,
-        sunset: pt.sunset
-      }
-    }))
-  };
-}
-else {
-      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+  async fetchHijriMonthlyData(): Promise<void> {
+    if (
+      this.selectedMonthYear === null ||
+      (!this.selectedLocation.cityId &&
+        !(this.selectedLocation.lat && this.selectedLocation.lng))
+    ) {
+      this.error = this.translate.instant('errors.missingRequiredFields');
+      return;
     }
-  } catch (err) {
-    console.error('Error fetching Hijri monthly prayer times:', err);
-    this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
-  } finally {
-    this.loading = false;
-  }
-}
 
+    try {
+      this.loading = true;
+      this.error = null;
 
- formatTime12(time: string | undefined): string {
-  if (!time || time === '--') return '--';
+      const { year, month } = this.selectedMonthYear;
+      const latitude = this.selectedLocation.lat;
+      const longitude = this.selectedLocation.lng;
 
-  const [h, m] = time.split(':');
-  if (h === undefined || m === undefined) return time;
+      const response = await this.prayerService
+        .getMonthlyPrayerTimesByHijri(year, month, longitude, latitude)
+        .toPromise();
 
-  let hour = parseInt(h, 10);
-  const minute = m.padStart(2, '0');
-  const isPM = hour >= 12;
-
-  hour = hour % 12;
-  if (hour === 0) hour = 12;
-
-  // جِب اللغة الحالية
-  const currentLang = this.translate.currentLang || 'en';
-
-  // الترجمات
-  let suffix = '';
-  switch (currentLang) {
-    case 'ar':
-      suffix = isPM ? 'م' : 'ص';
-      break;
-    case 'fr':
-      suffix = isPM ? 'PM' : 'AM'; // أو Matin / Soir لو حابب
-      break;
-    case 'ch':
-      suffix = isPM ? '下午' : '上午';
-      break;
-    case 'BN':
-      suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
-      break;
-    case 'tu':
-      suffix = isPM ? 'ÖS' : 'ÖÖ';
-      break;
-    default:
-      suffix = isPM ? 'PM' : 'AM'; // الافتراضي
+      if (response && response.success && response.result) {
+        this.prayerTimes = {
+          days_in_month: response.result.prayerTimes.length,
+          location: { /* حط بيانات الموقع هنا */ },
+          daily_prayer_times: response.result.prayerTimes.map(pt => ({
+            hijri_date: pt.hijri_date,
+            gregorian_date: pt.gregorian_date,
+            day_name: '', // لو API بيرجعها ضيفها
+            prayer_times: {
+              fajr: pt.fajr,
+              sunrise: pt.sunrise,
+              dhuhr: pt.dhuhr,
+              asr: pt.asr,
+              maghrib: pt.maghrib,
+              isha: pt.isha,
+              sunset: pt.sunset
+            }
+          }))
+        };
+      }
+      else {
+        this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+      }
+    } catch (err) {
+      console.error('Error fetching Hijri monthly prayer times:', err);
+      this.error = this.translate.instant('errors.failedToLoadPrayerTimes');
+    } finally {
+      this.loading = false;
+    }
   }
 
-  return `${hour}:${minute} ${suffix}`;
-}
 
+  formatTime12(time: string | undefined): string {
+    if (!time || time === '--') return '--';
+
+    const [h, m] = time.split(':');
+    if (h === undefined || m === undefined) return time;
+
+    let hour = parseInt(h, 10);
+    const minute = m.padStart(2, '0');
+    const isPM = hour >= 12;
+
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    // جِب اللغة الحالية
+    const currentLang = this.translate.currentLang || 'en';
+
+    // الترجمات
+    let suffix = '';
+    switch (currentLang) {
+      case 'ar':
+        suffix = isPM ? 'م' : 'ص';
+        break;
+      case 'fr':
+        suffix = isPM ? 'PM' : 'AM'; // أو Matin / Soir لو حابب
+        break;
+      case 'ch':
+        suffix = isPM ? '下午' : '上午';
+        break;
+      case 'BN':
+        suffix = isPM ? 'অপরাহ্ন' : 'পূর্বাহ্ন';
+        break;
+      case 'tu':
+        suffix = isPM ? 'ÖS' : 'ÖÖ';
+        break;
+      default:
+        suffix = isPM ? 'PM' : 'AM'; // الافتراضي
+    }
+
+    return `${hour}:${minute} ${suffix}`;
+  }
+
+  private setDefaultUmmAlQura(): void {
+    const today = new Date();
+    this.apiService.convertGregorianToHijri({
+      day: today.getDate(),
+      month: today.getMonth() + 1,
+      year: today.getFullYear(),
+    }).subscribe({
+      next: (res) => {
+        if (res.success && res.result) {
+          this.selectedMonthYear = {
+            year: res.result.year!,
+            month: res.result.month!,
+          };
+          this.selectedLocation = { lat: 21.42, lng: 39.83 };
+          this.fetchHijriMonthlyData();
+        }
+      },
+      error: (err) => console.error('Error converting to Hijri month:', err),
+    });
+  }
 }

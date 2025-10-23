@@ -97,7 +97,7 @@ export class GregorianMonthYearPickerComponent
     .subscribe({
       next: (months) => {
         this.months = months;
-        console.log('months', this.months);
+        // console.log('months', this.months);
       },
       error: (error) => {
         console.error('Error loading months:', error);
