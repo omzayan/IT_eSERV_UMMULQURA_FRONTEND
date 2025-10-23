@@ -11,7 +11,7 @@ interface SlideContent {
   title: string;
   description: string;
   imageUrl: string;
-  imageId:number;
+  imageId: number;
   displayOrder: number;
   showInWebsite: boolean;
 }
@@ -75,6 +75,7 @@ interface SlideContent {
 export class HeroSectionComponent implements OnInit, OnDestroy {
   currentSlide = 0;
   isAr = false;
+  currentLanguage = 'ar';
   private autoPlaySubscription?: Subscription;
   private destroy$ = new Subject<void>();
 
@@ -85,14 +86,16 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private languageService: LanguageService,
     private apiService: ApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-   
+
     this.languageService.currentLanguage$
       .pipe(takeUntil(this.destroy$))
       .subscribe((language) => {
         this.isAr = language === 'ar';
+        this.currentLanguage = language;
+        this.updateSlidesByLanguage(language);
       });
 
     this.fetchBanners();
@@ -105,48 +108,96 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     this.stopAutoPlay();
   }
 
- fetchBanners(): void {
-  const cached = JSON.parse(localStorage.getItem('banners') || 'null');
-  const oneDay = 24 * 60 * 60 * 1000;  
-  if (cached && (Date.now() - cached.timestamp < oneDay)) {
-    this.slides = cached.data;
-    return;
+  fetchBanners(): void {
+    const cached = JSON.parse(localStorage.getItem('banners') || 'null');
+    const oneDay = 24 * 60 * 60 * 1000;
+    if (cached && (Date.now() - cached.timestamp < oneDay)) {
+      this.slides = cached.data;
+      this.updateSlidesByLanguage(this.currentLanguage);
+      return;
+    }
+
+    this.apiService.getBanners().subscribe({
+      next: async (res) => {
+        if (res && res.result) {
+          this.slides = res.result.map((b: any) => ({
+            id: b.id,
+            imageId: b.image?.id,
+            imageUrl: b.image?.imageUrl ? `https://localhost:44311${b.image.imageUrl}` : 'assets/images/placeholder.png',
+            displayOrder: b.displayOrder,
+            showInWebsite: b.showInWebsite,
+            ...b,
+          }));
+
+          await Promise.all(this.slides.map(async (slide, idx) => {
+            if (!slide.imageId) return;
+            try {
+              const dto: any = await this.apiService.getBannerAttachment(slide.imageId).toPromise();
+              const att = dto?.result ?? dto ?? {};
+              if (att.bytes) {
+                const mime = this.detectMimeFromName(att.fileName ?? att.fileExt);
+                slide.imageUrl = `data:${mime};base64,${att.bytes}`;
+              }
+            } catch { }
+          }));
+
+          localStorage.setItem('banners', JSON.stringify({ data: this.slides, timestamp: Date.now() }));
+          this.updateSlidesByLanguage(this.currentLanguage);
+
+        }
+      },
+      error: (err) => console.error('Error loading banners', err),
+    });
   }
-  
-  this.apiService.getBanners().subscribe({
-    next: async (res) => {   
-      if (res && res.result) {
-        this.slides = res.result.map((b: any) => ({
-          id: b.id,
-          title: b.title,
-          description: b.description,
-          imageId: b.image?.id,
-          imageUrl: b.image?.imageUrl ? `https://localhost:44311${b.image.imageUrl}` : 'assets/images/placeholder.png',
-          displayOrder: b.displayOrder,
-          showInWebsite: b.showInWebsite,
-        }));
 
-        await Promise.all(this.slides.map(async (slide, idx) => {
-        if (!slide.imageId) return;
-        try {
-          const dto: any = await this.apiService.getBannerAttachment(slide.imageId).toPromise();
-          const att = dto?.result ?? dto ?? {};
-          if (att.bytes) {
-            const mime = this.detectMimeFromName(att.fileName ?? att.fileExt);
-            slide.imageUrl = `data:${mime};base64,${att.bytes}`;
-          }
-        } catch {}
-      }));
-      
-        localStorage.setItem('banners', JSON.stringify({ data: this.slides, timestamp: Date.now() }));
-       
-      }
-    },
-    error: (err) => console.error('Error loading banners', err),
-  });
-}
+  private getTitleByLanguage(item: any, lang: string): string {
+    const langKeyMap: Record<string, string[]> = {
+      ar: ['ArabicTitle', 'arabicTitle'],
+      en: ['EnglishTitle', 'englishTitle'],
+      fr: ['FrenchTitle', 'frenchTitle'],
+      ch: ['ChineseTitle', 'chineseTitle'],
+      Ad: ['UrduTitle', 'urduTitle'],
+      IN: ['IndonesianTitle', 'indonesianTitle'],
+      BN: ['BengaliTitle', 'bengaliTitle'],
+      Tu: ['TurkishTitle', 'turkishTitle'],
+    };
 
-private detectMimeFromName(nameOrExt?: string): string {
+    const keys = langKeyMap[lang] || ['ArabicTitle', 'arabicTitle'];
+    for (const key of keys) {
+      if (item[key] && item[key].trim() !== '') return item[key];
+    }
+    return item['ArabicTitle'] || item['arabicTitle'] || 'No Title';
+  }
+
+  private getDescriptionByLanguage(item: any, lang: string): string {
+    const langKeyMap: Record<string, string[]> = {
+      ar: ['ArabicDescription', 'arabicDescription'],
+      en: ['EnglishDescription', 'englishDescription'],
+      fr: ['FrenchDescription', 'frenchDescription'],
+      ch: ['ChineseDescription', 'chineseDescription'],
+      Ad: ['UrduDescription', 'urduDescription'],
+      IN: ['IndonesianDescription', 'indonesianDescription'],
+      BN: ['BengaliDescription', 'bengaliDescription'],
+      Tu: ['TurkishDescription', 'turkishDescription'],
+    };
+
+    const keys = langKeyMap[lang] || ['ArabicDescription', 'arabicDescription'];
+    for (const key of keys) {
+      if (item[key] && item[key].trim() !== '') return item[key];
+    }
+    return item['ArabicDescription'] || item['arabicDescription'] || '';
+  }
+
+  private updateSlidesByLanguage(lang: string): void {
+    if (!this.slides || this.slides.length === 0) return;
+
+    this.slides.forEach((slide) => {
+      slide.title = this.getTitleByLanguage(slide, lang);
+      slide.description = this.getDescriptionByLanguage(slide, lang);
+    });
+  }
+
+  private detectMimeFromName(nameOrExt?: string): string {
     const ext = ((nameOrExt || '').includes('.')
       ? nameOrExt!.slice(nameOrExt!.lastIndexOf('.'))
       : nameOrExt || ''
@@ -160,7 +211,7 @@ private detectMimeFromName(nameOrExt?: string): string {
       default: return 'image/jpeg';
     }
   }
-  
+
   startAutoPlay(): void {
     this.autoPlaySubscription = interval(5000).subscribe(() => {
       this.nextSlide();
