@@ -3,15 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { takeUntil, Subject } from 'rxjs';
-import {
-  TwitterXIconComponent,
-  LinkedInIconComponent,
-  InstagramIconComponent,
-  SignLanguageIconComponent,
-  SearchAddIconComponent,
-  ViewIconComponent,
-  LinkSquareIconComponent,
-} from './icons/footer-icons.component';
+import { LinkSquareIconComponent } from './icons/footer-icons.component';
 import { environment } from '../../../../environments/environment';
 import { LanguageService } from '../../../core/services/language.service';
 
@@ -21,12 +13,6 @@ import { LanguageService } from '../../../core/services/language.service';
   imports: [
     CommonModule,
     TranslateModule,
-    TwitterXIconComponent,
-    LinkedInIconComponent,
-    InstagramIconComponent,
-    SignLanguageIconComponent,
-    SearchAddIconComponent,
-    ViewIconComponent,
     LinkSquareIconComponent,
   ],
   templateUrl: './footer.component.html',
