@@ -92,6 +92,7 @@ interface PrayerCardMeta {
               <app-city-selector
                 #citySelector
                 [label]="'prayTimeSection.selectCity'"
+                 [defaultCityId]="21" 
                 (citySelect)="onCitySelect($event)"
                 (locationSelect)="onLocationSelect($event)">
               </app-city-selector>
@@ -108,7 +109,7 @@ interface PrayerCardMeta {
             </button>
           </div>
           <!-- City Validation -->
-          <div *ngIf="showCityError" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
+          <div *ngIf="showCityError && !selectedCoords" class="flex items-center gap-2 text-red-600 text-sm mt-1 font-ibm-plex-arabic">
             ⚠️ {{ 'PleaseSelectCity' | translate }}
           </div>
         </div>

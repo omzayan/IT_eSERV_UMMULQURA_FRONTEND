@@ -31,6 +31,7 @@ export class CitySelectorComponent implements OnInit, OnDestroy {
   @Input() label?: string = 'citySelect.selectCity';
   @Output() locationSelect = new EventEmitter<LocationData>();
   @Output() citySelect = new EventEmitter<City>();
+  @Input() defaultCityId: number | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -87,8 +88,17 @@ coords: LocationData = { lat: undefined, lng: undefined };
           this.cities = apiCities ?? [];
           this.filteredCities = this.cities;
           this.loadingCities = false;
-        },
-        error: () => {
+        if (this.defaultCityId) {
+          const defaultCity = this.cities.find(c => c.id === this.defaultCityId);
+
+          if (defaultCity) {
+            this.selectedCityName = this.getCityName(defaultCity);
+            this.searchText = this.getCityName(defaultCity);
+            this.citySelect.emit(defaultCity);
+          }
+        }
+      },
+      error: () => {
           this.citiesError = this.translate.instant('citySelect.citiesLoadError');
           this.loadingCities = false;
         },
