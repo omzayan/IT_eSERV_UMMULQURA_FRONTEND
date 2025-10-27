@@ -14,6 +14,7 @@ import {
   ReferenceDataService,
   LanguageService,
   GeolocationService,
+  ApiService,
 } from '../../../core/services';
 import {
   PrayerTimeWithDateResult,
@@ -211,6 +212,7 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   constructor(
     private translate: TranslateService,
     private prayerService: PrayerService,
+    private apiService : ApiService,
     private languageService: LanguageService,
     private referenceDataService: ReferenceDataService,
     private cdr: ChangeDetectorRef
@@ -231,16 +233,29 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   ngAfterViewInit(): void {
   setTimeout(() => {
     const today = new Date();
-this.selectedGregorianDate = {
-  year: today.getFullYear(),
-  month: today.getMonth() + 1,
-  dayNumber: today.getDate()
-};
-this.selectedCoords = { lat: 21.42, lng: 39.83 };
-this.prayerTime = null;
-this.handleGregorianDateSearch();
-
-
+    this.apiService.convertGregorianToHijri({
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      day: today.getDate()
+    }).subscribe({
+      next: (res) => {
+        if (res?.result) {
+          this.selectedHijriDate = {
+            year: res.result.year,
+            month: res.result.month,
+            dayNumber: res.result.day
+          };
+          this.selectedGregorianDate = null; 
+          this.onHijriDateChange(this.selectedHijriDate);
+          this.showDateError = false;
+          this.selectedCoords = { lat: 21.42, lng: 39.83 };
+          this.handleHijriDateSearch();
+        }
+      },
+      error: () => {
+        console.error('Error converting the Gregorian date to the Hijri date');
+      }
+    });
   });
 }
 
