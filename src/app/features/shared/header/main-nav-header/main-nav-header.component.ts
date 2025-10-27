@@ -11,6 +11,7 @@ import {
   SearchIconComponent2,
 } from '../icons/header-icons.component';
 import { LanguageService } from '../../../../core/services/language.service';
+import { HttpClient } from '@angular/common/http';
 
 interface NavigationItem {
   key: string;
@@ -251,10 +252,12 @@ interface NavigationItem {
           </form>
 
           <!-- Suggestions -->
-          <ul id="suggestionsList" class="mt-4 text-gray-700 space-y-2 font-ibm-plex-arabic">
-            <li *ngFor="let suggestion of suggestions" class="cursor-pointer hover:text-green-700">
-              {{ suggestion }}
-            </li>
+          <ul *ngIf="suggestions.length" class="border rounded mt-1 bg-white shadow-md max-h-60 overflow-auto">
+            <li *ngFor="let suggestion of suggestions" 
+              (click)="navigateToElement(suggestion)"
+              class="px-4 py-2 cursor-pointer hover:bg-gray-100">
+            {{ suggestion.label }}
+          </li>
           </ul>
         </div>
       </div>
@@ -314,7 +317,7 @@ interface NavigationItem {
 export class MainNavHeaderComponent implements OnInit, OnDestroy {
   isOpen = false;
   query = '';
-  suggestions: string[] = [];
+  suggestions: { label: string; element: HTMLElement }[] = [];
   currentLanguage: string = 'ar';
   showMobileMenu: boolean = false;
   dropdownOpen = false;
@@ -437,6 +440,47 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
 
   onSearch(event: Event) {
     event.preventDefault();
-    console.log('Searching for:', this.query);
+    const queryLower = this.query.toLowerCase();
+
+    const elements = Array.from(document.querySelectorAll('h1, h2, h3, p, span, li, section')) as HTMLElement[];
+
+    const seenLabels = new Set<string>();
+
+    const sentences: { text: string, element: HTMLElement }[] = [];
+
+    elements.forEach(el => {
+      const text = el.innerText;
+      if (text) {
+        text.split(/[\.\n]/).forEach(sentence => {
+          const trimmed = sentence.trim();
+          if (trimmed) {
+            sentences.push({ text: trimmed, element: el });
+          }
+        });
+      }
+    });
+
+    this.suggestions = sentences
+      .filter(s => s.text.toLowerCase().includes(queryLower))
+      .map(s => ({ label: s.text, element: s.element }))
+      .filter(item => {
+        if (seenLabels.has(item.label)) return false;
+        seenLabels.add(item.label);
+        return true;
+      });
   }
+
+  navigateToElement(suggestion: { label: string; element: HTMLElement }) {
+    const yOffset = -250; 
+    const elementPosition = suggestion.element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition + yOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+
+    this.toggleSearch();
+  }
+
 }
