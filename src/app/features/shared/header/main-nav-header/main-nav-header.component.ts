@@ -215,12 +215,12 @@ interface NavigationItem {
           <h3
             class="text-lg sm:text-xl font-bold text-gray-900 font-ibm-plex-arabic"
           >
-            عن ماذا تبحث ؟
+           {{ 'WhatAreYouLookingFor' | translate }}
           </h3>
           <button
             (click)="toggleSearch()"
             class="text-gray-400 hover:text-gray-600 transition-colors"
-            title="إغلاق"
+            title="{{ 'Close' | translate }}"
           >
             <img
               src="assets/images/cancel-circle.svg"
@@ -238,7 +238,7 @@ interface NavigationItem {
               name="term"
               id="siteSearchInputMegaMenu"
               type="text"
-              placeholder="كلمات البحث"
+              placeholder="{{ 'SearchWords' | translate }}"
               aria-label="search"
               class="flex-1 border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none text-gray-800 font-ibm-plex-arabic"
             />
@@ -246,7 +246,7 @@ interface NavigationItem {
               type="submit"
               class="bg-green-700 hover:bg-green-800 text-white font-medium px-6 py-2 rounded font-ibm-plex-arabic transition-colors"
             >
-              بحث
+              {{ 'Search' | translate }}
             </button>
           </form>
 
