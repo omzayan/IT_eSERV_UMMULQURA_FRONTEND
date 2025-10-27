@@ -110,11 +110,12 @@ coords: LocationData = { lat: undefined, lng: undefined };
   }
 
   filterCities() {
-    const text = this.searchText.toLowerCase();
-    this.filteredCities = this.cities.filter((c) =>
-      (c.cityName ?? '').toLowerCase().includes(text)
-    );
-  }
+  const text = this.searchText.toLowerCase();
+  this.filteredCities = this.cities.filter((c) =>
+    this.getCityName(c).toLowerCase().includes(text)
+  );
+}
+
 
   getCityName(city: City): string {
   const lang = this.translate.currentLang as keyof typeof city.name; 
