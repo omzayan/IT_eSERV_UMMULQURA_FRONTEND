@@ -98,3 +98,7 @@ textarea::-webkit-scrollbar-thumb:hover {
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
+
+html[dir="rtl"] input {
+    text-align: right !important;
+}

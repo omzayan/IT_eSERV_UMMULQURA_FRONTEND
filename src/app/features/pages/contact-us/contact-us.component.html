@@ -48,47 +48,53 @@
                         </div>
                     </div>
                 </div>
+<!-- Email & Phone -->
+<div class="flex flex-col md:flex-row md:gap-6 w-full">
+  <!-- Email -->
+  <div class="flex flex-col gap-2 flex-1 w-full">
+    <label class="font-semibold text-sm">
+      <span class="text-red-600">*</span>
+      {{ 'contactUs.form.email.label' | translate }}
+    </label>
+    <input
+      type="email"
+      formControlName="email"
+      [placeholder]="'contactUs.form.email.placeholder' | translate"
+      class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
+      [class.border-red-500]="hasError('email', 'required') || hasError('email', 'email')"
+    />
+    <div *ngIf="hasError('email', 'required')" class="text-red-500 text-sm">
+      {{ 'contactUs.form.email.label' | translate }} {{ 'IsRequired' | translate }}
+    </div>
+    <div *ngIf="hasError('email', 'email')" class="text-red-500 text-sm">
+      Please enter a valid email address
+    </div>
+  </div>
 
-                <!-- Email & Phone -->
-                <div class="flex gap-6 w-full">
-                    <div class="flex flex-col gap-2 flex-1">
-                        <label class="font-semibold text-sm">
-                            <span class="text-red-600">*</span>
-                            {{ 'contactUs.form.email.label' | translate }}
-                        </label>
-                        <input type="email" formControlName="email"
-                            [placeholder]="'contactUs.form.email.placeholder' | translate"
-                            class="w-full h-10 px-4 rounded bg-gray-100 text-base text-gray-600 placeholder-gray-500 outline-none"
-                            [class.border-red-500]="hasError('email', 'required') || hasError('email', 'email')" />
-                        <div *ngIf="hasError('email', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.email.label' | translate }} {{ 'IsRequired' | translate }}
-                        </div>
-                        <div *ngIf="hasError('email', 'email')" class="text-red-500 text-sm">
-                            Please enter a valid email address
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-2 flex-1">
-                        <label class="font-semibold text-sm">
-                            <span class="text-red-600">*</span>
-                            {{ 'contactUs.form.phone.label' | translate }}
-                        </label>
-                        <div class="flex h-10 bg-gray-100 rounded items-center">
-                            <input type="tel" formControlName="phone"
-                                [placeholder]="'contactUs.form.phone.placeholder' | translate"
-                                class="flex-1 h-full px-4 text-base text-gray-600 placeholder-gray-500 bg-transparent outline-none"
-                                [class.border-red-500]="hasError('phone', 'required')" />
-                            <div class="flex items-center gap-1 px-4 border-l border-gray-300">
-                                <app-chevron-down-icon className="w-5 h-5"></app-chevron-down-icon>
-                                <span class="text-gray-900 text-base">+966</span>
-                            </div>
-                        </div>
-                        <div *ngIf="hasError('phone', 'required')" class="text-red-500 text-sm">
-                            {{ 'contactUs.form.phone.label' | translate }} {{ 'IsRequired' | translate }}
-                        </div>
-                    </div>
-                </div>
-
+  <!-- Phone -->
+  <div class="flex flex-col gap-2 flex-1 w-full">
+    <label class="font-semibold text-sm">
+      <span class="text-red-600">*</span>
+      {{ 'contactUs.form.phone.label' | translate }}
+    </label>
+    <div class="flex h-10 bg-gray-100 rounded items-center w-full">
+      <input
+        type="tel"
+        formControlName="phone"
+        [placeholder]="'contactUs.form.phone.placeholder' | translate"
+        class="flex-1 h-full px-4 text-base text-gray-600 placeholder-gray-500 bg-transparent outline-none"
+        [class.border-red-500]="hasError('phone', 'required')"
+      />
+      <div class="flex items-center gap-1 px-4 border-l border-gray-300">
+        <app-chevron-down-icon className="w-5 h-5"></app-chevron-down-icon>
+        <span class="text-gray-900 text-base">+966</span>
+      </div>
+    </div>
+    <div *ngIf="hasError('phone', 'required')" class="text-red-500 text-sm">
+      {{ 'contactUs.form.phone.label' | translate }} {{ 'IsRequired' | translate }}
+    </div>
+  </div>
+</div>
                 <!-- Subject & Category -->
                 <div class="flex gap-6 w-full">
                     <div class="flex flex-col gap-2 flex-1">

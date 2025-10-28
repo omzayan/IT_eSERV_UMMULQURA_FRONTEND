@@ -78,7 +78,7 @@ interface NavigationItem {
               />
             </svg>
             <span class="text-sm lg:text-base font-medium font-ibm-plex-arabic">
-              {{ item.translationKey | translate }}
+              {{ item.translationKey | translate }}   
             </span>
           </button>
         </div>
@@ -394,14 +394,11 @@ export class MainNavHeaderComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // Add the missing isActive method
-  isActive(item: NavigationItem): boolean {
-    if (item.path === '/') {
-      return this.currentRoute === '/';
-    }
-    return this.currentRoute.startsWith(item.path || '');
-  }
+isActive(item: NavigationItem): boolean {
+  if (!item.path) return false;
 
+  return this.currentRoute === item.path || this.currentRoute.startsWith(item.path + '/');
+}
   navigate(path: string): void {
     this.router.navigate([path]);
   }

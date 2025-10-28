@@ -52,9 +52,10 @@ interface PrayerCardMeta {
 
       <!-- Header -->
       <div class="flex flex-col gap-5">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-start items-center">
+            <span class="inline-block w-1 h-8 bg-[#1B8354] rounded me-2"></span>
           <span class="text-[30px] md:text-[36px] font-bold text-[#161616] font-ibm-plex-arabic">
-            {{ 'prayTimeSection.title' | translate }}
+            {{ 'prayTimeSection.title' | translate }}  
           </span>
         </div>
         <span class="text-[16px] md:text-[18px] leading-relaxed text-[#161616] font-ibm-plex-arabic">
@@ -121,58 +122,64 @@ interface PrayerCardMeta {
       </div>
 
       <!-- Prayer Cards Grid -->
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-3">
+  <div
+    *ngFor="let meta of prayerCardMeta; let i = index"
+  [ngClass]="{
+    'relative flex flex-col items-center justify-center bg-[#D9F9E4] scale-105 w-[200px] h-[220px] shadow-lg border-2 border-[#24AF6E]  borderactive': isNextPrayer(i),
+    'relative flex flex-col items-center justify-center w-[180px] h-[200px] ': !isNextPrayer(i)
+  }"
+    class=" transition-all duration-300 
+     shadow-green-card overflow-hidden rounded-2xl"
+  >
+ <div *ngIf="isNextPrayer(i)" class="w-100-center mt-0">
   
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-  <div *ngFor="let meta of prayerCardMeta; let i = index"
-       class="prayer-card relative rounded-lg overflow-hidden h-[308px] cursor-pointer transform hover:scale-105 transition-transform duration-300"
-       [style.background-image]="'url(' + meta.bg + ')'">
-
-    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-
-    <div class="relative z-10 h-full flex flex-col justify-between px-4 pt-[40px] pb-6 text-white">
-      <div class="flex flex-col">
-        <h3 class="text-2xl font-bold font-ibm-plex-arabic mb-1">{{ meta.name | translate }}</h3>
-        <p class="text-base font-bold font-ibm-plex-arabic text-black bg-white w-fit rounded px-2">
-          {{ formatTo12Hour(getPrayerTime(meta.key)) }}
-        </p>
-      </div>
-
-      <!-- باقي الصلوات -->
-      <div *ngIf="!isNextPrayer(i)" class="flex flex-col gap-2 mt-2">
-        <div class="flex justify-between items-center">
-          <p class="text-sm font-ibm-plex-arabic">{{ 'prayTimeSection.remaining' | translate }}</p>
-          <p class="text-sm font-bold font-ibm-plex-arabic">
-            {{ getTimeRemaining(meta.key, i) }}
-          </p>
-        </div>
-      </div>
-
-      <!-- الصلاة الجاية → الدايرة -->
-      <div *ngIf="isNextPrayer(i)" class="flex flex-col items-center justify-center flex-1">
-        <div class="circular-countdown relative">
-          <svg class="countdown-circle" width="180" height="180" viewBox="0 0 180 180">
-            <circle cx="90" cy="90" r="80" fill="transparent" stroke="#1B8354" stroke-width="5"
-                    stroke-dasharray="3 8"></circle>
-            <circle cx="90" cy="90" r="80" fill="transparent" stroke="white" stroke-width="5"
-                    stroke-dasharray="3 8"
-                    [style.stroke-dashoffset]="(getProgressPercent(meta.key, i) / 100) * 502.4"
-                    class="countdown-progress"></circle>
-          </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <div class="text-3xl font-bold font-ibm-plex-arabic text-white mb-2">
-              {{ getTimeRemaining(meta.key, i) }}
-            </div>
-            <div class="text-sm font-ibm-plex-arabic text-white opacity-80">
-              {{ 'prayTimeSection.remaining' | translate }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+     <div class="text-sm  w-100 font-semibold font-ibm-plex-arabic text-[#1B8354] bg-[#BDEDCB] text-center py-1  ">
+        الصلاة التالية
       </div>
   </div>
+  <div class="flex flex-col items-center justify-center">
+    <!-- Prayer Name -->
+    <h2   [ngClass]="{
+      'text-2xl mb-3 font-bold font-ibm-plex-arabic text-green-800':
+        !isNextPrayer(i),
+      'text-xl mb-2 font-notmal font-ibm-plex-arabic text-green-800 mt-2':
+        isNextPrayer(i)
+    }" >
+      {{ meta.name | translate }}
+    </h2>
+
+    <!-- SVG Icon -->
+    <div class="mb-2 mt-2">
+      <img [src]="meta.icon" [alt]="meta.name" class="w-12 h-12" />
+    </div>
+ <!-- Remaining Time (only for next prayer) -->
+    <div *ngIf="isNextPrayer(i)" class="flex flex-col items-center mt-0">
+      <div class="text-3xl font-bold font-ibm-plex-arabic text-[#074D31] mb-0">
+        {{ getTimeRemaining(meta.key, i) }}
+      </div>
+      <div class="text-base font-ibm-plex-arabic text-[#1B8354] hidden">
+        {{ 'prayTimeSection.remaining' | translate }}
+      </div>
+   
+    </div>
+    <!-- Prayer Time -->
+    <p   [ngClass]="{
+      'text-2xl mt-3 font-light text-gray-900 font-ibm-plex-arabic':
+        !isNextPrayer(i),
+      'text-xl mt-0 font-light text-gray-900 font-ibm-plex-arabic':
+        isNextPrayer(i)
+    }"     >
+      {{ formatTo12Hour(getPrayerTime(meta.key)) }}
+    </p>
 </div>
+   
+  </div>
+</div>
+
+
+
 
   `,
   styles: [`
@@ -199,15 +206,22 @@ export class PrayTimeSectionComponent implements OnInit, OnDestroy {
   showDateError = false;
   showCityError = false;
 
- prayerCardMeta: PrayerCardMeta[] = [
+/* prayerCardMeta: PrayerCardMeta[] = [
   { key: 'fajr', name: 'prayers.fajr', bg: 'assets/images/fajr-time.png' },
   { key: 'sunrise', name: 'prayers.sunrise', bg: 'assets/images/sunrise-time.png' },
   { key: 'dhuhr', name: 'prayers.dhuhr', bg: 'assets/images/dhuhr-time.png' },
   { key: 'asr', name: 'prayers.asr', bg: 'assets/images/asr-time.png' },
   { key: 'maghrib', name: 'prayers.maghrib', bg: 'assets/images/maghrib-time.png' },
   { key: 'isha', name: 'prayers.isha', bg: 'assets/images/isha-time.png' },
-];
+];*/
 
+prayerCardMeta: { key: keyof PrayerTimes; name: string; icon: string; }[] = [
+  { key: 'fajr', name: 'الفجر', icon: '/assets/images/fajr.svg' },
+  { key: 'dhuhr', name: 'الظهر', icon: '/assets/images/dhuhr.svg' },
+  { key: 'asr', name: 'العصر', icon: '/assets/images/asr.svg' },
+  { key: 'maghrib', name: 'المغرب', icon: '/assets/images/maghrib.svg' },
+  { key: 'isha', name: 'العشاء', icon: '/assets/images/isha.svg' },
+];
 
   constructor(
     private translate: TranslateService,
@@ -499,3 +513,4 @@ getProgressPercent(key: keyof PrayerTimes, index: number): number {
 
 
 }
+   
