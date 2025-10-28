@@ -403,6 +403,8 @@ isActive(item: NavigationItem): boolean {
     this.router.navigate([path]);
   }
 
+  
+
   navigateToItem(item: NavigationItem): void {
     if (item.path) {
       this.router.navigate([item.path]);
